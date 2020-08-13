@@ -60,8 +60,6 @@ export default class PetList extends cc.Component {
             petConfigs.push(defaultpet);
         }
 
-        console.log(petConfigs);
-        
 
         let scrollView = this.ContentNode.getParent().getComponent(cc.ScrollView);
 
@@ -109,7 +107,6 @@ export default class PetList extends cc.Component {
 
 
     onClick(petconfig: PetData, petData: PetData, petItem: PetItem) {
-        console.log("click");
         PetRevealDialog.prompt(null, petData);
     }
 

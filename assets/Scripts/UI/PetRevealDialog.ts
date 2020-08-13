@@ -4,6 +4,7 @@ import ScreenSize from "../Tools/ScreenSize";
 
 type PetInfo = {
     petId: string,
+    petName: string;
     petData: PetData,
     petinfo: string,
     petNeedUpgrade: PetUpdateResourse[]
@@ -97,7 +98,6 @@ export default class PetRevealDialog extends ViewConnector {
         })
         this.UpgradeButton = this.node.getChildByName("UpgradeButton");
         this.UpgradeButton.on(cc.Node.EventType.TOUCH_END, () => {
-            console.log("cliiiiiiiiiiick");
             this.upgradePet(info)
 
         });
@@ -186,7 +186,8 @@ export default class PetRevealDialog extends ViewConnector {
 
         let petInfos: PetInfo[] = []
         let petinfo: PetInfo = {
-            petId: "pet1",
+            petId: "1",
+            petName:"pet1",
             petData: petData,
             petinfo: "it is a frog",
             petNeedUpgrade: [resourseWood, resourseBullet, resourseFood],
@@ -204,7 +205,7 @@ export default class PetRevealDialog extends ViewConnector {
 
     setPetInfoName(info: PetInfo) {
         let petname = this.petInfoNode.getChildByName("label_petName").getComponent(cc.Label);
-        petname.string = info.petData.petName;
+        petname.string = info.petName;
     }
 
     setPetInfo(info: PetInfo) {
