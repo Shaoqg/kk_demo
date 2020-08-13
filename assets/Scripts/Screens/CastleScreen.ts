@@ -141,13 +141,13 @@ export class CastleScreen extends ViewConnector {
         for (const key in config) {
             switch (key) {
                 case "coin":
-                        User.instance.coin -= config[name];
+                        User.instance.coin -= config[key];
                     break;
                 case "wood":
-                        User.instance.wood -= config[name];
+                        User.instance.wood -= config[key];
                     break;
                 case "stone":
-                        User.instance.stone -= config[name];
+                        User.instance.stone -= config[key];
                     break;
             }
         }

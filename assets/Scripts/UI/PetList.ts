@@ -2,15 +2,14 @@ import PetItem from "./PetItem";
 import LoopList, { TableViewDelegate } from "../Util/LoopList";
 import PetRevealDialog from "./PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
+import User from "../Gameplay/User";
 
 
 const { ccclass, property } = cc._decorator;
 export class PetData {
-    petid: string = "";
+    petId: string = "";
     petName: string = "";
     petLevel: number = 1;
-    petType: string []= [""];
-    petRare: string = "";
 }
 
 @ccclass
@@ -36,44 +35,22 @@ export default class PetList extends cc.Component {
         this.petItems = [];
 
         let startX = - this.ContentNode.width / 2 + this.left;
-
-        
-        
-
-        let petConfigs: PetData[] = []
-        let type=["nature","fire","water","snack"]
-        let Rares=["Nomal","Rare","Super Rare"]
-        for(let i=0;i<12;i++){
-            let petType=[]
-            if(Math.random()*2>1){
-                petType=[type[Math.floor(Math.random()*4)]];
-            }else{
-                petType=[type[Math.floor(Math.random()*4)],type[Math.floor(Math.random()*4)]]
-            }
-            let defaultpet: PetData = {
-                petid: i.toString(),
-                petName: "pet"+i.toString(),
-                petLevel: Math.floor(Math.random()*100),
-                petType: petType,
-                petRare: Rares[Math.floor(Math.random()*3)]
-            }
-            petConfigs.push(defaultpet);
-        }
+        let petConfigs:PetData[] = User.instance.getPetList();
 
 
         let scrollView = this.ContentNode.getParent().getComponent(cc.ScrollView);
 
         let applyData = (node: cc.Node, index: number) => {
-            let petConfig = petConfigs[index];
 
-            let petData = petConfig;
-
+            let petData = petConfigs[index];
+            console.log(petData);
+            
             let y = - Math.floor(index / 4) * (node.height + this.spacingY) - this.Top - node.height / 2;
             let x = (index % 4) * (node.width + this.spacingX) + startX + node.width / 2;
             node.setPosition(x, y);
             let petItem = node.getComponent(PetItem);
             petItem.Init(petData, () => {
-                petData && this.onClick(petConfig, petData, petItem);
+                petData && this.onClick(petData, petItem);
             });
         }
 
@@ -106,7 +83,7 @@ export default class PetList extends cc.Component {
     }
 
 
-    onClick(petconfig: PetData, petData: PetData, petItem: PetItem) {
+    onClick(petData: PetData, petItem: PetItem) {
         PetRevealDialog.prompt(null, petData);
     }
 

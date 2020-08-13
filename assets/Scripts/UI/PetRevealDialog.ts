@@ -1,18 +1,29 @@
 import { ViewConnector } from "../Tools/ViewConnector";
-import { PetData } from "./PetList";
 import ScreenSize from "../Tools/ScreenSize";
+import { PetData } from "./PetList";
+import User from "../Gameplay/User";
 
-type PetInfo = {
+
+
+export type PetInfo = {
     petId: string,
     petName: string;
-    petData: PetData,
     petinfo: string,
+    petType: string [],
+    petRare: string ,
+    petBouns:petBouns,
+    petBounsNum:number[],
     petNeedUpgrade: PetUpdateResourse[]
 }
 
-type PetUpdateResourse = {
+export type PetUpdateResourse = {
     Resourse: string,
     number: number
+}
+
+export type petBouns = {
+    BounsName: string,
+    BounsNum: number
 }
 
 const { ccclass, property } = cc._decorator;
@@ -54,6 +65,7 @@ export default class PetRevealDialog extends ViewConnector {
     static _instance: PetRevealDialog = null;
 
     UpgradeButton: cc.Node;
+    info: PetInfo;
 
     static async prompt(closeCallBack: Function = null, info: any = null, showShare: boolean = false): Promise<void> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -74,7 +86,7 @@ export default class PetRevealDialog extends ViewConnector {
 
 
 
-    init(info: PetInfo) {
+    init(data: PetData) {
         if (this.petSprite)
             return;
         let that = this;
@@ -98,25 +110,22 @@ export default class PetRevealDialog extends ViewConnector {
         })
         this.UpgradeButton = this.node.getChildByName("UpgradeButton");
         this.UpgradeButton.on(cc.Node.EventType.TOUCH_END, () => {
-            this.upgradePet(info)
+            this.upgradePet(data)
 
         });
 
-        this.setPetInfoName(info);
-        this.setPetInfo(info);
-        this.setPetLevel(info);
-
-
-        this.setPetType(info);
-        this.setPetRarity(info);
-
-        this.setPetNeedtoUpgrade(info);
+        this.setPetInfoName(data);
+        this.setPetInfo();
+        this.setPetLevel(data);
+        this.setPetType();
+        this.setPetRarity();
+        this.setPetNeedtoUpgrade();
 
         this.adjustGameInterface();
     }
-    upgradePet(info: PetInfo) {
-        info.petData.petLevel++;
-        info.petNeedUpgrade.forEach((res) => {
+    upgradePet(data: PetData) {
+        data.petLevel++;
+        this.info.petNeedUpgrade.forEach((res) => {
             switch (res.Resourse) {
                 case "Bullet":
                     this.bullethas -= res.number
@@ -133,14 +142,14 @@ export default class PetRevealDialog extends ViewConnector {
             }
         });
 
-        this.refresh(info)
+        this.refresh(data)
     }
-    refresh(info) {
-        this.setPetInfoName(info);
-        this.setPetInfo(info);
-        this.setPetLevel(info);
-        this.setPetType(info);
-        this.setPetNeedtoUpgrade(info);
+    refresh(data) {
+        this.setPetInfoName(data);
+        this.setPetInfo();
+        this.setPetLevel(data);
+        this.setPetType();
+        this.setPetNeedtoUpgrade();
     }
 
     currentScale = 1;
@@ -185,17 +194,12 @@ export default class PetRevealDialog extends ViewConnector {
         }
 
         let petInfos: PetInfo[] = []
-        let petinfo: PetInfo = {
-            petId: "1",
-            petName:"pet1",
-            petData: petData,
-            petinfo: "it is a frog",
-            petNeedUpgrade: [resourseWood, resourseBullet, resourseFood],
-        }
-        petInfos.push(petinfo)
+       
+        petInfos=User.instance.petInfos;
         petInfos.forEach((info) => {
-            if (petinfo.petId == petData.petid || true) {
-                this.init(info);
+            if (info.petId == petData.petId || true) {
+                this.info=info
+                this.init(petData);
                 return;
             }
         })
@@ -203,26 +207,26 @@ export default class PetRevealDialog extends ViewConnector {
 
     }
 
-    setPetInfoName(info: PetInfo) {
+    setPetInfoName(info: PetData) {
         let petname = this.petInfoNode.getChildByName("label_petName").getComponent(cc.Label);
         petname.string = info.petName;
     }
 
-    setPetInfo(info: PetInfo) {
+    setPetInfo() {
         let petInfo = this.petInfoNode.getChildByName("label_petInfo").getComponent(cc.Label);
-        petInfo.string = info.petinfo;
+        petInfo.string = this.info.petinfo;
     }
 
-    setPetLevel(info: PetInfo) {
+    setPetLevel(data: PetData) {
         let level = this.petInfoNode.getChildByName("level");
-        level.getChildByName("label_level").getComponent(cc.Label).string = info.petData.petLevel.toString();
+        level.getChildByName("label_level").getComponent(cc.Label).string =data.petLevel.toString();
     }
-    setPetRarity(info:PetInfo){
+    setPetRarity(){
         let petRare = cc.find("rarity/label", this.petInfoNode).getComponent(cc.Label);
-        petRare.string=info.petData.petRare;
+        petRare.string=this.info.petRare;
     }
 
-    setPetType(info: PetInfo) {
+    setPetType() {
         let petType = cc.find("type/typeLayout", this.petInfoNode);
         let natureNode = cc.find("type_land", petType);
         let fireNode = cc.find("type_fire", petType);
@@ -234,7 +238,7 @@ export default class PetRevealDialog extends ViewConnector {
         snackNode.active = false;
 
         // element icons
-        info.petData.petType.forEach(element => {
+        this.info.petType.forEach(element => {
             switch (element) {
                 case "nature":
                     natureNode.active = true;
@@ -253,7 +257,7 @@ export default class PetRevealDialog extends ViewConnector {
 
     }
 
-    setPetNeedtoUpgrade(info: PetInfo) {
+    setPetNeedtoUpgrade() {
         let resource = cc.find("resource/resourceLayout", this.petInfoNode);
 
         let BulletNode = cc.find("Bullet", resource);
@@ -270,7 +274,7 @@ export default class PetRevealDialog extends ViewConnector {
 
 
 
-        info.petNeedUpgrade.forEach((res) => {
+        this.info.petNeedUpgrade.forEach((res) => {
             switch (res.Resourse) {
                 case "Bullet":
                     BulletNode.active = true;
