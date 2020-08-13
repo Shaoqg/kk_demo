@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "eb1d460d-9fc7-45b2-8008-c6e84c7f58d1",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "buildingdust02_half": {
+      "ver": "1.0.4",
+      "uuid": "2f58e2c1-fb5a-4207-8ffa-6e208f506635",
+      "rawTextureUuid": "eb1d460d-9fc7-45b2-8008-c6e84c7f58d1",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 3.5,
+      "offsetY": 2.5,
+      "trimX": 35,
+      "trimY": 27,
+      "width": 89,
+      "height": 77,
+      "rawWidth": 152,
+      "rawHeight": 136,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

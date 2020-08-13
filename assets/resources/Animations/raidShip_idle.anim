@@ -1,0 +1,685 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "raidShip_idle",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 4,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "paths": {
+      "cannon_ball": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "cannon_wheel2": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "cannon": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "cannon_wheel1": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "ship/ship": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                0,
+                20.88,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                0,
+                20.88,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "angle": [
+            {
+              "frame": 0,
+              "value": -1.5000000000000009
+            },
+            {
+              "frame": 0.5,
+              "value": 0
+            },
+            {
+              "frame": 1.5,
+              "value": 3
+            },
+            {
+              "frame": 2.5,
+              "value": 0
+            },
+            {
+              "frame": 3.5,
+              "value": -3
+            },
+            {
+              "frame": 4,
+              "value": -1.5000000000000009
+            }
+          ]
+        }
+      },
+      "wheel": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                273.845,
+                296.832,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                271.233,
+                311.829,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                269.83000000000004,
+                298.17,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                271.427,
+                291.511,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                274.748,
+                319.151,
+                0
+              ]
+            },
+            {
+              "frame": 3.5,
+              "value": [
+                276.29650000000004,
+                309.9915,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                273.845,
+                296.832,
+                0
+              ]
+            }
+          ],
+          "angle": [
+            {
+              "frame": 0,
+              "value": -1.5
+            },
+            {
+              "frame": 1,
+              "value": 0
+            },
+            {
+              "frame": 2,
+              "value": 2
+            },
+            {
+              "frame": 3,
+              "value": -3
+            },
+            {
+              "frame": 4,
+              "value": -1.5
+            }
+          ]
+        }
+      },
+      "mast": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                351.494,
+                202.61,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                350.591,
+                220.671,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                352.0425,
+                211.6405,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                351.494,
+                202.61,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                349.591,
+                222.671,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                351.494,
+                202.61,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "PNode2": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                244.557,
+                318.868,
+                0
+              ]
+            },
+            {
+              "frame": 0.5,
+              "value": [
+                241.848,
+                325.189,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                238.236,
+                331.511,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                238.688,
+                316.611,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                240.042,
+                310.741,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                243.654,
+                337.832,
+                0
+              ]
+            },
+            {
+              "frame": 3.5,
+              "value": [
+                246.815,
+                331.059,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                244.557,
+                318.868,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "PNode1": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                426.473,
+                178.94,
+                0
+              ]
+            },
+            {
+              "frame": 0.5,
+              "value": [
+                426.473,
+                191.583,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                426.57,
+                200.71,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                428.376,
+                193.486,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                427.473,
+                181.746,
+                0
+              ]
+            },
+            {
+              "frame": 2.5,
+              "value": [
+                425.417,
+                190.075,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                424.264,
+                199.006,
+                0
+              ]
+            },
+            {
+              "frame": 3.5,
+              "value": [
+                422.66,
+                186.264,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                426.473,
+                178.94,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "PNode4": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                320.276,
+                198.449,
+                0
+              ]
+            },
+            {
+              "frame": 0.5,
+              "value": [
+                320.942,
+                206.434,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                321.845,
+                214.613,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                322.249,
+                202.933,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                321.19,
+                194.051,
+                0
+              ]
+            },
+            {
+              "frame": 2.5,
+              "value": [
+                319.632,
+                206.134,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                318.845,
+                217.215,
+                0
+              ]
+            },
+            {
+              "frame": 3.5,
+              "value": [
+                319.56050000000005,
+                208.832,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                320.276,
+                198.449,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "PNode3": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                334.073,
+                440.251,
+                0
+              ]
+            },
+            {
+              "frame": 0.5,
+              "value": [
+                333.976,
+                448.475,
+                0
+              ]
+            },
+            {
+              "frame": 1,
+              "value": [
+                334.073,
+                458.408,
+                0
+              ]
+            },
+            {
+              "frame": 1.5,
+              "value": [
+                334.267,
+                450.378,
+                0
+              ]
+            },
+            {
+              "frame": 2,
+              "value": [
+                334.267,
+                442.348,
+                0
+              ]
+            },
+            {
+              "frame": 2.5,
+              "value": [
+                334.267,
+                450.378,
+                0
+              ]
+            },
+            {
+              "frame": 3,
+              "value": [
+                334.267,
+                459.311,
+                0
+              ]
+            },
+            {
+              "frame": 3.5,
+              "value": [
+                334.267,
+                451.184,
+                0
+              ]
+            },
+            {
+              "frame": 4,
+              "value": [
+                334.073,
+                440.251,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "wave1": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": []
+          }
+        },
+        "props": {
+          "opacity": [],
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "wave2": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": []
+          }
+        },
+        "props": {
+          "scale": [],
+          "position": [],
+          "opacity": [],
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "wave3": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": []
+          }
+        },
+        "props": {
+          "scale": [],
+          "position": [],
+          "opacity": [],
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "wave4": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": []
+          }
+        },
+        "props": {
+          "scale": [],
+          "position": [],
+          "opacity": [],
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      },
+      "explosion": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 4,
+              "value": true
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}
