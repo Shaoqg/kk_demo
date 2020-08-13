@@ -17,7 +17,7 @@ export class StrikeReward extends ViewConnector {
     rewarditem: cc.Node;
 
     static async prompt(): Promise<any> {
-        let parentNode = cc.find("Canvas/Main Camera/DialogRoot");
+        let parentNode = cc.find("Canvas/DialogRoot");
         let vc = StrikeReward._instance = await this.loadView<StrikeReward>(parentNode, StrikeReward);
 
         vc.applyData();

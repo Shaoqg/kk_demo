@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "89fac448-a68e-49b1-b349-11269e25dfc4",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "stickerbook_tab2_selected_bottom": {
+      "ver": "1.0.4",
+      "uuid": "1727c475-fadd-456e-ad9d-2abc5e7e1847",
+      "rawTextureUuid": "89fac448-a68e-49b1-b349-11269e25dfc4",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 224,
+      "height": 16,
+      "rawWidth": 224,
+      "rawHeight": 16,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
