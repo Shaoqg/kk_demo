@@ -426,8 +426,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "收集奖励",
-    "_N$string": "收集奖励",
+    "_string": "Get Reward",
+    "_N$string": "Get Reward",
     "_fontSize": 28,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -1499,7 +1499,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 176,
+      "width": 156.38,
       "height": 56.7
     },
     "_anchorPoint": {
@@ -1550,8 +1550,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "收集吧！",
-    "_N$string": "收集吧！",
+    "_string": "Collect!",
+    "_N$string": "Collect!",
     "_fontSize": 44,
     "_lineHeight": 45,
     "_enableWrapText": true,

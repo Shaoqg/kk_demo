@@ -1,7 +1,5 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
-import { delay } from "../kk/DataUtils";
-import { Strike } from "./Strike";
 const { ccclass, property } = cc._decorator;
 
 @ccclass

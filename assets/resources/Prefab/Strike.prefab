@@ -373,8 +373,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "船 出击",
-    "_N$string": "船 出击",
+    "_string": "Strike",
+    "_N$string": "Strike",
     "_fontSize": 48,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -905,7 +905,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
+      "width": 350,
       "height": 60
     },
     "_anchorPoint": {
@@ -956,8 +956,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "等级：888",
-    "_N$string": "等级：888",
+    "_string": "Level:1",
+    "_N$string": "Level:1",
     "_fontSize": 28,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -1012,7 +1012,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
+      "width": 350,
       "height": 60
     },
     "_anchorPoint": {
@@ -1063,8 +1063,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "航速：24节",
-    "_N$string": "航速：24节",
+    "_string": "Speed：24 knots",
+    "_N$string": "Speed：24 knots",
     "_fontSize": 28,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -1119,7 +1119,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
+      "width": 350,
       "height": 60
     },
     "_anchorPoint": {
@@ -1170,8 +1170,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "人员容量：0/5",
-    "_N$string": "人员容量：0/5",
+    "_string": "Capacity：0/5",
+    "_N$string": "Capacity：0/5",
     "_fontSize": 28,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -1226,7 +1226,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
+      "width": 350,
       "height": 60
     },
     "_anchorPoint": {
@@ -1277,11 +1277,11 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "预计一分钟后返回",
-    "_N$string": "预计一分钟后返回",
+    "_string": "Expect to be back in 1 minute",
+    "_N$string": "Expect to be back in 1 minute",
     "_fontSize": 28,
     "_lineHeight": 49,
-    "_enableWrapText": true,
+    "_enableWrapText": false,
     "_N$file": {
       "__uuid__": "1e872b72-2627-4099-852d-887f4bb83de2"
     },
@@ -1759,8 +1759,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "木材\n+10%",
-    "_N$string": "木材\n+10%",
+    "_string": "Wood\n+10%",
+    "_N$string": "Wood\n+10%",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -2197,8 +2197,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "木材\n+10%",
-    "_N$string": "木材\n+10%",
+    "_string": "Wood\n+10%",
+    "_N$string": "Wood\n+10%",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -2635,8 +2635,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "木材\n+10%",
-    "_N$string": "木材\n+10%",
+    "_string": "Wood\n+10%",
+    "_N$string": "Wood\n+10%",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -3073,8 +3073,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "木材\n+10%",
-    "_N$string": "木材\n+10%",
+    "_string": "Wood\n+10%",
+    "_N$string": "Wood\n+10%",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -3511,8 +3511,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "木材\n+10%",
-    "_N$string": "木材\n+10%",
+    "_string": "Wood\n+10%",
+    "_N$string": "Wood\n+10%",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -3740,8 +3740,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "宠物列表",
-    "_N$string": "宠物列表",
+    "_string": "Pet List",
+    "_N$string": "Pet List",
     "_fontSize": 28,
     "_lineHeight": 49,
     "_enableWrapText": true,
@@ -4098,7 +4098,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 500,
-      "height": 1155.88
+      "height": 1117.88
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -4148,8 +4148,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材",
-    "_N$string": "获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材\n获得10点木材",
+    "_string": "You get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\n",
+    "_N$string": "You get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\nYou get 10 Woods\nYou get 3 Foods\n",
     "_fontSize": 30,
     "_lineHeight": 38,
     "_enableWrapText": true,
@@ -5543,7 +5543,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 132,
+      "width": 111.76,
       "height": 56.7
     },
     "_anchorPoint": {
@@ -5594,8 +5594,8 @@
       }
     ],
     "_useOriginalSize": true,
-    "_string": "出击！",
-    "_N$string": "出击！",
+    "_string": "GO！",
+    "_N$string": "GO！",
     "_fontSize": 44,
     "_lineHeight": 45,
     "_enableWrapText": true,
@@ -6253,8 +6253,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 84,
-      "height": 50.4
+      "width": 71.59,
+      "height": 90.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -6304,8 +6304,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "已使用",
-    "_N$string": "已使用",
+    "_string": "Now\nUsing",
+    "_N$string": "Now\nUsing",
     "_fontSize": 28,
     "_lineHeight": 40,
     "_enableWrapText": true,

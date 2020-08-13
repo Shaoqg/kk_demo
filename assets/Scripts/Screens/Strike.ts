@@ -20,7 +20,7 @@ export class Strike extends ViewConnector {
     pet: cc.Node;
     petReady: number = 0;
     boatReady: boolean = false;
-    bonusName: string[] = ["金属", "木材", "燃料", "炮弹", "食物"]
+    bonusName: string[] = ["Metal", "Wood", "Fuel", "Bullet", "Food"]
     bonusNum: string[] = ["10", "20", "15", "33", "50"]
     updateTime: number = 0;
     goStrike: boolean = false;
@@ -82,7 +82,7 @@ export class Strike extends ViewConnector {
             list.active = false;
             scrollview.getComponent(cc.ScrollView).content = battleinfo;
             battleinfo.active = true;
-            subtitleLabel.string = "战斗记录"
+            subtitleLabel.string = "Strike Log"
 
             let go_gry = cc.find("button_primary/button_gry", this.root);
             let goLabel = cc.find("button_primary/goLabel", this.root);
@@ -90,7 +90,7 @@ export class Strike extends ViewConnector {
 
             go.getComponent(cc.Button).interactable = false;
             go_gry.active = true;
-            goLabel.getComponent(cc.Label).string = "已出击"
+            goLabel.getComponent(cc.Label).string = "Exploring"
             timecount.active = true;
             go.off(cc.Node.EventType.TOUCH_END);
             let loadingbar = cc.find("loading_bar", this.node);
@@ -149,7 +149,7 @@ export class Strike extends ViewConnector {
 
         go.getComponent(cc.Button).interactable = true;
         go_gry.active = false;
-        goLabel.getComponent(cc.Label).string = "收集奖励";
+        goLabel.getComponent(cc.Label).string = "Go Collect!";
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
             this.close(undefined);
@@ -197,11 +197,11 @@ export class Strike extends ViewConnector {
         petImage.node.active = true;
 
 
-        bonusLabel.string = bonusLabel.string.replace("木材", this.bonusName[petListInfo]);
+        bonusLabel.string = bonusLabel.string.replace("Wood", this.bonusName[petListInfo]);
         bonusLabel.string = bonusLabel.string.replace("10", this.bonusNum[petListInfo]);
         bonusLabel.node.active = true;
 
-        shipCapacity.getComponent(cc.Label).string = "人员容量：" + this.petReady + "/5"
+        shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/5"
         if (this.petReady == 5) {
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
