@@ -5,8 +5,6 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export class Strike extends ViewConnector {
-    @property(cc.Button)
-    closeButton: cc.Button = null;
 
     @property(cc.SpriteFrame)
     SpriteFrame: cc.SpriteFrame[] = [];
