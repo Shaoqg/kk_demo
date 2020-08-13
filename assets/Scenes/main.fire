@@ -10159,7 +10159,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_dailay",
+    "_name": "btn_shop",
     "_objFlags": 0,
     "_parent": {
       "__id__": 146
@@ -10782,7 +10782,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "btn_shop",
+    "_name": "btn_dailay",
     "_objFlags": 0,
     "_parent": {
       "__id__": 146

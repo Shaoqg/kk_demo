@@ -3,6 +3,7 @@ import { CastleScreen } from "../Screens/CastleScreen";
 import { StateManager } from "./State/StateManager";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import { Strike } from "../Screens/Strike";
+import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 const {ccclass, property} = cc._decorator;
@@ -16,6 +17,7 @@ export default class WorldManager extends cc.Component {
     selectButton_ship:cc.Node = null;
     btn_levelup:cc.Node = null;
     btn_adventure:cc.Node = null;
+    btn_barn: cc.Node = null;
 
 
 
@@ -51,6 +53,12 @@ export default class WorldManager extends cc.Component {
         this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickAdventure();
         })
+
+        this.btn_barn = cc.find("DialogRoot/top_left/btn_barn", this.node)
+        this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickPet();
+        })
+
     }
 
     initCastle() {
@@ -93,4 +101,8 @@ export default class WorldManager extends cc.Component {
         this.initCastle();
     }
 
+	onclickPet() {
+        this.switchShipState(false);
+        StickerbookScreen.prompt();
+    }
 }

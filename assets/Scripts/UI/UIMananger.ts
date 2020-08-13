@@ -1,3 +1,4 @@
+import StoreScreen from "./StoreScreen";
 
 
 const {ccclass, property} = cc._decorator;
@@ -32,7 +33,7 @@ export default class UIManager extends cc.Component {
     }
 
     onclick_shop(){
-        
+        StoreScreen.prompt();
     }
 
     onclick_dailay(){
