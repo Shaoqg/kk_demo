@@ -1,6 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import { StrikeReward } from "./StrikeReward";
+import User from "../Gameplay/User";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -55,11 +56,7 @@ export class Strike extends ViewConnector {
 
         this.pet = cc.find("pet", this.node);
         let petListInfo = [];
-
-        //debug
-        for (let i = 0; i <= 53; i++) {
-            petListInfo.push(Math.floor(Math.random() * this.SpriteFrame.length));
-        }
+        petListInfo=User.instance.getPetList()
 
         let go = cc.find("button_primary", this.root);
         let scrollview = cc.find("scrollview", this.root);

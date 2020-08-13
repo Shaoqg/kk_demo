@@ -1,4 +1,5 @@
 import { PetData } from "./PetList";
+import User from "../Gameplay/User";
 
 const {ccclass, property} = cc._decorator;
 
@@ -52,11 +53,17 @@ export default class PetItem extends cc.Component {
     petShadowNode: cc.Node = null;
 
     Init(petData:PetData, touCallBack = null) {
-        let petid =petData.petid;
+        let petid =petData.petId;
         this.setLevelAndName(petid, petData);
-        this.setRare(petData.petRare);
-
-        this.SetElements(petData.petType);
+        let petInfos=User.instance.petInfos;
+        petInfos.forEach((info) => {
+            if (info.petId == petData.petId || true) {
+                this.setRare(info.petRare);
+                this.SetElements(info.petType);
+                return
+            }
+        })
+        
         // this.SetPortrait(petData, petConfig);
 
         this.node.off(cc.Node.EventType.TOUCH_END);
@@ -130,6 +137,7 @@ export default class PetItem extends cc.Component {
     setLevelAndName(petid:string,petData?:PetData){
         this.petShadowNode.active = this.StarLevelLabel.node.getParent().active = !!petData;
         this.petLabelNode.active = !petData;
+        
         this.StarLevelLabel.string = petData ? petData.petLevel.toString():"1";
 
         this.NameLabel.string =petData.petName;
