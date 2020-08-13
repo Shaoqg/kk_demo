@@ -10,7 +10,8 @@ export default class User {
     }
 
 
-    private level = 1;
+    public level = 1;
+    public petNumber = 1;
     private petList = {
         "froge":{
             work:true,
@@ -19,10 +20,12 @@ export default class User {
         }    
     }
 
-    private castalelevel = 1;
-    private coin = 200;
-    private wood = 200;
-    private stone = 200;
+    public level_ship = 1;
+    public level_castle = 1;
+    public coin = 200;
+    public wood = 200;
+    public stone = 200;
+
 
 }
 

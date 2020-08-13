@@ -27,7 +27,7 @@ export class Strike extends ViewConnector {
     timeremain: number = 0;
 
     static async prompt(): Promise<any> {
-        let parentNode = cc.find("Canvas/Main Camera/DialogRoot");
+        let parentNode = cc.find("Canvas/DialogRoot");
         let vc = Strike._instance = await this.loadView<Strike>(parentNode, Strike);
 
         vc.applyData();

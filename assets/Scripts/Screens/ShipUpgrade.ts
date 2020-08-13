@@ -4,9 +4,6 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export class ShipUpgrade extends ViewConnector {
-    @property(cc.Button)
-    closeButton: cc.Button = null;
-
 
     static prefabPath = 'Prefab/ShipUpgrade';
 
@@ -26,7 +23,7 @@ export class ShipUpgrade extends ViewConnector {
     bounss: number[] = [10, 50, 200];
 
     static async prompt(): Promise<any> {
-        let parentNode = cc.find("Canvas/Main Camera/DialogRoot");
+        let parentNode = cc.find("Canvas/DialogRoot");
         let vc = ShipUpgrade._instance = await this.loadView<ShipUpgrade>(parentNode, ShipUpgrade);
 
         vc.applyData();
