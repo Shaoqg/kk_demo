@@ -79,10 +79,7 @@ export default class PetRevealDialog extends ViewConnector {
     }
 
     //debug
-    bullethas = 15;
-    woodhas = 15;
-    foodhas = 15;
-    fuelhas = 15;
+
 
 
 
@@ -91,6 +88,8 @@ export default class PetRevealDialog extends ViewConnector {
             return;
         let that = this;
 
+     
+        
         this.petInfoNode = cc.find("petInfo/content/stats", this.node);
 
         this.petLevelBar = this.node.getChildByName("petLevelBar");
@@ -127,17 +126,14 @@ export default class PetRevealDialog extends ViewConnector {
         data.petLevel++;
         this.info.petNeedUpgrade.forEach((res) => {
             switch (res.Resourse) {
-                case "Bullet":
-                    this.bullethas -= res.number
-                    break;
                 case "Wood":
-                    this.woodhas -= res.number
+                     User.instance.wood -= res.number
                     break;
                 case "Food":
-                    this.foodhas -= res.number
+                    User.instance.food -= res.number
                     break;
-                case "Fuel":
-                    this.fuelhas -= res.number
+                case "Coin":
+                    User.instance.coin -= res.number
                     break;
             }
         });
@@ -175,23 +171,6 @@ export default class PetRevealDialog extends ViewConnector {
     setShowPetInfo(closeCallBack, petData: PetData) {
         this.petData = petData;
 
-        let resourseWood: PetUpdateResourse = {
-            Resourse: "Wood",
-            number: 3,
-        }
-
-        let resourseBullet: PetUpdateResourse = {
-            Resourse: "Bullet",
-            number: 6,
-        }
-        let resourseFuel: PetUpdateResourse = {
-            Resourse: "Fuel",
-            number: 1,
-        }
-        let resourseFood: PetUpdateResourse = {
-            Resourse: "Food",
-            number: 5,
-        }
 
         let petInfos: PetInfo[] = []
        
@@ -260,15 +239,13 @@ export default class PetRevealDialog extends ViewConnector {
     setPetNeedtoUpgrade() {
         let resource = cc.find("resource/resourceLayout", this.petInfoNode);
 
-        let BulletNode = cc.find("Bullet", resource);
         let WoodNode = cc.find("Wood", resource);
         let FoodNode = cc.find("Food", resource);
-        let FuelNode = cc.find("Fuel", resource);
+        let CoinNode = cc.find("Coin", resource);
 
-        BulletNode.active = false;
         WoodNode.active = false;
         FoodNode.active = false;
-        FuelNode.active = false;
+        CoinNode.active = false;
 
         let lesscount = 0;
 
@@ -276,31 +253,24 @@ export default class PetRevealDialog extends ViewConnector {
 
         this.info.petNeedUpgrade.forEach((res) => {
             switch (res.Resourse) {
-                case "Bullet":
-                    BulletNode.active = true;
-                    BulletNode.getChildByName("label").getComponent(cc.Label).string = "Bullet:" + this.bullethas + "/" + res.number;
-                    if (this.bullethas < res.number) {
-                        lesscount++;
-                    }
-                    break;
                 case "Wood":
                     WoodNode.active = true;
-                    WoodNode.getChildByName("label").getComponent(cc.Label).string = "Wood:" + this.woodhas + "/" + res.number;
-                    if (this.woodhas < res.number) {
+                    WoodNode.getChildByName("label").getComponent(cc.Label).string = "Wood:" +  User.instance.wood + "/" + res.number;
+                    if ( User.instance.wood < res.number) {
                         lesscount++;
                     }
                     break;
                 case "Food":
                     FoodNode.active = true;
-                    FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:" + this.foodhas + "/" + res.number;
-                    if (this.foodhas < res.number) {
+                    FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:" + User.instance.food + "/" + res.number;
+                    if (User.instance.food < res.number) {
                         lesscount++;
                     }
                     break;
-                case "Fuel":
-                    FuelNode.active = true;
-                    FuelNode.getChildByName("label").getComponent(cc.Label).string = "Fuel:" + this.fuelhas + "/" + res.number;
-                    if (this.fuelhas < res.number) {
+                case "Coin":
+                    CoinNode.active = true;
+                    CoinNode.getChildByName("label").getComponent(cc.Label).string = "Fuel:" + User.instance.coin + "/" + res.number;
+                    if (User.instance.coin < res.number) {
                         lesscount++;
                     }
                     break;

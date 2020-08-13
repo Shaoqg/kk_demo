@@ -39,6 +39,7 @@ export default class User {
     public coin = 200000;
     public wood = 200;
     public stone = 200;
+    public food = 200;
 
     public getPetList() {
         return this.petList;

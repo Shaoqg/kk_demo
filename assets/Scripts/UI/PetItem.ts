@@ -137,7 +137,6 @@ export default class PetItem extends cc.Component {
     setLevelAndName(petid:string,petData?:PetData){
         this.petShadowNode.active = this.StarLevelLabel.node.getParent().active = !!petData;
         this.petLabelNode.active = !petData;
-        console.log(petData);
         
         this.StarLevelLabel.string = petData ? petData.petLevel.toString():"1";
 

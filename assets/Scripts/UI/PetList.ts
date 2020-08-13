@@ -43,7 +43,6 @@ export default class PetList extends cc.Component {
         let applyData = (node: cc.Node, index: number) => {
 
             let petData = petConfigs[index];
-            console.log(petData);
             
             let y = - Math.floor(index / 4) * (node.height + this.spacingY) - this.Top - node.height / 2;
             let x = (index % 4) * (node.width + this.spacingX) + startX + node.width / 2;
