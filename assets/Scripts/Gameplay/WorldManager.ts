@@ -3,6 +3,7 @@ import { CastleScreen } from "../Screens/CastleScreen";
 import { StateManager } from "./State/StateManager";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import { Strike } from "../Screens/Strike";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,6 +23,9 @@ export default class WorldManager extends cc.Component {
         StateManager.instance.changeState("IslandState");
 
         this.init();
+        this.initCastle();
+
+        EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
     }
 
     init() {
@@ -50,9 +54,9 @@ export default class WorldManager extends cc.Component {
     }
 
     initCastle() {
-        let level = User.instance.level;
+        let level = User.instance.level_castle;
 
-        let castleNodes = cc.find("Canvas/world/island/islandUI/islandNode/island/mapblocks/build", this.node);
+        let castleNodes = cc.find("world/island/islandUI/islandNode/island/mapblocks/build", this.node);
         castleNodes.children.forEach((node, i)=>{
                 node.active = (i == level-1);
         })
@@ -82,6 +86,11 @@ export default class WorldManager extends cc.Component {
     onclickAdventure() {
         this.switchShipState(false);
         Strike.prompt();
+    }
+
+
+    onLevelUp(){
+        this.initCastle();
     }
 
 }

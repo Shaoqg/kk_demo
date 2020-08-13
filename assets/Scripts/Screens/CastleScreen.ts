@@ -2,6 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
 import { StateManager } from "../Gameplay/State/StateManager";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -38,7 +39,7 @@ export class CastleScreen extends ViewConnector {
     }
 
     applyData() {
-
+        this.Level = User.instance.level_castle;
         let underlay = cc.find("underlay", this.node);
         this.root = cc.find("content", this.node);
         this.adjustGameInterface();
@@ -150,7 +151,9 @@ export class CastleScreen extends ViewConnector {
                     break;
             }
         }
-
+        
+        User.instance.level_castle +=1;
+        EventEmitter.emitEvent(EventType.LEVEL_UP_CASTLE);
         this.close(null);
     }
 
@@ -174,7 +177,7 @@ export class CastleScreen extends ViewConnector {
             {
                 coin:100,
                 wood:5,
-                pet:2,
+                pet:1,
                 ship:1,
             },
             {
