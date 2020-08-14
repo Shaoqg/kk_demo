@@ -19,6 +19,9 @@ export default class WorldManager extends cc.Component {
     btn_adventure:cc.Node = null;
     btn_barn: cc.Node = null;
     coin_label: cc.Node;
+    woodNode: cc.Node;
+    stoneNode: cc.Node;
+    foodNode: cc.Node;
 
 
 
@@ -27,7 +30,8 @@ export default class WorldManager extends cc.Component {
 
         this.init();
         this.initCastle();
-        this.updateCoinLabel();
+        this.updateAllResource();
+        EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
 
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
     }
@@ -60,6 +64,12 @@ export default class WorldManager extends cc.Component {
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickPet();
         })
+
+        this.woodNode = cc.find("DialogRoot/top_right/wood", this.node)
+        this.stoneNode = cc.find("DialogRoot/top_right/stone", this.node)
+        this.foodNode = cc.find("DialogRoot/top_right/food", this.node)
+
+        this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
 
     }
 
@@ -101,8 +111,8 @@ export default class WorldManager extends cc.Component {
 
     onLevelUp(){
         this.initCastle();
-        console.log(User._instance.coin);
-        this.updateCoinLabel()
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+
     }
 
 	onclickPet() {
@@ -110,8 +120,26 @@ export default class WorldManager extends cc.Component {
         StickerbookScreen.prompt();
     }
 
+    updateAllResource(){
+        this.updateCoinLabel();
+        this.updateWoodLabel();
+        this.updateStoneLabel();
+        this.updateFoodLabel()
+    }
+
     updateCoinLabel(){
-        this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
         this.coin_label.getComponent(cc.Label).string=User._instance.coin.toString();
+    }
+
+    updateWoodLabel(){
+        this.woodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.wood.toString();
+    }
+
+    updateStoneLabel(){
+        this.stoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.stone.toString();
+    }
+
+    updateFoodLabel(){
+        this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.food.toString();
     }
 }

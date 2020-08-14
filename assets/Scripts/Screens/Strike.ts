@@ -3,8 +3,9 @@ import ScreenSize from '../Tools/ScreenSize';
 import { StrikeReward } from "./StrikeReward";
 import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
-import { PetInfo } from "../UI/PetRevealDialog";
+import { PetInfo, petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
+import { getPetConfigById } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -31,6 +32,7 @@ export class Strike extends ViewConnector {
     timeremain: number = 0;
     seats: boolean[]=[];
     seatNum: number;
+    boundsAll: petBouns[]=[{BounsName:"Coin",BounsNum:0},{BounsName:"Wood",BounsNum:0},{BounsName:"Stone",BounsNum:0}];
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -168,8 +170,10 @@ export class Strike extends ViewConnector {
         goLabel.getComponent(cc.Label).string = "Go Collect!";
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
-            this.close(undefined);
-            StrikeReward.prompt();
+            this.boundsAll.forEach((bands) => {
+                bands.BounsNum += User.instance.bounss[User.instance.ship_bouns_level];
+            })
+            StrikeReward.prompt(this.boundsAll);
         });
     }
 
@@ -180,11 +184,11 @@ export class Strike extends ViewConnector {
                 petinfo=info;
             }
         })
-
+        let petconfig=getPetConfigById(petinfo.petId);
         let pet = cc.instantiate(this.pet);
         let list = cc.find("scrollview/list", this.root);
         let petImage = pet.getChildByName("petimage").getComponent(cc.Sprite);
-        petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petinfo.petSpriteFrameName);
+        petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petconfig.art_asset);
         // petImage.spriteFrame = this.SpriteFrame[petListInfo];
 
         list.addChild(pet);
@@ -228,11 +232,15 @@ export class Strike extends ViewConnector {
 
         petImage.spriteFrame = petNode.getChildByName("petimage").getComponent(cc.Sprite).spriteFrame;
         petImage.node.active = true;
-        bonusLabel.string=petinfo.petBouns.BounsName+"\n+"+petinfo.petBouns.BounsNum+"%";
+        bonusLabel.string=petinfo.petBouns.BounsName+"\n+"+(petinfo.petBouns.BounsNum*petData.petLevel)+"%";
 
-        // bonusLabel.string = bonusLabel.string.replace("Wood", this.bonusName[petListInfo]);
-        // bonusLabel.string = bonusLabel.string.replace("10", this.bonusNum[petListInfo]);
         bonusLabel.node.active = true;
+
+        this.boundsAll.forEach((bands)=>{
+            if(bands.BounsName==petinfo.petBouns.BounsName){
+                bands.BounsNum+=petinfo.petBouns.BounsNum*petData.petLevel;
+            }
+        });
 
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
         petSeat.once(cc.Node.EventType.TOUCH_END, () => {
@@ -249,6 +257,12 @@ export class Strike extends ViewConnector {
                 go_gry.active = true;
                 this.boatReady = false;
             }
+
+            this.boundsAll.forEach((bands)=>{
+                if(bands.BounsName==petinfo.petBouns.BounsName){
+                    bands.BounsNum-=petinfo.petBouns.BounsNum*petData.petLevel;
+                }
+            });
             this.seats[seatnumber-1]=false;
             this.petReady--;
             shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;

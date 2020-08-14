@@ -3,6 +3,8 @@ import ScreenSize from "../Tools/ScreenSize";
 import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
+import { getPetConfigById, Rarity, PetType } from "../Config";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
 
@@ -10,12 +12,8 @@ export type PetInfo = {
     petId: string,
     petName: string;
     petinfo: string,
-    petType: string [],
-    petRare: string ,
     petBouns:petBouns,
-    petBounsNum:number[],
     petNeedUpgrade: PetUpdateResourse[]
-    petSpriteFrameName:string;
 }
 
 export type PetUpdateResourse = {
@@ -68,6 +66,7 @@ export default class PetRevealDialog extends ViewConnector {
 
     UpgradeButton: cc.Node;
     info: PetInfo;
+    petconfig:PetType;
 
     static async prompt(closeCallBack: Function = null, info: any = null, showShare: boolean = false): Promise<void> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -127,7 +126,7 @@ export default class PetRevealDialog extends ViewConnector {
     }
 
     async setPetSpriteFrame() {
-        this.petNode.getComponent(cc.Sprite).spriteFrame = await KKLoader.loadSprite("Pets/" + this.info.petSpriteFrameName);
+        this.petNode.getComponent(cc.Sprite).spriteFrame = await KKLoader.loadSprite("Pets/" + this.petconfig.art_asset);
     }
 
     upgradePet(data: PetData) {
@@ -145,7 +144,7 @@ export default class PetRevealDialog extends ViewConnector {
                     break;
             }
         });
-
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         this.refresh(data)
     }
     refresh(data) {
@@ -184,14 +183,13 @@ export default class PetRevealDialog extends ViewConnector {
        
         petInfos=User.instance.petInfos;
         petInfos.forEach((info) => {
-            if (info.petId == petData.petId || true) {
+            if (info.petId == petData.petId) {
                 this.info=info
+                this.petconfig=getPetConfigById(this.info.petId);
                 this.init(petData);
                 return;
             }
-        })
-
-
+        });
     }
 
     setPetInfoName(info: PetData) {
@@ -210,7 +208,7 @@ export default class PetRevealDialog extends ViewConnector {
     }
     setPetRarity(){
         let petRare = cc.find("rarity/label", this.petInfoNode).getComponent(cc.Label);
-        petRare.string=this.info.petRare;
+        petRare.string=this.petconfig.rarity;
     }
 
     setPetType() {
@@ -225,22 +223,20 @@ export default class PetRevealDialog extends ViewConnector {
         snackNode.active = false;
 
         // element icons
-        this.info.petType.forEach(element => {
-            switch (element) {
-                case "nature":
-                    natureNode.active = true;
-                    break;
-                case "fire":
-                    fireNode.active = true;
-                    break;
-                case "water":
-                    waterNode.active = true;
-                    break;
-                case "snack":
-                    snackNode.active = true;
-                    break;
-            }
-        });
+        switch (this.petconfig.elements) {
+            case "nature":
+                natureNode.active = true;
+                break;
+            case "fire":
+                fireNode.active = true;
+                break;
+            case "water":
+                waterNode.active = true;
+                break;
+            case "snack":
+                snackNode.active = true;
+                break;
+        };
 
     }
 
