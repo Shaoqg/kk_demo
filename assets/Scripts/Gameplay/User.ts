@@ -13,7 +13,6 @@ export default class User {
 
 
     public level = 1;
-    public petNumber = 1;
     private petList: PetData[] = [{
         // work:true,
         petId: "1",
@@ -56,7 +55,9 @@ export default class User {
         petLevel: 1,
         petName: "Froge"
     },
-]
+    ]
+    public petNumber = this.petList.length;
+
 
     public petInfos: PetInfo []= [{
         petId: "1",

@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "31064ef3-bf40-4874-ae3e-44d7a52774ef",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "moby_esq_hawaiian": {
+      "ver": "1.0.4",
+      "uuid": "e75551a5-894f-4f2d-be4c-e6c65784e525",
+      "rawTextureUuid": "31064ef3-bf40-4874-ae3e-44d7a52774ef",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": -1.5,
+      "offsetY": -2.5,
+      "trimX": 2,
+      "trimY": 14,
+      "width": 143,
+      "height": 127,
+      "rawWidth": 150,
+      "rawHeight": 150,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

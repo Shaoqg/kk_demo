@@ -1,5 +1,9 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import User from "../Gameplay/User";
+import { ConfigSet } from "../Util/ConfigSet";
+import { PetConfig, PetType } from "../Config";
+import { KKLoader } from "../Util/KKLoader";
 
 
 const { ccclass, property } = cc._decorator;
@@ -112,6 +116,75 @@ export default class StoreScreen extends ViewConnector {
     }
 
     _loadStore(storeName:string, storeNode:cc.Node) {
+    }
+
+    initPetStore(){
+        let petInfo = cc.find("", this.node);
+
+
+
+    }
+
+    addPet() {
+        let pets = this.getPet();
+
+        let petListContent = cc.find("root/Pet/content/petList/content", this.node);
+        let item = cc.find("petItem", petListContent);
+
+        pets.forEach((pet)=> {
+            let node = cc.instantiate(item);
+            node.name = pet.petId;
+            let sf = KKLoader.loadSprite("Pets/" + pet.art_asset).then((sf)=>{
+
+            })
+
+
+
+        })
+    }
+
+    getPet(){
+        let level = User.instance.level_castle;
+
+        let config =[];
+        PetConfig.forEach(element => {
+            switch (level) {
+                case 1:
+                    if (element.rarity == "common") {
+                        config.push(element);
+                    }    
+                    break;
+                case 2:
+                    if (element.rarity == "common" || element.rarity == "uncommon") {
+                        config.push(element);
+                    }      
+                    break;                
+                case 3:
+                    config.push(element);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        let id = [
+            [ "common", "common" ,"common" ,"common"],
+            [ "common", "common" ,"common" ,"common"],
+            [ "common", "common" ,"common" ,"uncommon"],
+            [ "common", "common" ,"uncommon" ,"rare"],
+        ]
+
+        let newPets = id[level] || id[3];
+        let newPetConfig:PetType[] = [];
+        while(newPets.length <=0) {
+            let i = Math.floor(Math.random()* PetConfig.length);
+            if (config[i].rarity == newPets[0]) {
+                newPetConfig.push(PetConfig[i]);
+                PetConfig.slice(i,1)
+                newPets.shift();
+            }
+        }
+        return newPetConfig;
     }
 
 

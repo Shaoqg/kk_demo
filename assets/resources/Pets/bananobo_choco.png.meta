@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "bd87026e-8d9c-44cf-8041-4e5e185cbf7e",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "bananobo_choco": {
+      "ver": "1.0.4",
+      "uuid": "a636fa26-65b3-424c-8e26-281a4aeadf26",
+      "rawTextureUuid": "bd87026e-8d9c-44cf-8041-4e5e185cbf7e",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0.5,
+      "offsetY": -1,
+      "trimX": 8,
+      "trimY": 2,
+      "width": 135,
+      "height": 148,
+      "rawWidth": 150,
+      "rawHeight": 150,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

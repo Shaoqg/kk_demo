@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "7646439b-391b-40a1-889b-240dcfab4751",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "pizzaface_pesto": {
+      "ver": "1.0.4",
+      "uuid": "d4f7b60c-0812-4327-816a-67d7fbcdae43",
+      "rawTextureUuid": "7646439b-391b-40a1-889b-240dcfab4751",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 3.5,
+      "offsetY": -0.5,
+      "trimX": 27,
+      "trimY": 3,
+      "width": 103,
+      "height": 145,
+      "rawWidth": 150,
+      "rawHeight": 150,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

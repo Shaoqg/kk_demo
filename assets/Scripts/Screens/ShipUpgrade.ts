@@ -142,7 +142,7 @@ export class ShipUpgrade extends ViewConnector {
     }
 
     updateShipLevel() {
-        User.instance.level = User.instance.ship_speed_level + User.instance.ship_capacity_level + User.instance.ship_bouns_level;
+        User.instance.level = User.instance.ship_speed_level + User.instance.ship_capacity_level + User.instance.ship_bouns_level + 1 ;
         this.getShipInfo("level").string = "Level：" + User.instance.level.toString();
     }
 
