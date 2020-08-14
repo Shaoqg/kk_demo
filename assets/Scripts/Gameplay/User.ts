@@ -192,6 +192,7 @@ export default class User {
             this.wood = data["wood"];
             this.petList = data["petList"];
 
+            this.petNumber = this.petList.length
         }
         this.isLoaded = true;
     }
