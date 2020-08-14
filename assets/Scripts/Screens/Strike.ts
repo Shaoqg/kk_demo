@@ -100,7 +100,7 @@ export class Strike extends ViewConnector {
             list.active = false;
             scrollview.getComponent(cc.ScrollView).content = battleinfo;
             battleinfo.active = true;
-            subtitleLabel.string = "Strike Log"
+            subtitleLabel.string = "Adventure Log"
 
             let go_gry = cc.find("button_primary/button_gry", this.root);
             let goLabel = cc.find("button_primary/goLabel", this.root);

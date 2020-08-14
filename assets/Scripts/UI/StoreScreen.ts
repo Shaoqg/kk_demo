@@ -347,11 +347,11 @@ export default class StoreScreen extends ViewConnector {
     getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
         switch (petType.rarity) {
             case Rarity.common:
-                return {coin:200,food:20, magic_stone:1};
+                return {coin:200,food:10, magic_stone:0};
             case Rarity.uncommon:
-                return {coin:200, food:20};
+                return {coin:500, food:20, magic_stone:0};
             case Rarity.rare:
-                return {coin:200, food:20, magic_stone:1};
+                return {coin:1000, food:20, magic_stone:1};
         }
         return {coin:200};
     }
