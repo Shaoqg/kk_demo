@@ -1,5 +1,6 @@
 import { PetData } from "./PetList";
 import User from "../Gameplay/User";
+import { KKLoader } from "../Util/KKLoader";
 
 const {ccclass, property} = cc._decorator;
 
@@ -60,6 +61,7 @@ export default class PetItem extends cc.Component {
             if (info.petId == petData.petId || true) {
                 this.setRare(info.petRare);
                 this.SetElements(info.petType);
+                this.setSpriteFrame(info.petSpriteFrameName)
                 return
             }
         })
@@ -69,6 +71,12 @@ export default class PetItem extends cc.Component {
         this.node.off(cc.Node.EventType.TOUCH_END);
         this.node.off("click");
         touCallBack && this.node.on(cc.Node.EventType.TOUCH_END, touCallBack);
+    }
+    async setSpriteFrame(petSpriteFrameName: string) {
+        let petSf = await KKLoader.loadSprite("Pets/" + petSpriteFrameName)
+        if (petSf) {
+            this.PetImage.spriteFrame = petSf;
+        }
     }
 
     natureNode:cc.Node = null;
