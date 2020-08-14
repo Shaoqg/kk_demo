@@ -1,4 +1,5 @@
 import StoreScreen from "./StoreScreen";
+import User from "../Gameplay/User";
 
 
 const {ccclass, property} = cc._decorator;
@@ -26,6 +27,10 @@ export default class UIManager extends cc.Component {
         this.btn_dailay.on(cc.Node.EventType.TOUCH_END, this.onclick_dailay.bind(this));
         this.btn_shop.on(cc.Node.EventType.TOUCH_END, this.onclick_shop.bind(this));
 
+        let btn_reset = cc.find("top_right/btn_reset", this.node);
+        btn_reset.on(cc.Node.EventType.TOUCH_END, this.onclick_reset.bind(this));
+
+
     }
 
     onclick_barn(){
@@ -38,6 +43,10 @@ export default class UIManager extends cc.Component {
 
     onclick_dailay(){
 
+    }
+
+    onclick_reset(){
+        User.instance.resetUse();
     }
 
 

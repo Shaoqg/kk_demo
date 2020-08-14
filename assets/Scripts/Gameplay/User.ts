@@ -198,6 +198,8 @@ export default class User {
 
     public resetUse(){
         cc.sys.localStorage.setItem("KK_DEMO","");
+        cc.director.pause(); // try to prevent more saves; PET-1128
+        location.reload();
     }
 }
 
