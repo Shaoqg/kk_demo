@@ -70,9 +70,9 @@ export class CastleScreen extends ViewConnector {
 
         let str = [
             "",
-            "The shop can recruit Common pets",
+            "The shop can recruit common pets",
+            "The shop can recruit Uncommon pets",
             "The shop can recruit rare pets",
-            "The shop can recruit Legendary pets",
         ];
         label_intr.string = str[User.instance.level_castle > 3? 3: User.instance.level_castle  ]
     }

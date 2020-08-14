@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import User from "../Gameplay/User";
 import { ConfigSet } from "../Util/ConfigSet";
-import { PetConfig, PetType, getPetIntroByElements, Rarity } from "../Config";
+import { PetConfig, PetType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 
 
@@ -50,6 +50,11 @@ export default class StoreScreen extends ViewConnector {
         this.AdjustGameInterface();
 
         this.initPetStore();
+
+        let close = cc.find("root/back", this.node);
+        close.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.close(null);
+        });
     }
 
     readonly width = 750;
@@ -125,9 +130,14 @@ export default class StoreScreen extends ViewConnector {
 
     }
 
-    currentNode = {};
+    currentNodes = {};
+    currentPetsType = [];
+    btn_recruit: cc.Node = null;
     initPet() {
-        let pets = this.getPet();
+        let pets = this.currentPetsType= this.getPet();
+
+        this.btn_recruit = cc.find("root/Pet/content/btn_recruit", this.node);
+        this.btn_recruit.on(cc.Node.EventType.TOUCH_END, this.onclickBuy.bind(this));
 
         let petListContent = cc.find("root/Pet/content/petList/content", this.node);
         let item = cc.find("petItem", petListContent);
@@ -147,18 +157,18 @@ export default class StoreScreen extends ViewConnector {
             let colors = {"common":cc.color(240,255,255),  "uncommon": cc.color(152,0,253), "rare": cc.color(255,255,0)}
             bgNode.color = colors[pet.rarity];
 
-            this.currentNode[pet.petId] = node;
-
+            this.currentNodes[pet.petId] = node;
             node.on(cc.Node.EventType.TOUCH_END, ()=>{
                 this.onclickPet(pet, node);
             });
 
         })
 
-        this.onclickPet(pets[0], this.currentNode[pets[0].petId]);
+        this.onclickPet(pets[0], this.currentNodes[pets[0].petId]);
     }
 
     currentSelectNode:cc.Node = null;
+    currentSelectPet:PetType = null;
     onclickPet(petType:PetType, node:cc.Node){
         if (this.currentSelectNode) {
             if (this.currentSelectNode.name == petType.petId) {
@@ -169,6 +179,11 @@ export default class StoreScreen extends ViewConnector {
             oldSelectNode.active = false;
         }
 
+        if (!petType || !node) {
+            this.updatePetInfo(null);
+            return;
+        }
+        this.currentSelectPet = petType;
         this.currentSelectNode = node;
         let select = node.getChildByName("select");
 
@@ -227,6 +242,10 @@ export default class StoreScreen extends ViewConnector {
     }
 
     updatePetInfo(pet:PetType) {
+        if (!pet) {
+            
+        }
+
         let content = cc.find("root/Pet/content", this.node);
         let petSprite = cc.find("petInfo/petPic", content);
 
@@ -238,7 +257,12 @@ export default class StoreScreen extends ViewConnector {
 
         //set skill
         let label_skill = cc.find("petInfo/skill/label_intro", content).getComponent(cc.Label);
-        label_skill.string = getPetIntroByElements(pet.elements as string);
+        label_skill.string = getPetIntroByElements(pet);
+
+        //set skill
+        let label_skill2 = cc.find("petInfo/skill2/label_intro", content).getComponent(cc.Label);
+        label_skill2.string = pet.rarity == Rarity.rare?"I have special skills, but I won’t tell you"
+        :"I have no special skills"
 
         //set name
         let label_name = cc.find("petInfo/stats/label_petName", content).getComponent(cc.Label);
@@ -250,7 +274,7 @@ export default class StoreScreen extends ViewConnector {
         //set cost
         let costConfig = this.getCost(pet);
         let list = cc.find("list", content)
-        let setCostItem = (name:string, str:string) => {
+        let setCostItem = (name:string, str:string, ok?:boolean) => {
             let costItem = list.getChildByName(name);
             if (str) {
                 costItem.active = true;
@@ -258,30 +282,76 @@ export default class StoreScreen extends ViewConnector {
             }else{
                 costItem.active = false;
             }
+
+            costItem.getChildByName("ok").getComponent(cc.Button).interactable = !!ok;
         }
-        setCostItem("coin", "500");
+        let coinEnough:boolean = true,foodEnough:boolean = true,magic_stoneEnough:boolean = true
+        coinEnough = User.instance.coin >= costConfig.coin;
+        setCostItem("coin", "500", coinEnough);
         setCostItem("food", null);
         setCostItem("stone", null);
         if (costConfig.food) {
-            setCostItem("food", "food\n" + costConfig.food);
+            foodEnough =  User.instance.food >= costConfig.food;
+            setCostItem("food", "food\n" + costConfig.food, foodEnough);
         }
-        if (costConfig.stone) {
-            setCostItem("stone", "magic rock\n" + costConfig.stone);
+        if (costConfig.magic_stone) {
+            magic_stoneEnough = User.instance.magic_stone >= costConfig.magic_stone;
+            setCostItem("stone", "magic rock\n" + costConfig.magic_stone, magic_stoneEnough);
         }
 
         //set button
-        
+        this.btn_recruit.getComponent(cc.Button).interactable = coinEnough && foodEnough && magic_stoneEnough;
 
     }
+    
+    onclickBuy() {
+        let button = this.btn_recruit.getComponent(cc.Button);
+        if (!button.interactable || !this.currentSelectPet) {
+            return;
+        }
 
-    getCost(petType: PetType):{coin:number, food?:number, stone?:number}{
+        let costConfig = this.getCost(this.currentSelectPet);
+        if (User.instance.coin >= costConfig.coin &&
+            User.instance.food >= costConfig.food &&
+            User.instance.magic_stone >= costConfig.magic_stone
+            ) {
+
+                let isBuy = User.instance.addPet(this.currentSelectPet);
+                if (isBuy) {
+                    User.instance.coin -= costConfig.coin;
+                    User.instance.food -= costConfig.food;
+                    User.instance.magic_stone -= costConfig.magic_stone;
+
+                    this.currentSelectNode.destroy();
+
+
+                    let content = cc.find("root/Pet/content/petList/content", this.node);
+
+                    let petId = "";
+                    for (let i = 0; i < content.children.length; i++) {
+                        if (content.children[i].name != "petItem" && content.children[i].active == true) {
+                            petId = content.children[i].name;
+                            break;
+                        }
+                    }
+                    if (content.children.length>0 && petId != "") {
+                        let petType = getPetConfigById(petId);
+                        this.onclickPet(petType, this.currentNodes[petType.petId]);
+                    }else{
+                        this.onclickPet(null, null);
+                    }
+                }
+            }
+    }
+
+    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
         switch (petType.rarity) {
             case Rarity.common:
-                return {coin:200,food:20, stone:1};
+                return {coin:200,food:20, magic_stone:1};
             case Rarity.uncommon:
                 return {coin:200, food:20};
             case Rarity.rare:
-                return {coin:200, food:20, stone:1};
+                return {coin:200, food:20, magic_stone:1};
         }
         return {coin:200};
     }
@@ -333,7 +403,8 @@ export default class StoreScreen extends ViewConnector {
 
 
     close(results:any) {
-        this.node.active = false;
+        StoreScreen.instance = null;
+        this.node.destroy();
     }
 
     static async prompt(tab:string = StoreScreen.StoreType.Egg): Promise<void> {

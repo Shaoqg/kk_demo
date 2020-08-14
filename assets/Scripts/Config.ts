@@ -7,19 +7,20 @@ export function getPetConfigById(id){
     return null;
 }
 
-export function getPetIntroByElements(elements){
-    switch (elements) {
+export function getPetIntroByElements(pet:PetType){
+    switch (pet.elements) {
         case Element.nature:
-                return "Can get more food"
+                return pet.rarity == Rarity.common ? "Can get little food bonus": "Can get more food bonus";
         case Element.fire:
-                return "Can get more wood"  
+                return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
         case Element.water:
-                return "Can get more wood"
+                return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
         case Element.snack:
-                return "Can get more stone"
+                return pet.rarity == Rarity.common ? "Can get little stone bonus":"Can get more stone bonus"
         default:
             break;
     }
+
     return "";
 }
 

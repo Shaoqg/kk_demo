@@ -1,5 +1,6 @@
 import { PetData } from "../UI/PetList";
 import { PetInfo } from "../UI/PetRevealDialog";
+import { PetType } from "../Config";
 
 export default class User {
 
@@ -18,42 +19,6 @@ export default class User {
         petId: "froom",
         petLevel: 1,
         petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
     },
     ]
     public petNumber = this.petList.length;
@@ -124,6 +89,28 @@ export default class User {
     public getPetList() {
         return this.petList;
     }
+
+    public addPet(pet:PetType) {
+        if (pet) {
+            let idAdd = true;
+            this.petList.forEach((petData)=>{
+                if (petData.petId == pet.petId) {
+                    idAdd = false;
+                }
+            })
+            if (idAdd) {
+                this.petList.push({
+                    petId:pet.petId,
+                    petName:pet.petId,
+                    petLevel:1
+                })
+            }
+            return idAdd;
+        }
+        return false;
+    }
+
+    public magic_stone = 1;
 
 }
 
