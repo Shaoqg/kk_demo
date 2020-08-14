@@ -148,6 +148,7 @@ export default class PetRevealDialog extends ViewConnector {
             User.instance.magic_stone -= cost.magic_stone;
         }
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+        EventEmitter.emitEvent(EventType.STAR_INCREASE);
         this.refresh(data)
     }
     refresh(data) {

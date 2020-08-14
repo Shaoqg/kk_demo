@@ -20,6 +20,7 @@ export default class WorldManager extends cc.Component {
     btn_adventure:cc.Node = null;
     btn_barn: cc.Node = null;
     coin_label: cc.Node;
+    star_label: cc.Node;
     woodNode: cc.Node;
     stoneNode: cc.Node;
     foodNode: cc.Node;
@@ -38,7 +39,7 @@ export default class WorldManager extends cc.Component {
         this.initCastle();
         this.updateAllResource();
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
-
+        EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
 
     }
@@ -83,6 +84,7 @@ export default class WorldManager extends cc.Component {
         this.magicStoneNode = cc.find("DialogRoot/top_right/magic", this.node)
 
         this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
+        this.star_label=cc.find("DialogRoot/top_left/animationNode/heart/button_background/desc",this.node);
 
     }
 
@@ -139,6 +141,11 @@ export default class WorldManager extends cc.Component {
     onclickDaily(){
         this.switchShipState(false);
         TaskScreen.prompt();
+    }
+
+    starIncrease() {
+        User.instance.star++;
+        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
     }
 
     updateAllResource(){

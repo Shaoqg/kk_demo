@@ -154,6 +154,7 @@ export class CastleScreen extends ViewConnector {
         
         User.instance.level_castle +=1;
         EventEmitter.emitEvent(EventType.LEVEL_UP_CASTLE);
+        EventEmitter.emitEvent(EventType.STAR_INCREASE);
         this.close(null);
     }
 
