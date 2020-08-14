@@ -15,61 +15,65 @@ export default class User {
     public level = 1;
     private petList: PetData[] = [{
         // work:true,
-        petId: "1",
+        petId: "froom",
         petLevel: 1,
         petName: "Froge"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "froom",
         petLevel: 1,
         petName: "Froge"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "froom",
         petLevel: 1,
         petName: "Froge"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "froom",
         petLevel: 1,
         petName: "Froge"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "king_parrot",
         petLevel: 1,
-        petName: "Froge"
+        petName: "king parrot"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "king_parrot",
         petLevel: 1,
-        petName: "Froge"
+        petName: "king parrot"
     },
     {
         // work:true,
-        petId: "1",
+        petId: "king_parrot",
         petLevel: 1,
-        petName: "Froge"
+        petName: "king parrot"
     },
     ]
     public petNumber = this.petList.length;
 
 
     public petInfos: PetInfo []= [{
-        petId: "1",
+        petId: "froom",
         petName: "Froge",
         petinfo: "it is a frog",
-        petType: ["nature", "water"],
-        petRare: "Rare",
         petBouns:{BounsName:"Coin",BounsNum:10},
-        petBounsNum:[10,20],
         petNeedUpgrade: [{Resourse: "Coin",number: 10}, {Resourse: "Wood",number: 10}, {Resourse: "Food",number: 10}],
-        petSpriteFrameName:"froom"
-    }]
+    },
+    {
+        petId: "king_parrot",
+        petName: "king parrot",
+        petinfo: "it is a King",
+        petBouns:{BounsName:"Stone",BounsNum:15},
+        petNeedUpgrade: [{Resourse: "Coin",number: 10}, {Resourse: "Wood",number: 10}, {Resourse: "Food",number: 10}],
+    },
+]
 
     public speeds: number[] = [24, 30, 42];
     public capacitys: number[] = [1, 3, 5];

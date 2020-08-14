@@ -1,6 +1,7 @@
 import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
+import { getPetConfigById, Rarity } from "../Config";
 
 const {ccclass, property} = cc._decorator;
 
@@ -58,10 +59,11 @@ export default class PetItem extends cc.Component {
         this.setLevelAndName(petid, petData);
         let petInfos=User.instance.petInfos;
         petInfos.forEach((info) => {
-            if (info.petId == petData.petId || true) {
-                this.setRare(info.petRare);
-                this.SetElements(info.petType);
-                this.setSpriteFrame(info.petSpriteFrameName)
+            if (info.petId == petData.petId) {
+                let config=getPetConfigById(info.petId);
+                this.setRare(config.rarity);
+                this.SetElements(config.elements);
+                this.setSpriteFrame(config.art_asset)
                 return
             }
         })
@@ -83,14 +85,11 @@ export default class PetItem extends cc.Component {
     fireNode:cc.Node = null;
     waterNode:cc.Node = null;
     snackNode:cc.Node = null;
-    SetElements(elements:string[]){ 
+    SetElements(element:Rarity| string){ 
         // background graphics
-        if(elements.length > 1) {
-            this.SetDualBackGround(elements);
-        }
-        else {
-            this.SetSingleBackground(elements[0]);
-        }
+        
+        this.SetSingleBackground(element);
+        
 
         if (!this.natureNode) {
             this.natureNode = cc.find("type_land", this.TypesNode);
@@ -104,25 +103,24 @@ export default class PetItem extends cc.Component {
         this.snackNode.active = false;
 
         // element icons
-        elements.forEach(element => {
-            switch(element){
-                case "nature":
-                    this.natureNode.active = true;
+
+        switch (element) {
+            case "nature":
+                this.natureNode.active = true;
                 break;
-                case "fire":
-                    this.fireNode.active = true;
+            case "fire":
+                this.fireNode.active = true;
                 break;
-                case "water":
-                    this.waterNode.active = true;
+            case "water":
+                this.waterNode.active = true;
                 break;
-                case "snack":
-                    this.snackNode.active = true;
+            case "snack":
+                this.snackNode.active = true;
                 break;
-            }
-        });
+        }
     }
 
-    SetSingleBackground(element:string){
+    SetSingleBackground(element:Rarity| string){
         let bp = 1;
         this.BackgroundAlt.enabled = false;
 
