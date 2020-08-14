@@ -154,8 +154,6 @@ export class ShipUpgrade extends ViewConnector {
             User.instance.coin -= cost.coin;
             User.instance.wood -= cost.wood;
             User.instance.stone -= cost.stone;
-            EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
-            EventEmitter.emitEvent(EventType.STAR_INCREASE);
         } else {
             return;
         }
@@ -174,7 +172,8 @@ export class ShipUpgrade extends ViewConnector {
                 break;
         }
         this.updateShipLevel();
-        
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+        EventEmitter.emitEvent(EventType.STAR_INCREASE);
     }
 
     checkMaxLevel(part: string, upgrade: cc.Node) {

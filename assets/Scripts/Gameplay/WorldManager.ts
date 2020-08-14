@@ -145,7 +145,7 @@ export default class WorldManager extends cc.Component {
 
     starIncrease() {
         User.instance.star++;
-        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+        this.updateStar()
         User.instance.saveUse();
     }
 
@@ -155,7 +155,7 @@ export default class WorldManager extends cc.Component {
         this.updateStoneLabel();
         this.updateFoodLabel()
         this.updateMagicLabel()
-
+        this.updateStar()
         User.instance.saveUse();
     }
 
@@ -177,5 +177,9 @@ export default class WorldManager extends cc.Component {
 
     updateMagicLabel(){
         this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.magic_stone.toString();
+    }
+
+    updateStar(){
+        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
     }
 }
