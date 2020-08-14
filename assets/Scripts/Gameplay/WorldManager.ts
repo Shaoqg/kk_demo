@@ -5,6 +5,7 @@ import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import { Strike } from "../Screens/Strike";
 import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import TaskScreen from "../UI/TaskScreen";
 
 const {ccclass, property} = cc._decorator;
 
@@ -22,6 +23,7 @@ export default class WorldManager extends cc.Component {
     woodNode: cc.Node;
     stoneNode: cc.Node;
     foodNode: cc.Node;
+    btn_dailay: cc.Node;
 
 
 
@@ -63,6 +65,11 @@ export default class WorldManager extends cc.Component {
         this.btn_barn = cc.find("DialogRoot/top_left/btn_barn", this.node)
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickPet();
+        })
+
+        this.btn_dailay = cc.find("DialogRoot/top_left/btn_dailay", this.node)
+        this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickDaily();
         })
 
         this.woodNode = cc.find("DialogRoot/top_right/wood", this.node)
@@ -118,6 +125,11 @@ export default class WorldManager extends cc.Component {
 	onclickPet() {
         this.switchShipState(false);
         StickerbookScreen.prompt();
+    }
+
+    onclickDaily(){
+        this.switchShipState(false);
+        TaskScreen.prompt();
     }
 
     updateAllResource(){

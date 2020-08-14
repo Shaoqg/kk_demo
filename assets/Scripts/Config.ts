@@ -1,3 +1,5 @@
+import { TaskType } from "./UI/TaskScreen";
+
 export function getPetConfigById(id){
     for (let i = 0; i < PetConfig.length; i++) {
         if (PetConfig[i].petId == id) {
@@ -5,6 +7,23 @@ export function getPetConfigById(id){
         }
     }
     return null;
+}
+
+export function getTaskConfigById(id, taskType) {
+  if (taskType == "daily") {
+    for (let i = 0; i < DailyTaskConfig.length; i++) {
+      if (DailyTaskConfig[i].taskID == id) {
+        return DailyTaskConfig[i]
+      }
+    }
+  } else if (taskType == "achievement") {
+    for (let i = 0; i < AcheievementConfig.length; i++) {
+      if (AcheievementConfig[i].taskID == id) {
+        return AcheievementConfig[i]
+      }
+    }
+  }
+  return null;
 }
 
 export function getPetIntroByElements(pet:PetType){
@@ -24,7 +43,19 @@ export function getPetIntroByElements(pet:PetType){
     return "";
 }
 
-export enum Rarity {
+export enum Rarity  {
+    "nature",
+    "fire",
+    "water",
+    "snack"
+}
+
+export enum Resource  {
+  "coin",
+  "wood",
+  "food",
+  "stone"
+}export enum Rarity {
     "common" = "common",
     "uncommon" = "uncommon",
     "rare" = "uncommon",
@@ -45,6 +76,96 @@ export type PetType = {
     "featuredCost"?:number,
     "featuredAmount"?:number,
 }
+
+export let AcheievementConfig: TaskType[] = [
+  {
+    taskID: "Task_Ach_1",
+    taskName: "First Coin",
+    taskInfo: "get 10 coins",
+    reward: {
+      rewardType: Resource.coin,
+      rewardNum: 5000,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 10,
+    },
+  },
+  {
+    taskID: "Task_Ach_2",
+    taskName: "Use Coin",
+    taskInfo: "use 20 coins",
+    reward: {
+      rewardType: Resource.food,
+      rewardNum: 150,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 20,
+    },
+  },
+  {
+    taskID: "Task_Ach_3",
+    taskName: "Use Coin2",
+    taskInfo: "use 30 coins",
+    reward: {
+      rewardType: Resource.coin,
+      rewardNum: 800,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 30,
+    },
+  },
+]
+
+export let DailyTaskConfig: TaskType[] = [
+  {
+    taskID: "Task_Dal_1",
+    taskName: "First Coin",
+    taskInfo: "get 10 coins",
+    reward: {
+      rewardType: Resource.wood,
+      rewardNum: 5000,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 10,
+    },
+  },
+  {
+    taskID: "Task_Dal_2",
+    taskName: "Use Coin",
+    taskInfo: "use 20 coins",
+    reward: {
+      rewardType: Resource.food,
+      rewardNum: 150,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 20,
+    },
+  },
+  {
+    taskID: "Task_Dal_3",
+    taskName: "Use Coin2",
+    taskInfo: "use 30 coins",
+    reward: {
+      rewardType: Resource.stone,
+      rewardNum: 800,
+    },
+    getReward:
+    {
+      rewardType: Resource.coin,
+      rewardNum: 30,
+    },
+  },
+]
 
 export let PetConfig:PetType[] = [
     {
