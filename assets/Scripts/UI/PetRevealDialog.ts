@@ -3,18 +3,10 @@ import ScreenSize from "../Tools/ScreenSize";
 import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity, PetType } from "../Config";
+import { getPetConfigById, Rarity, PetType, getPetIntroByElements } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
-
-export type PetInfo = {
-    petId: string,
-    petName: string;
-    petinfo: string,
-    petBouns:petBouns,
-    petNeedUpgrade: PetUpdateResourse[]
-}
 
 export type PetUpdateResourse = {
     Resourse: string,
@@ -65,7 +57,6 @@ export default class PetRevealDialog extends ViewConnector {
     static _instance: PetRevealDialog = null;
 
     UpgradeButton: cc.Node;
-    info: PetInfo;
     petconfig:PetType;
 
     static async prompt(closeCallBack: Function = null, info: any = null, showShare: boolean = false): Promise<void> {
@@ -129,21 +120,33 @@ export default class PetRevealDialog extends ViewConnector {
         this.petNode.getComponent(cc.Sprite).spriteFrame = await KKLoader.loadSprite("Pets/" + this.petconfig.art_asset);
     }
 
+    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
+        switch (petType.rarity) {
+            case Rarity.common:
+                return {coin:200,food:20, magic_stone:1};
+            case Rarity.uncommon:
+                return {coin:200, food:20};
+            case Rarity.rare:
+                return {coin:200, food:20, magic_stone:1};
+        }
+        return {coin:200};
+    }
+    
     upgradePet(data: PetData) {
         data.petLevel++;
-        this.info.petNeedUpgrade.forEach((res) => {
-            switch (res.Resourse) {
-                case "Wood":
-                     User.instance.wood -= res.number
-                    break;
-                case "Food":
-                    User.instance.food -= res.number
-                    break;
-                case "Coin":
-                    User.instance.coin -= res.number
-                    break;
-            }
-        });
+
+        let cost=this.getCost(this.petconfig);
+
+        console.log("cost",cost);
+        if(cost.coin){
+            User.instance.coin -= cost.coin;
+        }
+        if(cost.food){
+            User.instance.food -= cost.food;
+        }
+        if(cost.magic_stone){
+            User.instance.magic_stone -= cost.magic_stone;
+        }
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         this.refresh(data)
     }
@@ -179,27 +182,19 @@ export default class PetRevealDialog extends ViewConnector {
         this.petData = petData;
 
 
-        let petInfos: PetInfo[] = []
-       
-        petInfos=User.instance.petInfos;
-        petInfos.forEach((info) => {
-            if (info.petId == petData.petId) {
-                this.info=info
-                this.petconfig=getPetConfigById(this.info.petId);
-                this.init(petData);
-                return;
-            }
-        });
+        this.petconfig=getPetConfigById(petData.petId);
+        this.init(petData);
+        
     }
 
-    setPetInfoName(info: PetData) {
+    setPetInfoName(data: PetData) {
         let petname = this.petInfoNode.getChildByName("label_petName").getComponent(cc.Label);
-        petname.string = info.petName;
+        petname.string = data.petName;
     }
 
     setPetInfo() {
         let petInfo = this.petInfoNode.getChildByName("label_petInfo").getComponent(cc.Label);
-        petInfo.string = this.info.petinfo;
+        petInfo.string = getPetIntroByElements(this.petconfig);
     }
 
     setPetLevel(data: PetData) {
@@ -243,43 +238,38 @@ export default class PetRevealDialog extends ViewConnector {
     setPetNeedtoUpgrade() {
         let resource = cc.find("resource/resourceLayout", this.petInfoNode);
 
-        let WoodNode = cc.find("Wood", resource);
+        let MagicNode = cc.find("Magic", resource);
         let FoodNode = cc.find("Food", resource);
         let CoinNode = cc.find("Coin", resource);
 
-        WoodNode.active = false;
+        MagicNode.active = false;
         FoodNode.active = false;
         CoinNode.active = false;
 
         let lesscount = 0;
 
-
-
-        this.info.petNeedUpgrade.forEach((res) => {
-            switch (res.Resourse) {
-                case "Wood":
-                    WoodNode.active = true;
-                    WoodNode.getChildByName("label").getComponent(cc.Label).string = "Wood:" +  User.instance.wood + "/" + res.number;
-                    if ( User.instance.wood < res.number) {
-                        lesscount++;
-                    }
-                    break;
-                case "Food":
-                    FoodNode.active = true;
-                    FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:" + User.instance.food + "/" + res.number;
-                    if (User.instance.food < res.number) {
-                        lesscount++;
-                    }
-                    break;
-                case "Coin":
-                    CoinNode.active = true;
-                    CoinNode.getChildByName("label").getComponent(cc.Label).string = "Fuel:" + User.instance.coin + "/" + res.number;
-                    if (User.instance.coin < res.number) {
-                        lesscount++;
-                    }
-                    break;
+        let cost = this.getCost(this.petconfig);
+        if (cost.coin) {
+            CoinNode.active = true;
+            CoinNode.getChildByName("label").getComponent(cc.Label).string = "Coin:\n" + User.instance.coin + "/" + cost.coin;
+            if (User.instance.coin < cost.coin) {
+                lesscount++;
             }
-        });
+        }
+        if (cost.food) {
+            FoodNode.active = true;
+            FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:\n" + User.instance.food + "/" + cost.food;
+            if (User.instance.food < cost.food) {
+                lesscount++;
+            }
+        }
+        if (cost.magic_stone) {
+            MagicNode.active = true;
+            MagicNode.getChildByName("label").getComponent(cc.Label).string = "Magic Stone:\n" + User.instance.magic_stone + "/" + cost.magic_stone;
+            if (User.instance.magic_stone < cost.magic_stone) {
+                lesscount++;
+            }
+        }
 
         if (lesscount > 0) {
             this.node.getChildByName("ButtonBlock").active = true;

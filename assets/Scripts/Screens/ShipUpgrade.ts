@@ -3,6 +3,7 @@ import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import { speeds, capacitys, bounss, speedLevelUpInfo, capacityLevelUpInfo, bounsLevelUpInfo } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -48,9 +49,9 @@ export class ShipUpgrade extends ViewConnector {
         this.root = cc.find("content", this.node);
         this.adjustGameInterface();
 
-        this.speeds = User.instance.speeds;
-        this.capacitys = User.instance.capacitys;
-        this.bounss = User.instance.bounss;
+        this.speeds = speeds;
+        this.capacitys = capacitys;
+        this.bounss = bounss;
 
         this.getShipInfo("speed").string = "Speed：" + this.speeds[User.instance.ship_speed_level] + "kn"
         this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[User.instance.ship_capacity_level];
@@ -108,13 +109,13 @@ export class ShipUpgrade extends ViewConnector {
         let upgradeInfo;
         switch(part){
             case "speed":
-                upgradeInfo = User.instance.speedLevelUpInfo[User.instance.ship_speed_level];
+                upgradeInfo = speedLevelUpInfo[User.instance.ship_speed_level];
                 break;
             case "capacity":
-                upgradeInfo = User.instance.capacityLevelUpInfo[User.instance.ship_capacity_level];
+                upgradeInfo = capacityLevelUpInfo[User.instance.ship_capacity_level];
                 break;
             case "bouns":
-                upgradeInfo = User.instance.bounsLevelUpInfo[User.instance.ship_bouns_level];
+                upgradeInfo = bounsLevelUpInfo[User.instance.ship_bouns_level];
                 break;
         }
       
@@ -222,13 +223,13 @@ export class ShipUpgrade extends ViewConnector {
         let upgradeInfo;
         switch(part){
             case "speed":
-                upgradeInfo = User.instance.speedLevelUpInfo[User.instance.ship_speed_level];
+                upgradeInfo = speedLevelUpInfo[User.instance.ship_speed_level];
                 break;
             case "capacity":
-                upgradeInfo = User.instance.capacityLevelUpInfo[User.instance.ship_capacity_level];
+                upgradeInfo = capacityLevelUpInfo[User.instance.ship_capacity_level];
                 break;
             case "bouns":
-                upgradeInfo = User.instance.bounsLevelUpInfo[User.instance.ship_bouns_level];
+                upgradeInfo = bounsLevelUpInfo[User.instance.ship_bouns_level];
                 break;
         }
         let cout=0;
