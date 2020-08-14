@@ -1,13 +1,11 @@
 import { TaskType } from "./UI/TaskScreen";
 
 export function getPetConfigById(id){
-
     for (let i = 0; i < PetConfig.length; i++) {
         if (PetConfig[i].petId == id) {
             return PetConfig[i]
         }
     }
-
     return null;
 }
 
@@ -28,6 +26,23 @@ export function getTaskConfigById(id, taskType) {
   return null;
 }
 
+export function getPetIntroByElements(pet:PetType){
+    switch (pet.elements) {
+        case Element.nature:
+                return pet.rarity == Rarity.common ? "Can get little food bonus": "Can get more food bonus";
+        case Element.fire:
+                return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
+        case Element.water:
+                return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
+        case Element.snack:
+                return pet.rarity == Rarity.common ? "Can get little stone bonus":"Can get more stone bonus"
+        default:
+            break;
+    }
+
+    return "";
+}
+
 export enum Rarity  {
     "nature",
     "fire",
@@ -40,12 +55,23 @@ export enum Resource  {
   "wood",
   "food",
   "stone"
+}export enum Rarity {
+    "common" = "common",
+    "uncommon" = "uncommon",
+    "rare" = "uncommon",
+}
+
+export enum Element{
+    "nature" = "nature" ,
+    "fire" = "fire",
+    "water" = "water",
+    "snack" = "snack"
 }
 
 export type PetType = {
     "petId": string,
     "art_asset": string,
-    "rarity": "common" | "uncommon" |"rare",
+    "rarity": Rarity| string,
     "elements": Rarity| string,
     "featuredCost"?:number,
     "featuredAmount"?:number,
@@ -149,7 +175,6 @@ export let PetConfig:PetType[] = [
       "elements": "nature",
       "featuredCost": 500,
       "featuredAmount": 5,
-
     },
     {
       "petId": "froom",

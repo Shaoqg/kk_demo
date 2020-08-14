@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import User from "../Gameplay/User";
 import { ConfigSet } from "../Util/ConfigSet";
-import { PetConfig, PetType } from "../Config";
+import { PetConfig, PetType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 
 
@@ -48,6 +48,13 @@ export default class StoreScreen extends ViewConnector {
         //coinsTabButton.interactable = false;
 
         this.AdjustGameInterface();
+
+        this.initPetStore();
+
+        let close = cc.find("root/back", this.node);
+        close.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.close(null);
+        });
     }
 
     readonly width = 750;
@@ -118,49 +125,96 @@ export default class StoreScreen extends ViewConnector {
     _loadStore(storeName:string, storeNode:cc.Node) {
     }
 
-    initPetStore(){
-        let petInfo = cc.find("", this.node);
-
-
+    initPetStore() {
+        this.initPet();
 
     }
 
-    addPet() {
-        let pets = this.getPet();
+    currentNodes = {};
+    currentPetsType = [];
+    btn_recruit: cc.Node = null;
+    initPet() {
+        let pets = this.currentPetsType= this.getPet();
+
+        this.btn_recruit = cc.find("root/Pet/content/btn_recruit", this.node);
+        this.btn_recruit.on(cc.Node.EventType.TOUCH_END, this.onclickBuy.bind(this));
 
         let petListContent = cc.find("root/Pet/content/petList/content", this.node);
         let item = cc.find("petItem", petListContent);
-
+        item.active = false;
         pets.forEach((pet)=> {
             let node = cc.instantiate(item);
+            node.active = true;
             node.name = pet.petId;
-            let sf = KKLoader.loadSprite("Pets/" + pet.art_asset).then((sf)=>{
+            node.setParent(petListContent);
 
-            })
+            let sprite = node.getChildByName("petimage").getComponent(cc.Sprite);
+            KKLoader.loadSprite("Pets/" + pet.art_asset).then((sf)=>{
+                sprite.spriteFrame = sf;
+            });
 
+            let bgNode = cc.find("bg", node);
+            let colors = {"common":cc.color(240,255,255),  "uncommon": cc.color(152,0,253), "rare": cc.color(255,255,0)}
+            bgNode.color = colors[pet.rarity];
 
+            this.currentNodes[pet.petId] = node;
+            node.on(cc.Node.EventType.TOUCH_END, ()=>{
+                this.onclickPet(pet, node);
+            });
 
         })
+
+        this.onclickPet(pets[0], this.currentNodes[pets[0].petId]);
+    }
+
+    currentSelectNode:cc.Node = null;
+    currentSelectPet:PetType = null;
+    onclickPet(petType:PetType, node:cc.Node){
+        if (this.currentSelectNode) {
+            if (this.currentSelectNode.name == petType.petId) {
+                return;
+            }
+            let oldSelectNode = this.currentSelectNode.getChildByName("select");
+            oldSelectNode.stopAllActions();
+            oldSelectNode.active = false;
+        }
+
+        if (!petType || !node) {
+            this.updatePetInfo(null);
+            return;
+        }
+        this.currentSelectPet = petType;
+        this.currentSelectNode = node;
+        let select = node.getChildByName("select");
+
+        select.active = true;
+        select.runAction(cc.sequence(
+            cc.scaleTo(0.8, 1.1),
+            cc.scaleTo(0.8,1)
+        ).repeatForever());
+
+
+        this.updatePetInfo(petType);
     }
 
     getPet(){
         let level = User.instance.level_castle;
 
-        let config =[];
+        let selectPet =[];
         PetConfig.forEach(element => {
             switch (level) {
                 case 1:
                     if (element.rarity == "common") {
-                        config.push(element);
+                        selectPet.push(element);
                     }    
                     break;
                 case 2:
                     if (element.rarity == "common" || element.rarity == "uncommon") {
-                        config.push(element);
+                        selectPet.push(element);
                     }      
                     break;                
                 case 3:
-                    config.push(element);
+                    selectPet.push(element);
                     break;
                 default:
                     break;
@@ -176,33 +230,198 @@ export default class StoreScreen extends ViewConnector {
 
         let newPets = id[level] || id[3];
         let newPetConfig:PetType[] = [];
-        while(newPets.length <=0) {
-            let i = Math.floor(Math.random()* PetConfig.length);
-            if (config[i].rarity == newPets[0]) {
-                newPetConfig.push(PetConfig[i]);
-                PetConfig.slice(i,1)
+        while(newPets.length > 0) {
+            let i = Math.floor(Math.random()* selectPet.length);
+            if (selectPet[i].rarity == newPets[0]) {
+                newPetConfig.push(selectPet[i]);
+                selectPet.splice(i,1)
                 newPets.shift();
             }
         }
         return newPetConfig;
     }
 
+    updatePetInfo(pet:PetType) {
+        if (!pet) {
+            
+        }
+
+        let content = cc.find("root/Pet/content", this.node);
+        let petSprite = cc.find("petInfo/petPic", content);
+
+        //load sf
+        this.loadSF(pet.art_asset, petSprite);
+
+        //set Type
+        this.SetElements([pet.elements as string])
+
+        //set skill
+        let label_skill = cc.find("petInfo/skill/label_intro", content).getComponent(cc.Label);
+        label_skill.string = getPetIntroByElements(pet);
+
+        //set skill
+        let label_skill2 = cc.find("petInfo/skill2/label_intro", content).getComponent(cc.Label);
+        label_skill2.string = pet.rarity == Rarity.rare?"I have special skills, but I won’t tell you"
+        :"I have no special skills"
+
+        //set name
+        let label_name = cc.find("petInfo/stats/label_petName", content).getComponent(cc.Label);
+        label_name.string = pet.petId;
+
+        let label_rarity = cc.find("petInfo/stats/rarity/label", content).getComponent(cc.Label);
+        label_rarity.string = pet.rarity as string;
+
+        //set cost
+        let costConfig = this.getCost(pet);
+        let list = cc.find("list", content)
+        let setCostItem = (name:string, str:string, ok?:boolean) => {
+            let costItem = list.getChildByName(name);
+            if (str) {
+                costItem.active = true;
+                costItem.getChildByName("label_progress").getComponent(cc.Label).string = str;
+            }else{
+                costItem.active = false;
+            }
+
+            costItem.getChildByName("ok").getComponent(cc.Button).interactable = !!ok;
+        }
+        let coinEnough:boolean = true,foodEnough:boolean = true,magic_stoneEnough:boolean = true
+        coinEnough = User.instance.coin >= costConfig.coin;
+        setCostItem("coin", "500", coinEnough);
+        setCostItem("food", null);
+        setCostItem("stone", null);
+        if (costConfig.food) {
+            foodEnough =  User.instance.food >= costConfig.food;
+            setCostItem("food", "food\n" + costConfig.food, foodEnough);
+        }
+        if (costConfig.magic_stone) {
+            magic_stoneEnough = User.instance.magic_stone >= costConfig.magic_stone;
+            setCostItem("stone", "magic rock\n" + costConfig.magic_stone, magic_stoneEnough);
+        }
+
+        //set button
+        this.btn_recruit.getComponent(cc.Button).interactable = coinEnough && foodEnough && magic_stoneEnough;
+
+    }
+    
+    onclickBuy() {
+        let button = this.btn_recruit.getComponent(cc.Button);
+        if (!button.interactable || !this.currentSelectPet) {
+            return;
+        }
+
+        let costConfig = this.getCost(this.currentSelectPet);
+        if (User.instance.coin >= costConfig.coin &&
+            User.instance.food >= costConfig.food &&
+            User.instance.magic_stone >= costConfig.magic_stone
+            ) {
+
+                let isBuy = User.instance.addPet(this.currentSelectPet);
+                if (isBuy) {
+                    User.instance.coin -= costConfig.coin;
+                    User.instance.food -= costConfig.food;
+                    User.instance.magic_stone -= costConfig.magic_stone;
+
+                    this.currentSelectNode.destroy();
+
+
+                    let content = cc.find("root/Pet/content/petList/content", this.node);
+
+                    let petId = "";
+                    for (let i = 0; i < content.children.length; i++) {
+                        if (content.children[i].name != "petItem" && content.children[i].active == true) {
+                            petId = content.children[i].name;
+                            break;
+                        }
+                    }
+                    if (content.children.length>0 && petId != "") {
+                        let petType = getPetConfigById(petId);
+                        this.onclickPet(petType, this.currentNodes[petType.petId]);
+                    }else{
+                        this.onclickPet(null, null);
+                    }
+                }
+            }
+    }
+
+    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
+        switch (petType.rarity) {
+            case Rarity.common:
+                return {coin:200,food:20, magic_stone:1};
+            case Rarity.uncommon:
+                return {coin:200, food:20};
+            case Rarity.rare:
+                return {coin:200, food:20, magic_stone:1};
+        }
+        return {coin:200};
+    }
+
+
+    loadSF(art:string ,node:cc.Node){
+        KKLoader.loadSprite("Pets/" + art).then((sf)=>{
+            node.getComponent(cc.Sprite).spriteFrame = sf;
+        });
+    }
+    typesNode:cc.Node = null;
+    natureNode:cc.Node = null;
+    fireNode:cc.Node = null;
+    waterNode:cc.Node = null;
+    snackNode:cc.Node = null;
+    SetElements(elements:string[]){ 
+        // background graphics
+        
+        if (!this.natureNode) {
+            this.typesNode = cc.find("root/Pet/content/petInfo/type/typeLayout", this.node);
+            this.natureNode = cc.find("type_land", this.typesNode);
+            this.fireNode = cc.find("type_fire", this.typesNode);
+            this.waterNode = cc.find("type_water", this.typesNode);
+            this.snackNode = cc.find("type_snack", this.typesNode);
+        }    
+        this.natureNode.active = false;
+        this.fireNode.active = false;
+        this.waterNode.active = false;
+        this.snackNode.active = false;
+
+        // element icons
+        elements.forEach(element => {
+            switch(element){
+                case "nature":
+                    this.natureNode.active = true;
+                break;
+                case "fire":
+                    this.fireNode.active = true;
+                break;
+                case "water":
+                    this.waterNode.active = true;
+                break;
+                case "snack":
+                    this.snackNode.active = true;
+                break;
+            }
+        });
+    }
+
 
     close(results:any) {
+        StoreScreen.instance = null;
         this.node.destroy();
     }
 
     static async prompt(tab:string = StoreScreen.StoreType.Egg): Promise<void> {
         let parentNode = cc.find("Canvas/DialogRoot");
-        let vc = await this.loadView<StoreScreen>(parentNode, StoreScreen);
 
-        vc.applyData(tab);
+        if (!this.instance) {
+            let vc = await this.loadView<StoreScreen>(parentNode, StoreScreen);
+            vc.applyData(tab);
+            this.instance = vc;
+        }else{
+            this.instance.node.active = true;
+        }
+
         this.isShowing = true;
 
-        this.instance = vc;
-
         let executor = (resolve:(any)=>void, reject:(error)=>void) =>{
-            vc.onCloseCallback = resolve;
+            this.instance.onCloseCallback = resolve;
         }
 
         return new Promise(executor);

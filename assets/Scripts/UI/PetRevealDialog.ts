@@ -208,7 +208,7 @@ export default class PetRevealDialog extends ViewConnector {
     }
     setPetRarity(){
         let petRare = cc.find("rarity/label", this.petInfoNode).getComponent(cc.Label);
-        petRare.string=this.petconfig.rarity;
+        petRare.string=this.petconfig.rarity.toString();
     }
 
     setPetType() {

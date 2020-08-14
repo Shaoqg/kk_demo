@@ -61,7 +61,7 @@ export default class PetItem extends cc.Component {
         petInfos.forEach((info) => {
             if (info.petId == petData.petId) {
                 let config=getPetConfigById(info.petId);
-                this.setRare(config.rarity);
+                this.setRare(config.rarity.toString());
                 this.SetElements(config.elements);
                 this.setSpriteFrame(config.art_asset)
                 return

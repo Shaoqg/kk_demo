@@ -1,5 +1,6 @@
 import { PetData } from "../UI/PetList";
 import { PetInfo } from "../UI/PetRevealDialog";
+import { PetType } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 import WorldManager from "./WorldManager";
@@ -21,42 +22,6 @@ export default class User {
         petId: "froom",
         petLevel: 1,
         petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "froom",
-        petLevel: 1,
-        petName: "Froge"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
-    },
-    {
-        // work:true,
-        petId: "king_parrot",
-        petLevel: 1,
-        petName: "king parrot"
     },
     ]
     public petNumber = this.petList.length;
@@ -186,7 +151,29 @@ export default class User {
         return this.petList;
     }
 
-    public getReward(type: Resource, amount: number) {
+    public addPet(pet:PetType) {
+        if (pet) {
+            let idAdd = true;
+            this.petList.forEach((petData)=>{
+                if (petData.petId == pet.petId) {
+                    idAdd = false;
+                }
+            })
+            if (idAdd) {
+                this.petList.push({
+                    petId:pet.petId,
+                    petName:pet.petId,
+                    petLevel:1
+                })
+            }
+            return idAdd;
+        }
+        return false;
+    }
+
+    public magic_stone = 1;
+
+public getReward(type: Resource, amount: number) {
         switch (type) {
             case Resource.coin:
                 this.coin += amount;
@@ -202,6 +189,11 @@ export default class User {
                 break;
         }
     }
-}
 
+
+
+
+
+
+}
 
