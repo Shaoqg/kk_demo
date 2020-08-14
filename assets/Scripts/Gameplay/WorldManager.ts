@@ -18,7 +18,7 @@ export default class WorldManager extends cc.Component {
     btn_levelup:cc.Node = null;
     btn_adventure:cc.Node = null;
     btn_barn: cc.Node = null;
-    coin_label: cc.Node;
+    static coin_label: cc.Node;
 
 
 
@@ -27,7 +27,7 @@ export default class WorldManager extends cc.Component {
 
         this.init();
         this.initCastle();
-        this.updateCoinLabel();
+        WorldManager.updateCoinLabel();
 
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
     }
@@ -60,6 +60,8 @@ export default class WorldManager extends cc.Component {
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickPet();
         })
+
+        WorldManager.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
 
     }
 
@@ -101,8 +103,8 @@ export default class WorldManager extends cc.Component {
 
     onLevelUp(){
         this.initCastle();
-        console.log(User._instance.coin);
-        this.updateCoinLabel()
+        WorldManager.updateCoinLabel();
+
     }
 
 	onclickPet() {
@@ -110,8 +112,8 @@ export default class WorldManager extends cc.Component {
         StickerbookScreen.prompt();
     }
 
-    updateCoinLabel(){
-        this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
+    static updateCoinLabel(){
+        console.log(User._instance.coin);
         this.coin_label.getComponent(cc.Label).string=User._instance.coin.toString();
     }
 }

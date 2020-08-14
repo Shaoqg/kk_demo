@@ -1,5 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
+import User from "../Gameplay/User";
+import WorldManager from "../Gameplay/WorldManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -14,13 +16,9 @@ export class ShipUpgrade extends ViewConnector {
 
 
     shipParts = ["speed", "capacity", "bouns"];
-    shipLevel: number = 1;
-    mastLevel: number = 1;
-    capacityLevel: number = 1;
-    bounsLevel: number = 1;
-    speeds: number[] = [24, 30, 42];
-    capacitys: number[] = [5, 6, 7];
-    bounss: number[] = [10, 50, 200];
+    speeds: number[] ;
+    capacitys: number[];
+    bounss: number[];
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -49,20 +47,33 @@ export class ShipUpgrade extends ViewConnector {
         this.root = cc.find("content", this.node);
         this.adjustGameInterface();
 
-        this.getShipInfo("speed").string = "Speed：" + this.speeds[this.mastLevel - 1] + "kn"
-        this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[this.capacityLevel - 1];
-        this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[this.bounsLevel - 1] + "%"
+        this.speeds = User.instance.speeds;
+        this.capacitys = User.instance.capacitys;
+        this.bounss = User.instance.bounss;
+
+        this.getShipInfo("speed").string = "Speed：" + this.speeds[User.instance.ship_speed_level] + "kn"
+        this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[User.instance.ship_capacity_level];
+        this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[User.instance.ship_bouns_level] + "%"
         this.updateShipLevel();
 
         this.shipParts.forEach((part, idx) => {
             let upgrade = cc.find("partsOnShip/shipPart" + (idx+1) + "/goal", this.root);
             let isMax=this.checkMaxLevel(part, upgrade);
             this.updatePartBonus(part,idx+1,isMax);
-            
+            this.updatePartNeeded(part,idx+1,isMax)
+            this.showFinishLabel(idx+1,isMax);
+            if(!this.checkResource(part)){
+                this.showDisableButton(idx+1,isMax,true)
+            }
             upgrade.on(cc.Node.EventType.TOUCH_END, () => {
                 this.updateShipPart(part);
                 let isMax=this.checkMaxLevel(part, upgrade);
+                if(!this.checkResource(part)){
+                    this.showDisableButton(idx+1,isMax,true)
+                }
                 this.updatePartBonus(part,idx+1,isMax);
+                this.updatePartNeeded(part,idx+1,isMax)
+                this.showFinishLabel(idx+1,isMax);
             });
         });
 
@@ -78,45 +89,107 @@ export class ShipUpgrade extends ViewConnector {
         //this.adjustGameInterface();
     }
 
+    showDisableButton(idx:number,isMax:boolean,isShow:boolean) {
+        let btn = cc.find("partsOnShip/shipPart" + idx + "/goal_gry", this.root);
+        if(isMax){
+            btn.active=false;
+            return;
+        }
+        btn.active=isShow;
+    }
+
+    updatePartNeeded(part: string, idx: number, isMax: boolean) {
+        let resource = cc.find("partsOnShip/shipPart" + idx + "/resource", this.root);
+        if(isMax){
+            resource.active=false;
+            return;
+        }
+        let upgradeInfo;
+        switch(part){
+            case "speed":
+                upgradeInfo = User.instance.speedLevelUpInfo[User.instance.ship_speed_level];
+                break;
+            case "capacity":
+                upgradeInfo = User.instance.capacityLevelUpInfo[User.instance.ship_capacity_level];
+                break;
+            case "bouns":
+                upgradeInfo = User.instance.bounsLevelUpInfo[User.instance.ship_bouns_level];
+                break;
+        }
+      
+       if(upgradeInfo.coin){
+        let coin=resource.getChildByName("coin");
+        coin.active=true;
+        coin.getChildByName("need").getComponent(cc.Label).string="x"+upgradeInfo.coin.toString();
+       }
+       if(upgradeInfo.wood){
+        let wood=resource.getChildByName("wood");
+        wood.active=true;
+        wood.getChildByName("need").getComponent(cc.Label).string="x"+upgradeInfo.wood.toString();
+       }
+       if(upgradeInfo.stone){
+        let stone=resource.getChildByName("stone");
+        stone.active=true;
+        stone.getChildByName("need").getComponent(cc.Label).string="x"+upgradeInfo.stone.toString();
+       }
+       
+    }
+    showFinishLabel(idx: number, isMax: boolean) {
+        if(isMax){
+            let finishLabel = cc.find("partsOnShip/shipPart" + idx + "/finishLabel", this.root);
+            finishLabel.active = true;
+        }
+    }
+
     updateShipLevel() {
-        this.shipLevel = this.mastLevel + this.capacityLevel + this.bounsLevel;
-        this.getShipInfo("level").string = "Level：" + this.shipLevel.toString();
+        User.instance.level = User.instance.ship_speed_level + User.instance.ship_capacity_level + User.instance.ship_bouns_level;
+        this.getShipInfo("level").string = "Level：" + User.instance.level.toString();
     }
 
     updateShipPart(part: string) {
+        let cost = this.checkResource(part);
+        if (cost) {
+            User.instance.coin -= cost.coin;
+            User.instance.wood -= cost.wood;
+            User.instance.stone -= cost.stone;
+            WorldManager.updateCoinLabel()
+        } else {
+            return;
+        }
         switch (part) {
             case "speed":
-                this.mastLevel++;
-                this.getShipInfo("speed").string = "Speed：" + this.speeds[this.mastLevel - 1] + "kn"
+                User.instance.ship_speed_level++;
+                this.getShipInfo("speed").string = "Speed：" + this.speeds[User.instance.ship_speed_level] + "kn"
                 break;
             case "capacity":
-                this.capacityLevel++;
-                this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[this.capacityLevel - 1];
+                User.instance.ship_capacity_level++;
+                this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[User.instance.ship_capacity_level];
                 break;
             case "bouns":
-                this.bounsLevel++;
-                this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[this.bounsLevel - 1] + "%"
+                User.instance.ship_bouns_level++;
+                this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[User.instance.ship_bouns_level] + "%"
                 break;
         }
         this.updateShipLevel();
+        
     }
 
     checkMaxLevel(part: string, upgrade: cc.Node) {
         switch (part) {
             case "speed":
-                if (this.mastLevel >= this.speeds.length) {
+                if (User.instance.ship_speed_level >= this.speeds.length-1) {
                     upgrade.active = false;
                     return true;
                 }
                 break;
             case "capacity":
-                if (this.capacityLevel >= this.capacitys.length) {
+                if (User.instance.ship_capacity_level >= this.capacitys.length-1) {
                     upgrade.active = false;
                     return true;
                 }
                 break;
             case "bouns":
-                if (this.bounsLevel >= this.bounss.length) {
+                if (User.instance.ship_bouns_level >= this.bounss.length-1) {
                     upgrade.active = false;
                     return true;
                 }
@@ -128,19 +201,59 @@ export class ShipUpgrade extends ViewConnector {
     updatePartBonus(part: string,idx:number,isMax:boolean){
         let bonusLabel = cc.find("partsOnShip/shipPart" + idx + "/bonus", this.root).getComponent(cc.Label);
         if(isMax){
-            bonusLabel.string="Reached the highest level";
+            bonusLabel.node.active=false;
             return;
         }
         switch (part) {
             case "speed":
-                bonusLabel.string="Speed+"+(this.speeds[this.mastLevel]-this.speeds[this.mastLevel - 1])+"kn";
+                bonusLabel.string="Speed+"+(this.speeds[User.instance.ship_speed_level+1]-this.speeds[User.instance.ship_speed_level])+"kn";
                 break;
             case "capacity":
-                bonusLabel.string="Capacity+"+(this.capacitys[this.capacityLevel]-this.capacitys[this.capacityLevel - 1]);
+                bonusLabel.string="Capacity+"+(this.capacitys[User.instance.ship_capacity_level+1]-this.capacitys[User.instance.ship_capacity_level]);
                 break;
             case "bouns":
-                bonusLabel.string="Reward gain+"+(this.bounss[this.bounsLevel]-this.bounss[this.bounsLevel - 1])+"%";
+                bonusLabel.string="Reward gain+"+(this.bounss[User.instance.ship_bouns_level+1]-this.bounss[User.instance.ship_bouns_level])+"%";
                 break;
+        }
+    }
+
+    checkResource(part:string){
+        let upgradeInfo;
+        switch(part){
+            case "speed":
+                upgradeInfo = User.instance.speedLevelUpInfo[User.instance.ship_speed_level];
+                break;
+            case "capacity":
+                upgradeInfo = User.instance.capacityLevelUpInfo[User.instance.ship_capacity_level];
+                break;
+            case "bouns":
+                upgradeInfo = User.instance.bounsLevelUpInfo[User.instance.ship_bouns_level];
+                break;
+        }
+        let cout=0;
+        if(!upgradeInfo){
+            return false;
+        }
+        if (upgradeInfo.coin) {
+            if(User.instance.coin < upgradeInfo.coin){
+                cout++;
+            }
+        }
+        if (upgradeInfo.wood) {
+            if(User.instance.wood < upgradeInfo.wood){
+                cout++;
+            }
+        }
+        if (upgradeInfo.stone) {
+            if(User.instance.stone < upgradeInfo.stone){
+                cout++;
+            }
+        }
+
+        if(cout>0){
+            return false;
+        }else{
+            return {coin:upgradeInfo.coin?upgradeInfo.coin:0,wood:upgradeInfo.wood?upgradeInfo.wood:0,stone:upgradeInfo.stone?upgradeInfo.stone:0};
         }
     }
 
