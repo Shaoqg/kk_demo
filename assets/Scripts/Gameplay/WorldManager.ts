@@ -146,6 +146,7 @@ export default class WorldManager extends cc.Component {
     starIncrease() {
         User.instance.star++;
         this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+        User.instance.saveUse();
     }
 
     updateAllResource(){
