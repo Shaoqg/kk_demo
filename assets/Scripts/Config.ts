@@ -1,25 +1,45 @@
 export function getPetConfigById(id){
-
     for (let i = 0; i < PetConfig.length; i++) {
         if (PetConfig[i].petId == id) {
             return PetConfig[i]
         }
     }
-
     return null;
 }
 
-export enum Rarity  {
-    "nature",
-    "fire",
-    "water",
-    "snack"
+export function getPetIntroByElements(elements){
+    switch (elements) {
+        case Element.nature:
+                return "Can get more food"
+        case Element.fire:
+                return "Can get more wood"  
+        case Element.water:
+                return "Can get more wood"
+        case Element.snack:
+                return "Can get more stone"
+        default:
+            break;
+    }
+    return "";
+}
+
+export enum Rarity {
+    "common" = "common",
+    "uncommon" = "uncommon",
+    "rare" = "uncommon",
+}
+
+export enum Element{
+    "nature" = "nature" ,
+    "fire" = "fire",
+    "water" = "water",
+    "snack" = "snack"
 }
 
 export type PetType = {
     "petId": string,
     "art_asset": string,
-    "rarity": "common" | "uncommon" |"rare",
+    "rarity": Rarity| string,
     "elements": Rarity| string,
     "featuredCost"?:number,
     "featuredAmount"?:number,
@@ -33,7 +53,6 @@ export let PetConfig:PetType[] = [
       "elements": "nature",
       "featuredCost": 500,
       "featuredAmount": 5,
-
     },
     {
       "petId": "froom",
