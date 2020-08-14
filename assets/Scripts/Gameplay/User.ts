@@ -2,7 +2,6 @@ import { PetData } from "../UI/PetList";
 import { PetType } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
-import WorldManager from "./WorldManager";
 
 export default class User {
 
@@ -10,10 +9,12 @@ export default class User {
     static get instance() {
         if (!this._instance) {
             this._instance = new User();
+            this._instance.getUse();
         }
         return this._instance;
     }
 
+    public isLoaded = false;
 
     // public level = 1;
     private petList: PetData[] = [{
@@ -148,14 +149,57 @@ export default class User {
     }
 
     public saveUse() {
+        this.ship_bouns_level;
+        this.ship_capacity_level;
+        this.ship_speed_level;
+
+
         let gameData = {
-
-
-
+            star:this.star,
+            level_castle:this.level_castle,
+            level_ship:this.level_ship,
+            shipInfo:{
+                bouns:this.ship_bouns_level,
+                capacity: this.ship_capacity_level,
+                speed:this.ship_speed_level
+            },
+            magic_stone:this.magic_stone,
+            food:this.food,
+            stone:this.stone,
+            coin:this.coin,
+            wood:this.wood,
+            petList:this.petList
         }
-
-
+        cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
     }
 
+    public getUse() {
+        let dataStr = cc.sys.localStorage.getItem("KK_DEMO");
+
+        if (dataStr) {
+            let data = JSON.parse(dataStr);
+            this.star = data["star"];
+            this.level_castle = data["level_castle"];
+            this.level_ship = data["level_ship"];
+            
+            this.ship_bouns_level = data["shipInfo"]["bouns"]
+            this.ship_capacity_level = data["shipInfo"]["capacity"]
+            this.ship_speed_level = data["shipInfo"]["speed"]
+            this.magic_stone = data["magic_stone"];
+            this.food = data["food"];
+            this.stone = data["stone"];
+            this.coin = data["coin"];
+            this.wood = data["wood"];
+            this.petList = data["petList"];
+
+        }
+        this.isLoaded = true;
+    }
+
+    public resetUse(){
+        cc.sys.localStorage.setItem("KK_DEMO","");
+    }
 }
+
+
 
