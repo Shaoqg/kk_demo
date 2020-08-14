@@ -80,6 +80,11 @@ export default class User {
                 rewardNum: 15,
             },
         },
+        {
+            taskID: "Task_Dal_4",
+            tasktype: "daily",
+            taskfinish: false,
+        },
     ]
 
     public level_ship = 1;
@@ -134,6 +139,9 @@ public getReward(type: Resource, amount: number) {
                 break;
             case Resource.food:
                 this.food += amount;
+                break;
+            case Resource.magicStone:
+                this.magic_stone += amount;
                 break;
         }
     }
