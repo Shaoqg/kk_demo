@@ -31,7 +31,7 @@ export function getPetIntroByElements(pet:PetType){
         case Element.nature:
                 return pet.rarity == Rarity.common ? "Can get little food bonus": "Can get more food bonus";
         case Element.fire:
-                return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
+                return pet.rarity == Rarity.common ? "Can get little coin bonus":"Can get more coin bonus"
         case Element.water:
                 return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
         case Element.snack:
@@ -41,6 +41,23 @@ export function getPetIntroByElements(pet:PetType){
     }
 
     return "";
+}
+
+export function getPetBouns(pet: PetType) {
+  switch (pet.elements) {
+    case Element.nature:
+      return { BounsName: "Food", BounsNum: 10 };
+    case Element.fire:
+      return { BounsName: "Coin", BounsNum: 10 };
+    case Element.water:
+      return { BounsName: "Wood", BounsNum: 10 };
+    case Element.snack:
+      return { BounsName: "Stone", BounsNum: 10 };
+    default:
+      break;
+  }
+
+  return null;
 }
 
 export enum Rarity  {
@@ -76,6 +93,43 @@ export type PetType = {
     "featuredCost"?:number,
     "featuredAmount"?:number,
 }
+
+export let speeds: number[] = [24, 30, 42];
+export let capacitys: number[] = [1, 3, 5];
+export let bounss: number[] = [10, 50, 200];
+
+export let speedLevelUpInfo= [
+    {
+        coin:100,
+        wood:5,
+    },
+    {
+        coin:200,
+        wood:20,
+    },
+]
+export let capacityLevelUpInfo= [
+    {
+        coin:10,
+        wood:5,
+        stone:5,
+    },
+    {
+        coin:20,
+        wood:2,
+        stone:10,
+    },
+]
+export let bounsLevelUpInfo= [
+    {
+        coin:1000,
+        stone:50,
+    },
+    {
+        coin:2000,
+        stone:1000,
+    },
+]
 
 export let AcheievementConfig: TaskType[] = [
   {

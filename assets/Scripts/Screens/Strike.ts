@@ -3,9 +3,9 @@ import ScreenSize from '../Tools/ScreenSize';
 import { StrikeReward } from "./StrikeReward";
 import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
-import { PetInfo, petBouns } from "../UI/PetRevealDialog";
+import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -75,10 +75,10 @@ export class Strike extends ViewConnector {
         let shipLevel = cc.find("shipInfo/level", this.root);
         let shipSpeed = cc.find("shipInfo/speed", this.root);
 
-        this.seatNum=User.instance.capacitys[User.instance.ship_capacity_level];
+        this.seatNum=capacitys[User.instance.ship_capacity_level];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
         shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level;
-        shipSpeed.getComponent(cc.Label).string="Speed："+User.instance.speeds[User.instance.ship_speed_level]+" knots:";
+        shipSpeed.getComponent(cc.Label).string="Speed："+speeds[User.instance.ship_speed_level]+" knots:";
         
 
         for(let i=1;i<=this.seatNum;i++){
@@ -171,20 +171,15 @@ export class Strike extends ViewConnector {
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
             this.boundsAll.forEach((bands) => {
-                bands.BounsNum += User.instance.bounss[User.instance.ship_bouns_level];
+                bands.BounsNum += bounss[User.instance.ship_bouns_level];
             })
             StrikeReward.prompt(this.boundsAll);
         });
     }
 
     async createList(petData: any, idx: number) {
-        let petinfo:PetInfo=null;
-        User.instance.petInfos.forEach((info)=>{
-            if(info.petId==petData.petId){
-                petinfo=info;
-            }
-        })
-        let petconfig=getPetConfigById(petinfo.petId);
+
+        let petconfig=getPetConfigById(petData.petId);
         let pet = cc.instantiate(this.pet);
         let list = cc.find("scrollview/list", this.root);
         let petImage = pet.getChildByName("petimage").getComponent(cc.Sprite);
@@ -200,11 +195,11 @@ export class Strike extends ViewConnector {
         pet.x = (idx % 5) * (pet.width + 11) + (pet.width / 2 + 11);
 
         pet.on(cc.Node.EventType.TOUCH_END, () => {
-            this.setToReady(pet, petData,petinfo);
+            this.setToReady(pet, petData,petconfig);
         });
     }
 
-    setToReady(petNode: cc.Node, petData: PetData,petinfo:PetInfo) {
+    setToReady(petNode: cc.Node, petData: PetData,petconfig:PetType) {
         if (this.petReady >= this.seatNum) {
             return;
         }
@@ -232,13 +227,14 @@ export class Strike extends ViewConnector {
 
         petImage.spriteFrame = petNode.getChildByName("petimage").getComponent(cc.Sprite).spriteFrame;
         petImage.node.active = true;
-        bonusLabel.string=petinfo.petBouns.BounsName+"\n+"+(petinfo.petBouns.BounsNum*petData.petLevel)+"%";
+        let petBouns=getPetBouns(petconfig);
+        bonusLabel.string=petBouns.BounsName+"\n+"+(petBouns.BounsNum*petData.petLevel)+"%";
 
         bonusLabel.node.active = true;
 
         this.boundsAll.forEach((bands)=>{
-            if(bands.BounsName==petinfo.petBouns.BounsName){
-                bands.BounsNum+=petinfo.petBouns.BounsNum*petData.petLevel;
+            if(bands.BounsName==petBouns.BounsName){
+                bands.BounsNum+=petBouns.BounsNum*petData.petLevel;
             }
         });
 
@@ -259,8 +255,8 @@ export class Strike extends ViewConnector {
             }
 
             this.boundsAll.forEach((bands)=>{
-                if(bands.BounsName==petinfo.petBouns.BounsName){
-                    bands.BounsNum-=petinfo.petBouns.BounsNum*petData.petLevel;
+                if(bands.BounsName==petBouns.BounsName){
+                    bands.BounsNum-=petBouns.BounsNum*petData.petLevel;
                 }
             });
             this.seats[seatnumber-1]=false;

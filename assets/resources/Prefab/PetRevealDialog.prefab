@@ -3640,7 +3640,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Wood",
+    "_name": "Magic",
     "_objFlags": 0,
     "_parent": {
       "__id__": 94
@@ -3733,7 +3733,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 80,
-      "height": 84
+      "height": 70
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3785,7 +3785,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "aca3ce24-ba2f-4112-903b-6cab14fbfba4"
+      "__uuid__": "9aa05e46-cf35-4d90-9067-45eb69b2e808"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -3840,7 +3840,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 54.02,
-      "height": 50.4
+      "height": 31.5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -3893,7 +3893,7 @@
     "_string": "Type",
     "_N$string": "Type",
     "_fontSize": 24,
-    "_lineHeight": 40,
+    "_lineHeight": 25,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "1e872b72-2627-4099-852d-887f4bb83de2"
@@ -4024,7 +4024,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 61.5,
+      "width": 70,
       "height": 75
     },
     "_anchorPoint": {
@@ -4077,7 +4077,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "ccf43cb1-713c-480f-9925-ab5b16794f2b"
+      "__uuid__": "6b916290-7fee-4f63-906a-4fe22c09ef63"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -4132,7 +4132,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 54.02,
-      "height": 50.4
+      "height": 31.5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -4185,7 +4185,7 @@
     "_string": "Type",
     "_N$string": "Type",
     "_fontSize": 24,
-    "_lineHeight": 40,
+    "_lineHeight": 25,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "1e872b72-2627-4099-852d-887f4bb83de2"
@@ -4424,7 +4424,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 54.02,
-      "height": 50.4
+      "height": 31.5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -4477,7 +4477,7 @@
     "_string": "Type",
     "_N$string": "Type",
     "_fontSize": 24,
-    "_lineHeight": 40,
+    "_lineHeight": 25,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "1e872b72-2627-4099-852d-887f4bb83de2"

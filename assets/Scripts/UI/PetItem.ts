@@ -57,17 +57,10 @@ export default class PetItem extends cc.Component {
     Init(petData:PetData, touCallBack = null) {
         let petid =petData.petId;
         this.setLevelAndName(petid, petData);
-        let petInfos=User.instance.petInfos;
-        petInfos.forEach((info) => {
-            if (info.petId == petData.petId) {
-                let config=getPetConfigById(info.petId);
-                this.setRare(config.rarity.toString());
-                this.SetElements(config.elements);
-                this.setSpriteFrame(config.art_asset)
-                return
-            }
-        })
-        
+        let config = getPetConfigById(petid);
+        this.setRare(config.rarity.toString());
+        this.SetElements(config.elements);
+        this.setSpriteFrame(config.art_asset)
         // this.SetPortrait(petData, petConfig);
 
         this.node.off(cc.Node.EventType.TOUCH_END);
