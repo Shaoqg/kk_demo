@@ -30,6 +30,9 @@ export default class WorldManager extends cc.Component {
 
     onLoad() {
         StateManager.instance.changeState("IslandState");
+    }
+
+    start(){
 
         this.init();
         this.initCastle();
@@ -37,6 +40,7 @@ export default class WorldManager extends cc.Component {
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
 
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
+
     }
 
     init() {
@@ -88,7 +92,7 @@ export default class WorldManager extends cc.Component {
         let castleNodes = cc.find("world/island/islandUI/islandNode/island/mapblocks/build", this.node);
         castleNodes.children.forEach((node, i)=>{
             node.active = (i == level-1);
-            if (i == castleNodes.children.length -1 && !node.active) {
+            if (level-1 > castleNodes.children.length - 1) {
                 node.active = true;
             }
         })
@@ -143,6 +147,8 @@ export default class WorldManager extends cc.Component {
         this.updateStoneLabel();
         this.updateFoodLabel()
         this.updateMagicLabel()
+
+        User.instance.saveUse();
     }
 
     updateCoinLabel(){
