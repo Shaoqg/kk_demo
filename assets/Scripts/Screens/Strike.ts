@@ -5,6 +5,7 @@ import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
 import { PetInfo, petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
+import { getPetConfigById } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -183,11 +184,11 @@ export class Strike extends ViewConnector {
                 petinfo=info;
             }
         })
-
+        let petconfig=getPetConfigById(petinfo.petId);
         let pet = cc.instantiate(this.pet);
         let list = cc.find("scrollview/list", this.root);
         let petImage = pet.getChildByName("petimage").getComponent(cc.Sprite);
-        petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petinfo.petSpriteFrameName);
+        petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petconfig.art_asset);
         // petImage.spriteFrame = this.SpriteFrame[petListInfo];
 
         list.addChild(pet);
@@ -231,15 +232,13 @@ export class Strike extends ViewConnector {
 
         petImage.spriteFrame = petNode.getChildByName("petimage").getComponent(cc.Sprite).spriteFrame;
         petImage.node.active = true;
-        bonusLabel.string=petinfo.petBouns.BounsName+"\n+"+petinfo.petBouns.BounsNum+"%";
+        bonusLabel.string=petinfo.petBouns.BounsName+"\n+"+(petinfo.petBouns.BounsNum*petData.petLevel)+"%";
 
-        // bonusLabel.string = bonusLabel.string.replace("Wood", this.bonusName[petListInfo]);
-        // bonusLabel.string = bonusLabel.string.replace("10", this.bonusNum[petListInfo]);
         bonusLabel.node.active = true;
 
         this.boundsAll.forEach((bands)=>{
             if(bands.BounsName==petinfo.petBouns.BounsName){
-                bands.BounsNum+=petinfo.petBouns.BounsNum
+                bands.BounsNum+=petinfo.petBouns.BounsNum*petData.petLevel;
             }
         });
 
@@ -261,7 +260,7 @@ export class Strike extends ViewConnector {
 
             this.boundsAll.forEach((bands)=>{
                 if(bands.BounsName==petinfo.petBouns.BounsName){
-                    bands.BounsNum-=petinfo.petBouns.BounsNum
+                    bands.BounsNum-=petinfo.petBouns.BounsNum*petData.petLevel;
                 }
             });
             this.seats[seatnumber-1]=false;

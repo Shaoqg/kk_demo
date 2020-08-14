@@ -4,6 +4,7 @@ import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
 import { getPetConfigById, Rarity, PetType } from "../Config";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
 
@@ -143,7 +144,7 @@ export default class PetRevealDialog extends ViewConnector {
                     break;
             }
         });
-
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         this.refresh(data)
     }
     refresh(data) {

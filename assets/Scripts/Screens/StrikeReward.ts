@@ -1,6 +1,10 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import { petBouns } from "../UI/PetRevealDialog";
+import User from "../Gameplay/User";
+import { Strike } from "./Strike";
+import WorldManager from "../Gameplay/WorldManager";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -69,7 +73,6 @@ export class StrikeReward extends ViewConnector {
                     break;
             }
         });
-        console.log(boundsWood,boundsStone,boundsCoin);
         
         wood = Math.floor(wood * (1 + boundsWood / 100));
         stone = Math.floor(stone * (1 + boundsStone / 100));
@@ -83,9 +86,16 @@ export class StrikeReward extends ViewConnector {
         rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + boundsStone + "%";
         rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + boundsCoin + "%";
 
+        User.instance.coin+=coins;
+        User.instance.stone+=stone;
+        User.instance.wood+=wood;   
+
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
             this.close(undefined);
+            Strike.close();
         });
 
 

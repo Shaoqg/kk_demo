@@ -2,6 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
 import WorldManager from "../Gameplay/WorldManager";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -152,7 +153,7 @@ export class ShipUpgrade extends ViewConnector {
             User.instance.coin -= cost.coin;
             User.instance.wood -= cost.wood;
             User.instance.stone -= cost.stone;
-            WorldManager.updateCoinLabel()
+            EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         } else {
             return;
         }
