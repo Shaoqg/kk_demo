@@ -199,6 +199,10 @@ export default class StoreScreen extends ViewConnector {
 
     getPet(){
         let level = User.instance.level_castle;
+        if (level >=3) {
+            level = 3;
+        }
+
 
         let selectPet =[];
         PetConfig.forEach(element => {
@@ -340,6 +344,8 @@ export default class StoreScreen extends ViewConnector {
                     }else{
                         this.onclickPet(null, null);
                     }
+
+                    EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
                 }
             }
     }

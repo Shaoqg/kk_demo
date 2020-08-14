@@ -78,7 +78,7 @@ export enum Resource  {
 export enum Rarity {
     "common" = "common",
     "uncommon" = "uncommon",
-    "rare" = "uncommon",
+    "rare" = "rare",
 }
 
 export enum Element{
