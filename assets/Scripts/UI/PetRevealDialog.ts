@@ -2,6 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
 import { PetData } from "./PetList";
 import User from "../Gameplay/User";
+import { KKLoader } from "../Util/KKLoader";
 
 
 
@@ -14,6 +15,7 @@ export type PetInfo = {
     petBouns:petBouns,
     petBounsNum:number[],
     petNeedUpgrade: PetUpdateResourse[]
+    petSpriteFrameName:string;
 }
 
 export type PetUpdateResourse = {
@@ -119,9 +121,15 @@ export default class PetRevealDialog extends ViewConnector {
         this.setPetType();
         this.setPetRarity();
         this.setPetNeedtoUpgrade();
+        this.setPetSpriteFrame();
 
         this.adjustGameInterface();
     }
+
+    async setPetSpriteFrame() {
+        this.petNode.getComponent(cc.Sprite).spriteFrame = await KKLoader.loadSprite("Pets/" + this.info.petSpriteFrameName);
+    }
+
     upgradePet(data: PetData) {
         data.petLevel++;
         this.info.petNeedUpgrade.forEach((res) => {
