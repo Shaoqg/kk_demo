@@ -5,7 +5,7 @@ import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, strikeTime } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -135,7 +135,8 @@ export class Strike extends ViewConnector {
     async startCountDown() {
         this.goStrike = true
         this.time = Date.now() / 1000;
-        this.counttime = 0.2;
+        this.counttime = strikeTime / speeds[User.instance.ship_speed_level];
+        console.log("time",this.counttime * 60);
         
     }
 

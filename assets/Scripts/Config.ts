@@ -101,6 +101,8 @@ export let speeds: number[] = [24, 30, 42];
 export let capacitys: number[] = [1, 3, 5];
 export let bounss: number[] = [10, 50, 200];
 
+export let strikeTime: number = 5;
+
 export let speedLevelUpInfo= [
     {
         coin:100,
