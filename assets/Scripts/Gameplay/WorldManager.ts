@@ -85,7 +85,10 @@ export default class WorldManager extends cc.Component {
 
         let castleNodes = cc.find("world/island/islandUI/islandNode/island/mapblocks/build", this.node);
         castleNodes.children.forEach((node, i)=>{
-                node.active = (i == level-1);
+            node.active = (i == level-1);
+            if (i == castleNodes.children.length -1 && !node.active) {
+                node.active = true;
+            }
         })
     }
 

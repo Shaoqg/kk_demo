@@ -323,7 +323,7 @@ export default class StoreScreen extends ViewConnector {
                     User.instance.magic_stone -= costConfig.magic_stone;
 
                     this.currentSelectNode.destroy();
-
+                    this.currentSelectPet = null;
 
                     let content = cc.find("root/Pet/content/petList/content", this.node);
 

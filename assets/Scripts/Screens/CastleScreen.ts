@@ -100,8 +100,8 @@ export class CastleScreen extends ViewConnector {
             }
             switch (name) {
                 case "ship":
-                        isOk = User.instance.level >= config[name];
-                        str = `Level: ${User.instance.level}/ ${ config[name]}`;
+                        isOk = User.instance.level_ship >= config[name];
+                        str = `Level: ${User.instance.level_ship}/ ${ config[name]}`;
                     break;
                 case "pet":
                         isOk = User.instance.petNumber >= config[name];
@@ -196,7 +196,7 @@ export class CastleScreen extends ViewConnector {
             },
         ]
 
-        return levelupConfig[level - 1];
+        return levelupConfig[level - 1] || levelupConfig[levelupConfig.length -1];
     }
 
     adjustGameInterface() {

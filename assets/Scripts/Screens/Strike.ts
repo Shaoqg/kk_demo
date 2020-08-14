@@ -77,7 +77,7 @@ export class Strike extends ViewConnector {
 
         this.seatNum=capacitys[User.instance.ship_capacity_level];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
-        shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level;
+        shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level_ship;
         shipSpeed.getComponent(cc.Label).string="Speed："+speeds[User.instance.ship_speed_level]+" knots:";
         
 

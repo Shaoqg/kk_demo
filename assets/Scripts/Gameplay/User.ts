@@ -6,8 +6,8 @@ import WorldManager from "./WorldManager";
 
 export default class User {
 
-    static _instance:User = null;
-    static get instance(){
+    static _instance: User = null;
+    static get instance() {
         if (!this._instance) {
             this._instance = new User();
         }
@@ -15,7 +15,7 @@ export default class User {
     }
 
 
-    public level = 1;
+    // public level = 1;
     private petList: PetData[] = [{
         // work:true,
         petId: "froom",
@@ -82,15 +82,16 @@ export default class User {
         },
     ]
 
+    public star = 1;
     public level_ship = 1;
     public level_castle = 1;
     public coin = 200000;
     public wood = 200;
     public stone = 200;
     public food = 200;
-    public ship_capacity_level=0;
-    public ship_speed_level=0;
-    public ship_bouns_level=0;
+    public ship_capacity_level = 0;
+    public ship_speed_level = 0;
+    public ship_bouns_level = 0;
     public petNumber = this.petList.length;
     public magic_stone = 10;
 
@@ -98,19 +99,19 @@ export default class User {
         return this.petList;
     }
 
-    public addPet(pet:PetType) {
+    public addPet(pet: PetType) {
         if (pet) {
             let idAdd = true;
-            this.petList.forEach((petData)=>{
+            this.petList.forEach((petData) => {
                 if (petData.petId == pet.petId) {
                     idAdd = false;
                 }
             })
             if (idAdd) {
                 this.petList.push({
-                    petId:pet.petId,
-                    petName:pet.petId,
-                    petLevel:1
+                    petId: pet.petId,
+                    petName: pet.petId,
+                    petLevel: 1
                 })
                 this.petNumber++;
             }
@@ -121,7 +122,7 @@ export default class User {
 
 
 
-public getReward(type: Resource, amount: number) {
+    public getReward(type: Resource, amount: number) {
         switch (type) {
             case Resource.coin:
                 this.coin += amount;
@@ -138,6 +139,15 @@ public getReward(type: Resource, amount: number) {
         }
     }
 
-public 
+    public saveUse() {
+        let gameData = {
+
+
+
+        }
+
+
+    }
+
 }
 
