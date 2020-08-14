@@ -1,5 +1,8 @@
 import { PetData } from "../UI/PetList";
 import { PetInfo } from "../UI/PetRevealDialog";
+import { TaskData } from "../UI/TaskScreen";
+import { Resource } from "../Config";
+import WorldManager from "./WorldManager";
 
 export default class User {
 
@@ -112,6 +115,64 @@ export default class User {
         },
     ]
 
+    public AchievementData: TaskData[] = [
+        {
+            taskID: "Task_Ach_1",
+            tasktype: "achievement",
+            taskfinish: false,
+            start: {
+                rewardType: Resource.coin,
+                rewardNum: 1500,
+            },
+        }, {
+            taskID: "Task_Ach_2",
+            tasktype: "achievement",
+            taskfinish: false,
+            start: {
+                rewardType: Resource.coin,
+                rewardNum: 15,
+            },
+        }, {
+            taskID: "Task_Ach_3",
+            tasktype: "achievement",
+            taskfinish: false,
+            start:
+            {
+                rewardType: Resource.coin,
+                rewardNum: 15,
+            },
+        },
+    ]
+
+    public DailyTaskData: TaskData[] = [
+        {
+            taskID: "Task_Dal_1",
+            tasktype: "daily",
+            taskfinish: false,
+            start: {
+                rewardType: Resource.coin,
+                rewardNum: 1500,
+            },
+        }, {
+            taskID: "Task_Dal_2",
+            tasktype: "daily",
+            taskfinish: false,
+            start: {
+                rewardType: Resource.coin,
+                rewardNum: 15,
+            },
+        }, {
+            taskID: "Task_Dal_3",
+            tasktype: "daily",
+            taskfinish: false,
+            start:
+            {
+                rewardType: Resource.coin,
+                rewardNum: 15,
+            },
+        },
+    ]
+
     public level_ship = 1;
     public level_castle = 1;
     public coin = 200000;
@@ -125,6 +186,22 @@ export default class User {
         return this.petList;
     }
 
+    public getReward(type: Resource, amount: number) {
+        switch (type) {
+            case Resource.coin:
+                this.coin += amount;
+                break;
+            case Resource.wood:
+                this.wood += amount;
+                break;
+            case Resource.stone:
+                this.stone += amount;
+                break;
+            case Resource.food:
+                this.food += amount;
+                break;
+        }
+    }
 }
 
 
