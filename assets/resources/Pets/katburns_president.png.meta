@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "6a73a8ec-7029-4671-89c9-a31a9f3ce546",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "katburns_president": {
+      "ver": "1.0.4",
+      "uuid": "e091bf0f-3bee-4fda-931b-ede93b0c526f",
+      "rawTextureUuid": "6a73a8ec-7029-4671-89c9-a31a9f3ce546",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 3,
+      "offsetY": -7.5,
+      "trimX": 12,
+      "trimY": 17,
+      "width": 132,
+      "height": 131,
+      "rawWidth": 150,
+      "rawHeight": 150,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
