@@ -23,6 +23,7 @@ export default class WorldManager extends cc.Component {
     woodNode: cc.Node;
     stoneNode: cc.Node;
     foodNode: cc.Node;
+    magicStoneNode: cc.Node;
     btn_dailay: cc.Node;
 
 
@@ -75,6 +76,7 @@ export default class WorldManager extends cc.Component {
         this.woodNode = cc.find("DialogRoot/top_right/wood", this.node)
         this.stoneNode = cc.find("DialogRoot/top_right/stone", this.node)
         this.foodNode = cc.find("DialogRoot/top_right/food", this.node)
+        this.magicStoneNode = cc.find("DialogRoot/top_right/magic", this.node)
 
         this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
 
@@ -140,6 +142,7 @@ export default class WorldManager extends cc.Component {
         this.updateWoodLabel();
         this.updateStoneLabel();
         this.updateFoodLabel()
+        this.updateMagicLabel()
     }
 
     updateCoinLabel(){
@@ -156,5 +159,9 @@ export default class WorldManager extends cc.Component {
 
     updateFoodLabel(){
         this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.food.toString();
+    }
+
+    updateMagicLabel(){
+        this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.magic_stone.toString();
     }
 }

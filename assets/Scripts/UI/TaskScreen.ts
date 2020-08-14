@@ -10,7 +10,7 @@ export type TaskData = {
     taskID: string,
     tasktype: "achievement" | "daily",
     taskfinish: boolean;
-    start:RewardType;
+    start?:RewardType;
 }
 
 export type TaskType = {
@@ -175,6 +175,9 @@ export default class TaskScreen extends ViewConnector {
                 break;
             case Resource.food:
                 path = "UI/food_04";
+                break;
+            case Resource.magicStone:
+                path = "UI/magic_rock";
                 break;
             default:
                 path = "UI/hud_icon_coin";

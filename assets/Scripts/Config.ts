@@ -71,8 +71,11 @@ export enum Resource  {
   "coin",
   "wood",
   "food",
-  "stone"
-}export enum Rarity {
+  "stone",
+  "magicStone"
+}
+
+export enum Rarity {
     "common" = "common",
     "uncommon" = "uncommon",
     "rare" = "uncommon",
@@ -217,6 +220,15 @@ export let DailyTaskConfig: TaskType[] = [
     {
       rewardType: Resource.coin,
       rewardNum: 30,
+    },
+  },
+  {
+    taskID: "Task_Dal_4",
+    taskName: "Magic Power",
+    taskInfo: "Just Click Me",
+    reward: {
+      rewardType: Resource.magicStone,
+      rewardNum: 800,
     },
   },
 ]
