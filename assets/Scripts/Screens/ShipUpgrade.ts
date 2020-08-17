@@ -54,30 +54,38 @@ export class ShipUpgrade extends ViewConnector {
         this.bounss = bounss;
 
         this.getShipInfo("speed").string = "Speed：" + this.speeds[User.instance.ship_speed_level] + "kn"
-        this.getShipInfo("capacity").string = "Capacity：0/" + this.capacitys[User.instance.ship_capacity_level];
+        this.getShipInfo("capacity").string = "Capacity：" + User.instance.AdventurePets.length + "/" + this.capacitys[User.instance.ship_capacity_level];
         this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[User.instance.ship_bouns_level] + "%"
         this.updateShipLevel();
 
-        this.shipParts.forEach((part, idx) => {
-            let upgrade = cc.find("partsOnShip/shipPart" + (idx+1) + "/goal", this.root);
-            let isMax=this.checkMaxLevel(part, upgrade);
-            this.updatePartBonus(part,idx+1,isMax);
-            this.updatePartNeeded(part,idx+1,isMax)
-            this.showFinishLabel(idx+1,isMax);
-            if(!this.checkResource(part)){
-                this.showDisableButton(idx+1,isMax,true)
-            }
-            upgrade.on(cc.Node.EventType.TOUCH_END, () => {
-                this.updateShipPart(part);
+        let timestamp = User.instance.getTimeStamp("Adventure");
+        if (timestamp > 0) {
+            let upgradeNode = cc.find("partsOnShip", this.root);
+            let inAdventureNode = cc.find("shipInAdventure", this.root);
+            upgradeNode.active = false;
+            inAdventureNode.active = true;
+        }else{
+            this.shipParts.forEach((part, idx) => {
+                let upgrade = cc.find("partsOnShip/shipPart" + (idx+1) + "/goal", this.root);
                 let isMax=this.checkMaxLevel(part, upgrade);
-                if(!this.checkResource(part)){
-                    this.showDisableButton(idx+1,isMax,true)
-                }
                 this.updatePartBonus(part,idx+1,isMax);
                 this.updatePartNeeded(part,idx+1,isMax)
                 this.showFinishLabel(idx+1,isMax);
+                if(!this.checkResource(part)){
+                    this.showDisableButton(idx+1,isMax,true)
+                }
+                upgrade.on(cc.Node.EventType.TOUCH_END, () => {
+                    this.updateShipPart(part);
+                    let isMax=this.checkMaxLevel(part, upgrade);
+                    if(!this.checkResource(part)){
+                        this.showDisableButton(idx+1,isMax,true)
+                    }
+                    this.updatePartBonus(part,idx+1,isMax);
+                    this.updatePartNeeded(part,idx+1,isMax)
+                    this.showFinishLabel(idx+1,isMax);
+                });
             });
-        });
+        }
 
 
 
