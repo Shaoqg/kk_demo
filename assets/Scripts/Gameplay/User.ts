@@ -109,7 +109,6 @@ export default class User {
     }
 
     getTimeStamp(name: string){
-        console.log(this._timeStamps);
         return this._timeStamps[name];
     }
 
@@ -186,7 +185,7 @@ export default class User {
             AdventurePets: this.AdventurePets,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
-        console.log("save user")
+        console.log("SAVE USER")
     }
 
     public getUse() {

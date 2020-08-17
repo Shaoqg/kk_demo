@@ -86,7 +86,6 @@ export class Adventure extends ViewConnector {
         }
         
         let timestamp = User.instance.getTimeStamp("Adventure");
-        console.log("Adventure",timestamp);
         if (timestamp > 0) {
             this.time = timestamp
             this.counttime = User.instance.AdventureTime;
@@ -104,7 +103,6 @@ export class Adventure extends ViewConnector {
             })
             this.goAdventure = true;
             this.getTimeRemaining();
-            console.log("this.goAdventure",this.goAdventure);
             list.active = false;
             scrollview.getComponent(cc.ScrollView).content = battleinfo;
             battleinfo.active = true;
@@ -194,7 +192,6 @@ export class Adventure extends ViewConnector {
         let timeelapsed = (Date.now() / 1000 - this.time);
         this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
         loadingbar.progress = 1 - (this.timeremain / (this.counttime * 60));
-        console.log(this.timeremain);
         if(this.timeremain<=0){
             this.goAdventure=false;
             this.AdventureOver()
@@ -292,9 +289,7 @@ export class Adventure extends ViewConnector {
                         newseat.push(pet);
                     }
                 })
-                console.log("newseat",newseat);
                 this.seatPet=newseat;
-                console.log("this.seatPet",this.seatPet);
 
                 shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/" + this.seatNum;
 
@@ -320,7 +315,6 @@ export class Adventure extends ViewConnector {
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
        
         if ((this.petReady == this.seatNum)&&!this.goAdventure) {
-            console.log("this.petReady == this.seatNum",this.petReady == this.seatNum);
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
             go.getComponent(cc.Button).interactable = true;
