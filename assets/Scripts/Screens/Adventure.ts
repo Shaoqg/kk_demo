@@ -1,23 +1,20 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
-import { StrikeReward } from "./StrikeReward";
+import { AdventureReward } from "./AdventureReward";
 import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, strikeTime } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime,  } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export class Strike extends ViewConnector {
-
-    @property(cc.SpriteFrame)
-    SpriteFrame: cc.SpriteFrame[] = [];
+export class Adventure extends ViewConnector {
 
 
-    static prefabPath = 'Prefab/Strike';
+    static prefabPath = 'Prefab/Adventure';
 
-    static _instance: Strike = null;
+    static _instance: Adventure = null;
 
     root: cc.Node = null;
     pet: cc.Node;
@@ -26,7 +23,7 @@ export class Strike extends ViewConnector {
     bonusName: string[] = ["Metal", "Wood", "Fuel", "Bullet", "Food"]
     bonusNum: string[] = ["10", "20", "15", "33", "50"]
     updateTime: number = 0;
-    goStrike: boolean = false;
+    goAdventure: boolean = false;
     time: number = 0;
     counttime: number = 0;
     timeremain: number = 0;
@@ -36,7 +33,7 @@ export class Strike extends ViewConnector {
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
-        let vc = Strike._instance = await this.loadView<Strike>(parentNode, Strike);
+        let vc = Adventure._instance = await this.loadView<Adventure>(parentNode, Adventure);
 
         vc.applyData();
 
@@ -133,15 +130,15 @@ export class Strike extends ViewConnector {
         //this.adjustGameInterface();
     }
     async startCountDown() {
-        this.goStrike = true
+        this.goAdventure = true
         this.time = Date.now() / 1000;
-        this.counttime = strikeTime / speeds[User.instance.ship_speed_level];
+        this.counttime = AdventureTime / speeds[User.instance.ship_speed_level];
         console.log("time",this.counttime * 60);
         
     }
 
     update(dt) {
-        if (!this.goStrike) {
+        if (!this.goAdventure) {
             return;
         }
         this.updateTime += dt;
@@ -156,12 +153,12 @@ export class Strike extends ViewConnector {
         this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
         loadingbar.progress = 1 - (this.timeremain / (this.counttime * 60));
         if(this.timeremain<=0){
-            this.goStrike=false;
-            this.strikeOver()
+            this.goAdventure=false;
+            this.AdventureOver()
         }
     }
 
-    strikeOver() {
+    AdventureOver() {
         let go = cc.find("button_primary", this.root);
         let goLabel = cc.find("button_primary/goLabel", this.root);
         let go_gry = cc.find("button_primary/button_gry", this.root);
@@ -174,7 +171,7 @@ export class Strike extends ViewConnector {
             this.boundsAll.forEach((bands) => {
                 bands.BounsNum += bounss[User.instance.ship_bouns_level];
             })
-            StrikeReward.prompt(this.boundsAll);
+            AdventureReward.prompt(this.boundsAll);
         });
     }
 

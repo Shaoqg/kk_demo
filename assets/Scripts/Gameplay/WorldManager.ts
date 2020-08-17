@@ -2,7 +2,7 @@ import User from "./User";
 import { CastleScreen } from "../Screens/CastleScreen";
 import { StateManager } from "./State/StateManager";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
-import { Strike } from "../Screens/Strike";
+import { Adventure } from "../Screens/Adventure";
 import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import TaskScreen from "../UI/TaskScreen";
@@ -123,7 +123,7 @@ export default class WorldManager extends cc.Component {
 
     onclickAdventure() {
         this.switchShipState(false);
-        Strike.prompt();
+        Adventure.prompt();
     }
 
 

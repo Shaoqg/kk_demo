@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Strike",
+    "_name": "Adventure",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -6725,7 +6725,7 @@
     "sync": false
   },
   {
-    "__type__": "629a9JihsBOS6ksLHQBrSyX",
+    "__type__": "05d3cqIiYNDLpXMAiB1HVQr",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -6736,23 +6736,7 @@
       "__id__": 159
     },
     "fitWidth": false,
-    "SpriteFrame": [
-      {
-        "__uuid__": "412df72b-f688-49d6-82a5-355e24acc0ec"
-      },
-      {
-        "__uuid__": "597dd9eb-a127-4ea4-aaf7-c28bcc326f5b"
-      },
-      {
-        "__uuid__": "faff27ff-089c-497f-b8c4-9ccc4c430cb4"
-      },
-      {
-        "__uuid__": "4ed837f0-8f33-46fe-97f3-52263ff08e58"
-      },
-      {
-        "__uuid__": "210370de-48d8-42ea-8ae7-ba026a8dcf6f"
-      }
-    ],
+    "SpriteFrame": [],
     "_id": ""
   },
   {

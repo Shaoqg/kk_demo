@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "StrikeReward",
+    "_name": "AdventureReward",
     "_objFlags": 0,
     "_parent": null,
     "_children": [
@@ -2892,7 +2892,7 @@
     "sync": false
   },
   {
-    "__type__": "c8050Qv3TlIe7ONusfF75eV",
+    "__type__": "c67bdLAYclCjpMdk4PluFFo",
     "_name": "",
     "_objFlags": 0,
     "node": {
