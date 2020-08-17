@@ -30,6 +30,7 @@ export class Adventure extends ViewConnector {
     seats: boolean[]=[];
     seatNum: number;
     boundsAll: petBouns[]=[{BounsName:"Coin",BounsNum:0},{BounsName:"Wood",BounsNum:0},{BounsName:"Stone",BounsNum:0}];
+    seatPet:PetData[]=[];
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -83,35 +84,62 @@ export class Adventure extends ViewConnector {
             petSeat.active=true
             this.seats.push(false);
         }
+        
+        let timestamp = User.instance.getTimeStamp("Adventure");
+        console.log("Adventure",timestamp);
+        if (timestamp > 0) {
+            this.time = timestamp
+            this.counttime = User.instance.AdventureTime;
+            let Pets = User.instance.AdventurePets;
+            Pets.forEach((pet) => {
+                let petconfig = getPetConfigById(pet.petId);
+                let petBouns = getPetBouns(petconfig)
+                this.boundsAll.forEach((bands) => {
+                    if (bands.BounsName == petBouns.BounsName) {
+                        bands.BounsNum += petBouns.BounsNum * pet.petLevel;
+                    }
+                });
 
-        list.height = 11;
-
-        petList.forEach((data, idx) => {
-            this.createList(data, idx);
-        });
-
-        go.on(cc.Node.EventType.TOUCH_END, () => {
-            if (!this.boatReady) {
-                return;
-            }
+                this.setToReady(pet, petconfig);
+            })
+            this.goAdventure = true;
+            this.getTimeRemaining();
+            console.log("this.goAdventure",this.goAdventure);
             list.active = false;
             scrollview.getComponent(cc.ScrollView).content = battleinfo;
             battleinfo.active = true;
-            subtitleLabel.string = "Adventure Log"
-
-            let go_gry = cc.find("button_primary/button_gry", this.root);
-            let goLabel = cc.find("button_primary/goLabel", this.root);
-            let timecount = cc.find("shipInfo/timecount", this.root);
-
-            go.getComponent(cc.Button).interactable = false;
-            go_gry.active = true;
-            goLabel.getComponent(cc.Label).string = "Exploring"
-            timecount.active = true;
-            go.off(cc.Node.EventType.TOUCH_END);
-            let loadingbar = cc.find("loading_bar", this.node);
+            subtitleLabel.string = "Adventure Log";
+            let loadingbar = cc.find("loading_bar", this.root);
             loadingbar.active = true
-            this.startCountDown();
-        });
+            if (this.goAdventure) {
+                this.setButtomAndTimeBar("Exploring", false, true);
+            } else {
+                this.setButtomAndTimeBar("Go Collect!", true, true);
+            }
+        }else{
+            list.height = 11;
+
+            petList.forEach((data, idx) => {
+                this.createList(data, idx);
+            });
+    
+            go.on(cc.Node.EventType.TOUCH_END, () => {
+                if (!this.boatReady) {
+                    return;
+                }
+                list.active = false;
+                scrollview.getComponent(cc.ScrollView).content = battleinfo;
+                battleinfo.active = true;
+                subtitleLabel.string = "Adventure Log"
+    
+                this.setButtomAndTimeBar("Exploring",false,true);
+                go.off(cc.Node.EventType.TOUCH_END);
+                let loadingbar = cc.find("loading_bar", this.root);
+                loadingbar.active = true
+                User.instance.AdventurePets=this.seatPet;
+                this.startCountDown();
+            });
+        }
 
 
         this.root.stopAllActions();
@@ -133,8 +161,22 @@ export class Adventure extends ViewConnector {
         this.goAdventure = true
         this.time = Date.now() / 1000;
         this.counttime = AdventureTime / speeds[User.instance.ship_speed_level];
+        User.instance.setTimeStamp("Adventure",this.time);
+        User.instance.AdventureTime=this.counttime;
         console.log("time",this.counttime * 60);
-        
+        User.instance.saveUse();
+    }
+
+    setButtomAndTimeBar(buttonLabel:string,buttonInteractable:boolean=true,timecountOpen:boolean=true){
+            let go = cc.find("button_primary", this.root);
+            let go_gry = cc.find("button_primary/button_gry", this.root);
+            let goLabel = cc.find("button_primary/goLabel", this.root);
+            let timecount = cc.find("shipInfo/timecount", this.root);
+
+            go.getComponent(cc.Button).interactable = buttonInteractable;
+            go_gry.active = !buttonInteractable;
+            goLabel.getComponent(cc.Label).string = buttonLabel;
+            timecount.active = timecountOpen;
     }
 
     update(dt) {
@@ -148,10 +190,11 @@ export class Adventure extends ViewConnector {
         }
     }
     getTimeRemaining() {
-        let loadingbar = cc.find("loading_bar", this.node).getComponent(cc.ProgressBar);
+        let loadingbar = cc.find("loading_bar", this.root).getComponent(cc.ProgressBar);
         let timeelapsed = (Date.now() / 1000 - this.time);
         this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
         loadingbar.progress = 1 - (this.timeremain / (this.counttime * 60));
+        console.log(this.timeremain);
         if(this.timeremain<=0){
             this.goAdventure=false;
             this.AdventureOver()
@@ -160,25 +203,24 @@ export class Adventure extends ViewConnector {
 
     AdventureOver() {
         let go = cc.find("button_primary", this.root);
-        let goLabel = cc.find("button_primary/goLabel", this.root);
-        let go_gry = cc.find("button_primary/button_gry", this.root);
-
-        go.getComponent(cc.Button).interactable = true;
-        go_gry.active = false;
-        goLabel.getComponent(cc.Label).string = "Go Collect!";
+        this.setButtomAndTimeBar("Go Collect!",true,true);
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
             this.boundsAll.forEach((bands) => {
                 bands.BounsNum += bounss[User.instance.ship_bouns_level];
             })
             AdventureReward.prompt(this.boundsAll);
+            User.instance.setTimeStamp("Adventure",0);
+            User.instance.AdventureTime = 0;
+            User.instance.AdventurePets = [];
         });
     }
 
-    async createList(petData: any, idx: number) {
+    async createList(petData: PetData, idx: number) {
 
         let petconfig=getPetConfigById(petData.petId);
         let pet = cc.instantiate(this.pet);
+        pet.name=petData.petId;
         let list = cc.find("scrollview/list", this.root);
         let petImage = pet.getChildByName("petimage").getComponent(cc.Sprite);
         petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petconfig.art_asset);
@@ -193,11 +235,11 @@ export class Adventure extends ViewConnector {
         pet.x = (idx % 5) * (pet.width + 11) + (pet.width / 2 + 11);
 
         pet.on(cc.Node.EventType.TOUCH_END, () => {
-            this.setToReady(pet, petData,petconfig);
+            this.setToReady(petData,petconfig,pet);
         });
     }
 
-    setToReady(petNode: cc.Node, petData: PetData,petconfig:PetType) {
+    async setToReady( petData: PetData,petconfig:PetType,petNode?: cc.Node) {
         if (this.petReady >= this.seatNum) {
             return;
         }
@@ -218,12 +260,51 @@ export class Adventure extends ViewConnector {
         let petImage = petSeat.getChildByName("petimage").getComponent(cc.Sprite);
         let bonusLabel = petSeat.getChildByName("bonus").getComponent(cc.Label);
 
-        petNode.getChildByName("underlay").active = true;
-        petNode.getChildByName("Label").active = true;
+        if(petNode){
+            this.seatPet.push(petData);
+            petNode.getChildByName("underlay").active = true;
+            petNode.getChildByName("Label").active = true;
+            petSeat.once(cc.Node.EventType.TOUCH_END, () => {
+                petNode.getChildByName("underlay").active = false;
+                petNode.getChildByName("Label").active = false;
+                bg.active = false;
+                petImage.node.active = false;
+                bonusLabel.node.active = false;
 
+                if (this.petReady == this.seatNum) {
+                    let go = cc.find("button_primary", this.root);
+                    let go_gry = cc.find("button_primary/button_gry", this.root);
+                    go.getComponent(cc.Button).interactable = false;
+                    go_gry.active = true;
+                    this.boatReady = false;
+                }
+
+                this.boundsAll.forEach((bands) => {
+                    if (bands.BounsName == petBouns.BounsName) {
+                        bands.BounsNum -= petBouns.BounsNum * petData.petLevel;
+                    }
+                });
+                this.seats[seatnumber - 1] = false;
+                this.petReady--;
+                let newseat:PetData[]=[]
+                this.seatPet.forEach((pet)=>{
+                    if(pet.petId!=petNode.name){
+                        newseat.push(pet);
+                    }
+                })
+                console.log("newseat",newseat);
+                this.seatPet=newseat;
+                console.log("this.seatPet",this.seatPet);
+
+                shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/" + this.seatNum;
+
+            });
+        }
+
+        
         bg.active = true;
 
-        petImage.spriteFrame = petNode.getChildByName("petimage").getComponent(cc.Sprite).spriteFrame;
+        petImage.spriteFrame =  await KKLoader.loadSprite("Pets/"+petconfig.art_asset);
         petImage.node.active = true;
         let petBouns=getPetBouns(petconfig);
         bonusLabel.string=petBouns.BounsName+"\n+"+(petBouns.BounsNum*petData.petLevel)+"%";
@@ -237,32 +318,9 @@ export class Adventure extends ViewConnector {
         });
 
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
-        petSeat.once(cc.Node.EventType.TOUCH_END, () => {
-            petNode.getChildByName("underlay").active = false;
-            petNode.getChildByName("Label").active = false;
-            bg.active = false;
-            petImage.node.active = false;
-            bonusLabel.node.active = false;
-
-            if(this.petReady == this.seatNum){
-                let go = cc.find("button_primary", this.root);
-                let go_gry = cc.find("button_primary/button_gry", this.root);
-                go.getComponent(cc.Button).interactable = false;
-                go_gry.active = true;
-                this.boatReady = false;
-            }
-
-            this.boundsAll.forEach((bands)=>{
-                if(bands.BounsName==petBouns.BounsName){
-                    bands.BounsNum-=petBouns.BounsNum*petData.petLevel;
-                }
-            });
-            this.seats[seatnumber-1]=false;
-            this.petReady--;
-            shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
-
-        });
-        if (this.petReady == this.seatNum) {
+       
+        if ((this.petReady == this.seatNum)&&!this.goAdventure) {
+            console.log("this.petReady == this.seatNum",this.petReady == this.seatNum);
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
             go.getComponent(cc.Button).interactable = true;

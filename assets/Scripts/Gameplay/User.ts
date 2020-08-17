@@ -100,6 +100,18 @@ export default class User {
     public ship_bouns_level = 0;
     public petNumber = this.petList.length;
     public magic_stone = 10;
+    public _timeStamps: object = {};
+    public AdventureTime = 0
+    public AdventurePets:PetData[]=[]
+
+    setTimeStamp(name: string, timeStamp: number){
+        this._timeStamps[name]=timeStamp;
+    }
+
+    getTimeStamp(name: string){
+        console.log(this._timeStamps);
+        return this._timeStamps[name];
+    }
 
     public getPetList() {
         return this.petList;
@@ -168,9 +180,13 @@ export default class User {
             stone:this.stone,
             coin:this.coin,
             wood:this.wood,
-            petList:this.petList
+            petList: this.petList,
+            _timeStamps: this._timeStamps,
+            AdventureTime: this.AdventureTime,
+            AdventurePets: this.AdventurePets,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
+        console.log("save user")
     }
 
     public getUse() {
@@ -191,7 +207,9 @@ export default class User {
             this.coin = data["coin"];
             this.wood = data["wood"];
             this.petList = data["petList"];
-
+            this._timeStamps = data["_timeStamps"];
+            this.AdventureTime = data["AdventureTime"];
+            this.AdventurePets = data["AdventurePets"];
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;
