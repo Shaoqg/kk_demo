@@ -52,43 +52,20 @@ export class AdventureReward extends ViewConnector {
         let rewardCoinNode = cc.find("rewardCoin", this.root);
 
         //debug
-        let wood = 15;
-        let stone = 10;
-        let coins = 100;
 
-
-        let boundsWood = 0;
-        let boundsStone = 0;
-        let boundsCoin = 0;
-        boundsAll.forEach((bounds) => {
-            switch (bounds.BounsName) {
-                case "Wood":
-                    boundsWood = bounds.BounsNum;
-                    break;
-                case "Stone":
-                    boundsStone = bounds.BounsNum;
-                    break;
-                case "Coin":
-                    boundsCoin = bounds.BounsNum;
-                    break;
-            }
-        });
+        let rewards=Adventure._instance.getResource(boundsAll)
         
-        wood = Math.floor(wood * (1 + boundsWood / 100));
-        stone = Math.floor(stone * (1 + boundsStone / 100));
-        coins = Math.floor(coins * (1 + boundsCoin / 100));
+        rewardWoodNode.getChildByName("reward").getComponent(cc.Label).string = "Wood x" + rewards.wood;
+        rewardStoneNode.getChildByName("reward").getComponent(cc.Label).string = "Stone x" + rewards.stone;
+        rewardCoinNode.getChildByName("reward").getComponent(cc.Label).string = "Coins x" + rewards.coins;
 
-        rewardWoodNode.getChildByName("reward").getComponent(cc.Label).string = "Wood x" + wood;
-        rewardStoneNode.getChildByName("reward").getComponent(cc.Label).string = "Stone x" + stone;
-        rewardCoinNode.getChildByName("reward").getComponent(cc.Label).string = "Coins x" + coins;
+        rewardWoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsWood + "%";
+        rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsStone + "%";
+        rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsCoin + "%";
 
-        rewardWoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + boundsWood + "%";
-        rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + boundsStone + "%";
-        rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + boundsCoin + "%";
-
-        User.instance.coin+=coins;
-        User.instance.stone+=stone;
-        User.instance.wood+=wood;   
+        User.instance.coin+=rewards.coins;
+        User.instance.stone+=rewards.stone;
+        User.instance.wood+=rewards.wood;   
 
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
