@@ -113,6 +113,8 @@ export default class PetRevealDialog extends ViewConnector {
         this.setPetNeedtoUpgrade();
         this.setPetSpriteFrame();
 
+       this.checkPetInAdventure(data);
+       
         this.adjustGameInterface();
     }
 
@@ -278,6 +280,21 @@ export default class PetRevealDialog extends ViewConnector {
             this.node.getChildByName("ButtonBlock").active = false;
         }
 
+    }
+    
+    checkPetInAdventure(data:PetData){
+        let pets=User.instance.AdventurePets;
+        let isinAdventrue=false
+        pets.forEach((pet)=>{
+            if(pet.petId==data.petId){
+                isinAdventrue = true;
+            }
+        })
+
+        if(!this.node.getChildByName("ButtonBlock").active){
+            this.node.getChildByName("ButtonBlock").active = isinAdventrue;
+        }
+       this.node.getChildByName("PetInAdventure").active = isinAdventrue;
     }
 
 
