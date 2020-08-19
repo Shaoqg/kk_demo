@@ -5,7 +5,8 @@ import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines,  } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood,  } from "../Config";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -33,12 +34,16 @@ export class Adventure extends ViewConnector {
     seatPet:PetData[]=[];
     battleinfo: cc.Node;
     AllLine: number=10;
+    foodNumLabel: cc.Label;
+    btn_reduce: cc.Node;
+    btn_increase: cc.Node;
+    food: number = 1;
 
-    static async prompt(): Promise<any> {
+    static async prompt(areaName?:string): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
         let vc = Adventure._instance = await this.loadView<Adventure>(parentNode, Adventure);
 
-        vc.applyData();
+        vc.applyData(areaName);
 
         let executor = (resolve: (any) => void, reject: (error) => void) => {
             vc.onCloseCallback = resolve;
@@ -55,7 +60,7 @@ export class Adventure extends ViewConnector {
         }
     }
 
-    applyData() {
+    applyData(areaName?: string) {
 
         let underlay = cc.find("underlay", this.node);
         this.root = cc.find("content", this.node);
@@ -74,18 +79,29 @@ export class Adventure extends ViewConnector {
         let shipCapacity = cc.find("shipInfo/capacity", this.root);
         let shipLevel = cc.find("shipInfo/level", this.root);
         let shipSpeed = cc.find("shipInfo/speed", this.root);
+        let shipFood = cc.find("shipInfo/food", this.root);
+        this.btn_reduce = cc.find("reduce", shipFood);
+        this.btn_increase = cc.find("increase", shipFood);
+        this.foodNumLabel = cc.find("foodNum/number", shipFood).getComponent(cc.Label);
+        let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
         this.seatNum=capacitys[User.instance.ship_capacity_level];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
         shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level_ship;
         shipSpeed.getComponent(cc.Label).string="Speed："+speeds[User.instance.ship_speed_level]+" knots:";
         
+        if(!areaName){
+            areaName=User.instance.AdventureDestination;
+        }
+        destinationLabel.string = "destination: area " + areaName;
 
         for(let i=1;i<=this.seatNum;i++){
             let petSeat = cc.find("petsOnShip/pet" + i, this.root);
             petSeat.active=true
             this.seats.push(false);
         }
+
+        this.initFoodBtn();
         
         this.boundsAll.forEach((bands) => {
             bands.BounsNum += bounss[User.instance.ship_bouns_level];
@@ -122,6 +138,9 @@ export class Adventure extends ViewConnector {
 
             let loadingbar = cc.find("loading_bar", this.root);
             loadingbar.active = true
+
+            shipFood.active = false;
+
             if (this.goAdventure) {
                 this.setButtomAndTimeBar("Exploring", false, true);
             } else {
@@ -140,6 +159,7 @@ export class Adventure extends ViewConnector {
                     return;
                 }
                 list.active = false;
+                shipFood.active = false;
                 scrollview.getComponent(cc.ScrollView).content = this.battleinfo;
                 this.battleinfo.active = true;
                 subtitleLabel.string = "Adventure Log"
@@ -150,10 +170,17 @@ export class Adventure extends ViewConnector {
                 loadingbar.active = true
 
                 User.instance.AdventurePets=this.seatPet;
+                User.instance.food -= this.food;
+                User.instance.AdventureFood = this.food;
+                User.instance.AdventureDestination = areaName;
+                User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
+
                 this.startCountDown();
                 this.updateTimeCountLabel();
                 this.setRandomResource(this.AllLine);
                 User.instance.saveUse();
+                
+                EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
             });
         }
 
@@ -173,10 +200,35 @@ export class Adventure extends ViewConnector {
             )));
         //this.adjustGameInterface();
     }
+
+    initFoodBtn() {
+        this.foodNumLabel.string = this.food.toString();
+
+        this.btn_increase.on(cc.Node.EventType.TOUCH_END, () => {
+            if (this.food < User.instance.food && this.food < AdventureShipMaxFood) {
+                this.food++;
+            }
+            this.foodNumLabel.string = this.food.toString();
+        })
+
+        this.btn_reduce.on(cc.Node.EventType.TOUCH_END, () => {
+            if (this.food > 1) {
+                this.food--;
+            }
+            this.foodNumLabel.string = this.food.toString();
+        })
+
+        if (User.instance.food < this.food) {
+            this.food = 0;
+            this.foodNumLabel.string = this.food.toString();
+            this.setButtomAndTimeBar("Lack of food", false, false)
+        }
+    }
+
     async startCountDown() {
         this.goAdventure = true
         this.time = Date.now() / 1000;
-        this.counttime = AdventureTime / speeds[User.instance.ship_speed_level];
+        this.counttime = AdventureTime * this.food / speeds[User.instance.ship_speed_level];
         this.timeremain = this.counttime * 60 ;
         User.instance.setTimeStamp("Adventure",this.time);
         User.instance.AdventureTime=this.counttime;
@@ -444,7 +496,7 @@ export class Adventure extends ViewConnector {
 
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
        
-        if ((this.petReady == this.seatNum)&&!this.goAdventure) {
+        if ((this.petReady == this.seatNum) && !this.goAdventure && this.food < User.instance.food) {
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
             go.getComponent(cc.Button).interactable = true;
@@ -454,9 +506,9 @@ export class Adventure extends ViewConnector {
     }
 
     getResource(boundsAll) {
-        let wood = 15;
-        let stone = 10;
-        let coins = 100;
+        let wood = AdventureBasicwood * User.instance.AdventureFood;
+        let stone = AdventureBasicstone * User.instance.AdventureFood;
+        let coins = AdventureBasiccoins * User.instance.AdventureFood;
 
 
         let boundsWood = 0;

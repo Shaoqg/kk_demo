@@ -6,6 +6,9 @@ import { Adventure } from "../Screens/Adventure";
 import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import TaskScreen from "../UI/TaskScreen";
+import { AdventureArea } from "../Screens/AdventureArea";
+import { TreeUpgrade } from "../Screens/TreeUpgrade";
+import { Trees } from "../Config";
 
 const {ccclass, property} = cc._decorator;
 
@@ -26,6 +29,9 @@ export default class WorldManager extends cc.Component {
     foodNode: cc.Node;
     magicStoneNode: cc.Node;
     btn_dailay: cc.Node;
+    btn_tree1: cc.Node;
+    btn_tree2: cc.Node;
+    btn_tree3: cc.Node;
 
 
 
@@ -37,10 +43,13 @@ export default class WorldManager extends cc.Component {
 
         this.init();
         this.initCastle();
+        this.initTrees();
+        this.initChangeArrow();
         this.updateAllResource();
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
+        EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
 
     }
 
@@ -78,6 +87,21 @@ export default class WorldManager extends cc.Component {
             this.onclickDaily();
         })
 
+        this.btn_tree1 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build1", worldNode);
+        this.btn_tree1.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickTree();
+        })
+        this.btn_tree2 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build2", worldNode);
+        this.btn_tree2.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickTree();
+        })
+        this.btn_tree3 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build3", worldNode);
+        this.btn_tree3.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickTree();
+        })
+
+
+
         this.woodNode = cc.find("DialogRoot/top_right/wood", this.node)
         this.stoneNode = cc.find("DialogRoot/top_right/stone", this.node)
         this.foodNode = cc.find("DialogRoot/top_right/food", this.node)
@@ -97,6 +121,38 @@ export default class WorldManager extends cc.Component {
             if (level-1 > castleNodes.children.length - 1) {
                 node.active = true;
             }
+        })
+    }
+
+    initTrees() {
+        let treeLevels = User.instance.level_Trees;
+        Trees.forEach((treeConfig) => {
+            let treelevel = treeLevels[treeConfig.treeId];
+            let treeNode = cc.find("world/island/islandUI/farmNode/island/mapblocks/" + treeConfig.treeId, this.node);
+            treeNode.children.forEach((tree) => {
+                if (treelevel == 0) {
+                    tree.active = false;
+                } else if (tree.name == "level" + (treelevel - 1)) {
+                    tree.active = true;
+                } else {
+                    tree.active = false;
+                }
+            })
+        })
+
+    }
+
+    initChangeArrow() {
+        let arrow_left = cc.find("world/island/islandUI/arrow_left", this.node);
+        let arrow_right = cc.find("world/island/islandUI/arrow_right", this.node);
+        let islandUI = cc.find("world/island/islandUI", this.node);
+
+        arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
+            islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
+        })
+        arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
+            islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
+
         })
     }
 
@@ -123,12 +179,23 @@ export default class WorldManager extends cc.Component {
 
     onclickAdventure() {
         this.switchShipState(false);
-        Adventure.prompt();
+        let timestamp = User.instance.getTimeStamp("Adventure");
+        if (timestamp > 0) {
+            Adventure.prompt();
+        } else {
+            AdventureArea.prompt();
+        }
     }
 
 
     onLevelUp(){
         this.initCastle();
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+
+    }
+
+    onTreeLevelUp(){
+        this.initTrees();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
     }
@@ -141,6 +208,10 @@ export default class WorldManager extends cc.Component {
     onclickDaily(){
         this.switchShipState(false);
         TaskScreen.prompt();
+    }
+
+    onclickTree(){
+        TreeUpgrade.prompt();
     }
 
     starIncrease() {

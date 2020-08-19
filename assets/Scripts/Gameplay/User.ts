@@ -91,6 +91,7 @@ export default class User {
     public star = 1;
     public level_ship = 1;
     public level_castle = 1;
+    public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
     public coin = 200000;
     public wood = 200;
     public stone = 200;
@@ -102,10 +103,13 @@ export default class User {
     public magic_stone = 10;
     public _timeStamps: object = {};
     public AdventureTime = 0
+    public AdventureFood = 1;
+    public AdventureDestination = "";
     public AdventurePets:PetData[]=[]
     public adventureCoinslist: number[] = []
     public adventureWoodlist: number[] = []
     public adventureStonelist: number[] = []
+    public exploreTime:object={"water":0,"fire":0,"food":0,"nature":0}
 
     setTimeStamp(name: string, timeStamp: number){
         this._timeStamps[name]=timeStamp;
@@ -172,6 +176,7 @@ export default class User {
             star:this.star,
             level_castle:this.level_castle,
             level_ship:this.level_ship,
+            level_Trees: this.level_Trees,
             shipInfo:{
                 bouns:this.ship_bouns_level,
                 capacity: this.ship_capacity_level,
@@ -186,9 +191,12 @@ export default class User {
             _timeStamps: this._timeStamps,
             AdventureTime: this.AdventureTime,
             AdventurePets: this.AdventurePets,
+            AdventureFood: this.AdventureFood,
+            AdventureDestination: this.AdventureDestination,
             adventureCoinslist: this.adventureCoinslist,
             adventureWoodlist: this.adventureWoodlist,
             adventureStonelist: this.adventureStonelist,
+            exploreTime:this.exploreTime,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -202,6 +210,7 @@ export default class User {
             this.star = data["star"];
             this.level_castle = data["level_castle"];
             this.level_ship = data["level_ship"];
+            this.level_Trees = data["level_Trees"];
             
             this.ship_bouns_level = data["shipInfo"]["bouns"]
             this.ship_capacity_level = data["shipInfo"]["capacity"]
@@ -215,9 +224,12 @@ export default class User {
             this._timeStamps = data["_timeStamps"];
             this.AdventureTime = data["AdventureTime"];
             this.AdventurePets = data["AdventurePets"];
+            this.AdventureFood = data["AdventureFood"];
+            this.AdventureDestination = data["AdventureDestination"];
             this.adventureCoinslist = data["adventureCoinslist"];
             this.adventureWoodlist = data["adventureWoodlist"];
             this.adventureStonelist = data["adventureStonelist"];
+            this.exploreTime = data["exploreTime"];
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;
