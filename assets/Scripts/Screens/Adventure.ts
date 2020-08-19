@@ -6,6 +6,7 @@ import { PetData } from "../UI/PetList";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
 import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood,  } from "../Config";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -178,6 +179,8 @@ export class Adventure extends ViewConnector {
                 this.updateTimeCountLabel();
                 this.setRandomResource(this.AllLine);
                 User.instance.saveUse();
+                
+                EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
             });
         }
 
