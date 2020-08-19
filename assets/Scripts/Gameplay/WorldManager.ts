@@ -6,6 +6,7 @@ import { Adventure } from "../Screens/Adventure";
 import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import TaskScreen from "../UI/TaskScreen";
+import { AdventureArea } from "../Screens/AdventureArea";
 
 const {ccclass, property} = cc._decorator;
 
@@ -123,7 +124,12 @@ export default class WorldManager extends cc.Component {
 
     onclickAdventure() {
         this.switchShipState(false);
-        Adventure.prompt();
+        let timestamp = User.instance.getTimeStamp("Adventure");
+        if (timestamp > 0) {
+            Adventure.prompt();
+        } else {
+            AdventureArea.prompt();
+        }
     }
 
 

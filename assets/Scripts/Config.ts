@@ -108,6 +108,25 @@ export let AdventureBasicstone = 30;
 export let AdventureBasiccoins = 100;
 export let AdventureShipMaxFood = 5;
 
+export let AdventureAreas = [
+  {
+    areaName: "water",
+    areaCompletetime: 3,
+  },
+  {
+    areaName: "fire",
+    areaCompletetime: 6,
+  },
+  {
+    areaName: "food",
+    areaCompletetime: 9,
+  },
+  {
+    areaName: "nature",
+    areaCompletetime: 12,
+  }
+];
+
 export let speedLevelUpInfo= [
     {
         coin:100,

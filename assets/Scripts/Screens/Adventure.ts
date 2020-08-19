@@ -38,11 +38,11 @@ export class Adventure extends ViewConnector {
     btn_increase: cc.Node;
     food: number = 1;
 
-    static async prompt(): Promise<any> {
+    static async prompt(areaName?:string): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
         let vc = Adventure._instance = await this.loadView<Adventure>(parentNode, Adventure);
 
-        vc.applyData();
+        vc.applyData(areaName);
 
         let executor = (resolve: (any) => void, reject: (error) => void) => {
             vc.onCloseCallback = resolve;
@@ -59,7 +59,7 @@ export class Adventure extends ViewConnector {
         }
     }
 
-    applyData() {
+    applyData(areaName?: string) {
 
         let underlay = cc.find("underlay", this.node);
         this.root = cc.find("content", this.node);
@@ -82,12 +82,17 @@ export class Adventure extends ViewConnector {
         this.btn_reduce = cc.find("reduce", shipFood);
         this.btn_increase = cc.find("increase", shipFood);
         this.foodNumLabel = cc.find("foodNum/number", shipFood).getComponent(cc.Label);
+        let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
         this.seatNum=capacitys[User.instance.ship_capacity_level];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
         shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level_ship;
         shipSpeed.getComponent(cc.Label).string="Speed："+speeds[User.instance.ship_speed_level]+" knots:";
         
+        if(!areaName){
+            areaName=User.instance.AdventureDestination;
+        }
+        destinationLabel.string = "destination: area " + areaName;
 
         for(let i=1;i<=this.seatNum;i++){
             let petSeat = cc.find("petsOnShip/pet" + i, this.root);
@@ -166,6 +171,8 @@ export class Adventure extends ViewConnector {
                 User.instance.AdventurePets=this.seatPet;
                 User.instance.food -= this.food;
                 User.instance.AdventureFood = this.food;
+                User.instance.AdventureDestination = areaName;
+                User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
 
                 this.startCountDown();
                 this.updateTimeCountLabel();
@@ -218,7 +225,7 @@ export class Adventure extends ViewConnector {
     async startCountDown() {
         this.goAdventure = true
         this.time = Date.now() / 1000;
-        this.counttime = (AdventureTime / speeds[User.instance.ship_speed_level]) * this.food;
+        this.counttime = AdventureTime * this.food / speeds[User.instance.ship_speed_level];
         this.timeremain = this.counttime * 60 ;
         User.instance.setTimeStamp("Adventure",this.time);
         User.instance.AdventureTime=this.counttime;
