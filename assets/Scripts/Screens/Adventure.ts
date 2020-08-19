@@ -5,7 +5,7 @@ import User from "../Gameplay/User";
 import { PetData } from "../UI/PetList";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime,  } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines,  } from "../Config";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -31,6 +31,8 @@ export class Adventure extends ViewConnector {
     seatNum: number;
     boundsAll: petBouns[]=[{BounsName:"Coin",BounsNum:0},{BounsName:"Wood",BounsNum:0},{BounsName:"Stone",BounsNum:0}];
     seatPet:PetData[]=[];
+    battleinfo: cc.Node;
+    AllLine: number=10;
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -67,7 +69,7 @@ export class Adventure extends ViewConnector {
         let go = cc.find("button_primary", this.root);
         let scrollview = cc.find("scrollview", this.root);
         let list = cc.find("list", scrollview);
-        let battleinfo = cc.find("battleinfo", scrollview);
+        this.battleinfo = cc.find("battleinfo", scrollview);
         let subtitleLabel = cc.find("subtitle/capacity", this.root).getComponent(cc.Label);
         let shipCapacity = cc.find("shipInfo/capacity", this.root);
         let shipLevel = cc.find("shipInfo/level", this.root);
@@ -85,10 +87,19 @@ export class Adventure extends ViewConnector {
             this.seats.push(false);
         }
         
+        this.boundsAll.forEach((bands) => {
+            bands.BounsNum += bounss[User.instance.ship_bouns_level];
+        })
+        
+        this.AllLine = AdventureLogLines;
+
         let timestamp = User.instance.getTimeStamp("Adventure");
         if (timestamp > 0) {
             this.time = timestamp
             this.counttime = User.instance.AdventureTime;
+            let timeelapsed = (Date.now() / 1000 - this.time);
+            this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
+            this.updateTimeCountLabel();
             let Pets = User.instance.AdventurePets;
             Pets.forEach((pet) => {
                 let petconfig = getPetConfigById(pet.petId);
@@ -104,14 +115,17 @@ export class Adventure extends ViewConnector {
             this.goAdventure = true;
             this.getTimeRemaining();
             list.active = false;
-            scrollview.getComponent(cc.ScrollView).content = battleinfo;
-            battleinfo.active = true;
+            scrollview.getComponent(cc.ScrollView).content = this.battleinfo;
+            this.battleinfo.active = true;
             subtitleLabel.string = "Adventure Log";
+            this.setAdventureLog(timeelapsed);
+
             let loadingbar = cc.find("loading_bar", this.root);
             loadingbar.active = true
             if (this.goAdventure) {
                 this.setButtomAndTimeBar("Exploring", false, true);
             } else {
+                this.updateTimeCountLabel(true);
                 this.setButtomAndTimeBar("Go Collect!", true, true);
             }
         }else{
@@ -126,16 +140,20 @@ export class Adventure extends ViewConnector {
                     return;
                 }
                 list.active = false;
-                scrollview.getComponent(cc.ScrollView).content = battleinfo;
-                battleinfo.active = true;
+                scrollview.getComponent(cc.ScrollView).content = this.battleinfo;
+                this.battleinfo.active = true;
                 subtitleLabel.string = "Adventure Log"
     
                 this.setButtomAndTimeBar("Exploring",false,true);
                 go.off(cc.Node.EventType.TOUCH_END);
                 let loadingbar = cc.find("loading_bar", this.root);
                 loadingbar.active = true
+
                 User.instance.AdventurePets=this.seatPet;
                 this.startCountDown();
+                this.updateTimeCountLabel();
+                this.setRandomResource(this.AllLine);
+                User.instance.saveUse();
             });
         }
 
@@ -159,10 +177,119 @@ export class Adventure extends ViewConnector {
         this.goAdventure = true
         this.time = Date.now() / 1000;
         this.counttime = AdventureTime / speeds[User.instance.ship_speed_level];
+        this.timeremain = this.counttime * 60 ;
         User.instance.setTimeStamp("Adventure",this.time);
         User.instance.AdventureTime=this.counttime;
         console.log("time",this.counttime * 60);
-        User.instance.saveUse();
+    }
+
+    setAdventureLog(time: number) {
+        let stepTime = Math.ceil(this.counttime * 60 / this.AllLine)
+        let lines: number = 0;
+        if (time >= this.counttime * 60) {
+            lines = Math.floor(this.AllLine);
+        } else {
+            lines = Math.floor(time / stepTime);
+        }
+
+        let stringAll: string = "";
+        for (let i = 0; i < lines + 1; i++) {
+            let resource = this.getRandomResource(i);
+            let string = ""
+            if (resource.coins > 0) {
+                string += resource.coins + " Coins ";
+            }
+            if (resource.wood > 0) {
+                string += resource.wood + " Wood ";
+            }
+            if (resource.stone > 0) {
+                string += resource.stone + " Stone";
+            }
+            if (string != "") {
+                stringAll += "Get " + string + "\n"
+            }
+        }
+        this.battleinfo.getComponent(cc.Label).string = stringAll
+    }
+
+    setRandomResource(AllLine) {
+        let reward = this.getResource(this.boundsAll);
+
+        let randomCoins: number[] = [];
+        for (let i = 0; i < AllLine - 1; i++) {
+            randomCoins.push(this.random(1, reward.coins))
+        }
+
+        let randomWood: number[] = [];
+        for (let i = 0; i < AllLine - 1; i++) {
+            randomWood.push(this.random(1, reward.wood))
+        }
+
+        let randomStone: number[] = [];
+        for (let i = 0; i < AllLine - 1; i++) {
+            randomStone.push(this.random(1, reward.stone))
+        }
+
+        let finalRandomCoins = this.randomList(randomCoins)
+        let finalCoin = finalRandomCoins.random2
+        finalCoin.push(reward.coins - finalRandomCoins.count);
+
+        let finalRandomWood = this.randomList(randomWood)
+        let finalWood = finalRandomWood.random2
+        finalWood.push(reward.wood - finalRandomWood.count);
+
+        let finalRandomStone = this.randomList(randomStone)
+        let finalStone = finalRandomStone.random2
+        finalStone.push(reward.stone - finalRandomStone.count);
+
+
+        User.instance.adventureCoinslist = finalCoin;
+        User.instance.adventureWoodlist = finalWood;
+        User.instance.adventureStonelist = finalStone;
+
+    }
+    randomList(random: number[]) {
+        for (let i = 1; i < random.length; i++) {
+            for (let j = 0; j < random.length - i; j++) {
+                if (random[j] > random[j + 1]) {
+                    let temp = random[j];
+                    random[j] = random[j + 1];
+                    random[j + 1] = temp;
+                }
+            }
+        }
+        let count = 0;
+        let random2: number[] = []
+        for (let i = 0; i < random.length; i++) {
+            if (i == 0) {
+                random2[i] = random[i];
+            } else {
+                random2[i] = random[i] - random[i - 1];
+            }
+            count += random2[i]
+        }
+        return { random2, count }
+    }
+    getRandomResource(lines) {
+        let coins = User.instance.adventureCoinslist[lines];
+        let wood = User.instance.adventureWoodlist[lines];
+        let stone = User.instance.adventureStonelist[lines];
+        return { coins, wood, stone };
+    }
+
+    random(lower, upper) {
+        return Math.floor(Math.random() * (upper - lower + 1)) + lower;
+    }
+
+    updateTimeCountLabel(over: boolean = false) {
+        let timecount = cc.find("shipInfo/timecount", this.root);
+        if (over) {
+            timecount.getComponent(cc.Label).string = "Pets are back on the island now!"
+        } else {
+            let timeremain = Math.floor(this.timeremain) >= 0 ? Math.floor(this.timeremain) : 0;
+            timecount.getComponent(cc.Label).string = "Expect to be back in " + timeremain.toString() + " second"
+        }
+
     }
 
     setButtomAndTimeBar(buttonLabel:string,buttonInteractable:boolean=true,timecountOpen:boolean=true){
@@ -192,6 +319,8 @@ export class Adventure extends ViewConnector {
         let timeelapsed = (Date.now() / 1000 - this.time);
         this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
         loadingbar.progress = 1 - (this.timeremain / (this.counttime * 60));
+        this.setAdventureLog(timeelapsed)
+        this.updateTimeCountLabel();
         if(this.timeremain<=0){
             this.goAdventure=false;
             this.AdventureOver()
@@ -200,16 +329,17 @@ export class Adventure extends ViewConnector {
 
     AdventureOver() {
         let go = cc.find("button_primary", this.root);
+        this.updateTimeCountLabel(true);
         this.setButtomAndTimeBar("Go Collect!",true,true);
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
-            this.boundsAll.forEach((bands) => {
-                bands.BounsNum += bounss[User.instance.ship_bouns_level];
-            })
             AdventureReward.prompt(this.boundsAll);
             User.instance.setTimeStamp("Adventure",0);
             User.instance.AdventureTime = 0;
             User.instance.AdventurePets = [];
+            User.instance.adventureStonelist = []
+            User.instance.adventureCoinslist = []
+            User.instance.adventureWoodlist = []
         });
     }
 
@@ -321,6 +451,35 @@ export class Adventure extends ViewConnector {
             go_gry.active = false;
             this.boatReady = true;
         }
+    }
+
+    getResource(boundsAll) {
+        let wood = 15;
+        let stone = 10;
+        let coins = 100;
+
+
+        let boundsWood = 0;
+        let boundsStone = 0;
+        let boundsCoin = 0;
+        boundsAll.forEach((bounds) => {
+            switch (bounds.BounsName) {
+                case "Wood":
+                    boundsWood = bounds.BounsNum;
+                    break;
+                case "Stone":
+                    boundsStone = bounds.BounsNum;
+                    break;
+                case "Coin":
+                    boundsCoin = bounds.BounsNum;
+                    break;
+            }
+        });
+
+        wood = Math.floor(wood * (1 + boundsWood / 100));
+        stone = Math.floor(stone * (1 + boundsStone / 100));
+        coins = Math.floor(coins * (1 + boundsCoin / 100));
+        return { wood: wood, stone: stone, coins: coins, boundsWood: boundsWood, boundsStone: boundsStone, boundsCoin: boundsCoin }
     }
 
     adjustGameInterface() {

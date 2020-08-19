@@ -103,6 +103,9 @@ export default class User {
     public _timeStamps: object = {};
     public AdventureTime = 0
     public AdventurePets:PetData[]=[]
+    public adventureCoinslist: number[] = []
+    public adventureWoodlist: number[] = []
+    public adventureStonelist: number[] = []
 
     setTimeStamp(name: string, timeStamp: number){
         this._timeStamps[name]=timeStamp;
@@ -183,6 +186,9 @@ export default class User {
             _timeStamps: this._timeStamps,
             AdventureTime: this.AdventureTime,
             AdventurePets: this.AdventurePets,
+            adventureCoinslist: this.adventureCoinslist,
+            adventureWoodlist: this.adventureWoodlist,
+            adventureStonelist: this.adventureStonelist,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -209,6 +215,9 @@ export default class User {
             this._timeStamps = data["_timeStamps"];
             this.AdventureTime = data["AdventureTime"];
             this.AdventurePets = data["AdventurePets"];
+            this.adventureCoinslist = data["adventureCoinslist"];
+            this.adventureWoodlist = data["adventureWoodlist"];
+            this.adventureStonelist = data["adventureStonelist"];
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;
