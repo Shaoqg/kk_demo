@@ -101,8 +101,12 @@ export let speeds: number[] = [24, 30, 42];
 export let capacitys: number[] = [1, 3, 5];
 export let bounss: number[] = [10, 50, 200];
 
-export let AdventureTime: number = 50;
+export let AdventureTime: number = 5;
 export let AdventureLogLines: number = 50;
+export let AdventureBasicwood = 5;
+export let AdventureBasicstone = 30;
+export let AdventureBasiccoins = 100;
+export let AdventureShipMaxFood = 5;
 
 export let speedLevelUpInfo= [
     {

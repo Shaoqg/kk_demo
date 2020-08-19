@@ -102,6 +102,7 @@ export default class User {
     public magic_stone = 10;
     public _timeStamps: object = {};
     public AdventureTime = 0
+    public AdventureFood = 1;
     public AdventurePets:PetData[]=[]
     public adventureCoinslist: number[] = []
     public adventureWoodlist: number[] = []
@@ -186,6 +187,7 @@ export default class User {
             _timeStamps: this._timeStamps,
             AdventureTime: this.AdventureTime,
             AdventurePets: this.AdventurePets,
+            AdventureFood: this.AdventureFood,
             adventureCoinslist: this.adventureCoinslist,
             adventureWoodlist: this.adventureWoodlist,
             adventureStonelist: this.adventureStonelist,
@@ -215,6 +217,7 @@ export default class User {
             this._timeStamps = data["_timeStamps"];
             this.AdventureTime = data["AdventureTime"];
             this.AdventurePets = data["AdventurePets"];
+            this.AdventureFood = data["AdventureFood"];
             this.adventureCoinslist = data["adventureCoinslist"];
             this.adventureWoodlist = data["adventureWoodlist"];
             this.adventureStonelist = data["adventureStonelist"];
