@@ -91,6 +91,7 @@ export default class User {
     public star = 1;
     public level_ship = 1;
     public level_castle = 1;
+    public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
     public coin = 200000;
     public wood = 200;
     public stone = 200;
@@ -175,6 +176,7 @@ export default class User {
             star:this.star,
             level_castle:this.level_castle,
             level_ship:this.level_ship,
+            level_Trees: this.level_Trees,
             shipInfo:{
                 bouns:this.ship_bouns_level,
                 capacity: this.ship_capacity_level,
@@ -208,6 +210,7 @@ export default class User {
             this.star = data["star"];
             this.level_castle = data["level_castle"];
             this.level_ship = data["level_ship"];
+            this.level_Trees = data["level_Trees"];
             
             this.ship_bouns_level = data["shipInfo"]["bouns"]
             this.ship_capacity_level = data["shipInfo"]["capacity"]
