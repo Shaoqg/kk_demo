@@ -1,5 +1,4 @@
-import { PetData } from "../UI/PetList";
-import { PetType } from "../Config";
+import { PetType, PetData } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 

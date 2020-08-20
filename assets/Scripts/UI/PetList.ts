@@ -3,14 +3,10 @@ import LoopList, { TableViewDelegate } from "../Util/LoopList";
 import PetRevealDialog from "./PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
 import User from "../Gameplay/User";
+import { PetData } from "../Config";
 
 
 const { ccclass, property } = cc._decorator;
-export class PetData {
-    petId: string = "";
-    petName: string = "";
-    petLevel: number = 1;
-}
 
 @ccclass
 export default class PetList extends cc.Component {

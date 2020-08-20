@@ -1,9 +1,8 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
-import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity, PetType, getPetIntroByElements } from "../Config";
+import { getPetConfigById, Rarity, PetType, getPetIntroByElements, PetData } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
