@@ -115,7 +115,7 @@ export class Adventure extends ViewConnector {
             let timeelapsed = (Date.now() / 1000 - this.time);
             this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
             this.updateTimeCountLabel();
-            let Pets = User.instance.AdventurePets;
+            let Pets = User.instance.getPetsInAdventure();
             Pets.forEach((pet) => {
                 let petconfig = getPetConfigById(pet.petId);
                 let petBouns = getPetBouns(petconfig)
@@ -168,7 +168,12 @@ export class Adventure extends ViewConnector {
                 let loadingbar = cc.find("loading_bar", this.root);
                 loadingbar.active = true
 
-                User.instance.AdventurePets=this.seatPet;
+                this.seatPet.forEach((seatpet)=>{
+                    let UserPet=User.instance.findPetDataByPetId(seatpet.petId);
+                    UserPet.nowUsing=true;
+                    UserPet.UsingBy="Adventure"
+                })
+
                 User.instance.food -= this.food;
                 User.instance.AdventureFood = this.food;
                 User.instance.AdventureDestination = areaName;
@@ -390,10 +395,11 @@ export class Adventure extends ViewConnector {
             this.close(undefined)
             User.instance.setTimeStamp("Adventure",0);
             User.instance.AdventureTime = 0;
-            User.instance.AdventurePets = [];
+            User.instance.removePetFromInAdventure();
             User.instance.adventureStonelist = []
             User.instance.adventureCoinslist = []
             User.instance.adventureWoodlist = []
+            User.instance.saveUse();
         });
     }
 

@@ -148,6 +148,45 @@ export default class User {
         return false;
     }
 
+    findPetDataByPetId(petId: string) {
+        let PetFind: PetData;
+        this.petList.forEach((petData) => {
+            if (petData.petId == petId) {
+                PetFind = petData;
+            }
+        })
+        return PetFind;
+    }
+
+    getPetsInAdventure() {
+        let Pets: PetData[] = [];
+        this.petList.forEach((petData) => {
+            if (petData.nowUsing) {
+                if (petData.UsingBy == "Adventure") {
+                    Pets.push(petData);
+                }
+            }
+        })
+        return Pets;
+    }
+
+    removePetFromInAdventure() {
+        let Pets = this.getPetsInAdventure();
+        this.petList.forEach((petData) => {
+            if (petData.nowUsing) {
+                if (petData.UsingBy == "Adventure") {
+                    Pets.forEach((pet) => {
+                        if (pet.petId == petData.petId) {
+                            console.log(petData);
+                            petData.nowUsing = false;
+                            petData.UsingBy = "";
+                        }
+                    })
+                }
+            }
+        })
+    }
+
 
 
     public getReward(type: Resource, amount: number) {
