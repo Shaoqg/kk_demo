@@ -26,9 +26,28 @@ export function getTaskConfigById(id, taskType) {
   return null;
 }
 
-export function getStrengthByPetData(petda:PetData) {
+export function getStrengthByPetData(petData:PetData) {
+  let strength = 0;
 
-  return null;
+  let config = getPetConfigById(petData);
+
+  switch (config.rarity) {
+    case Rarity.common:
+      strength = petData.petLevel * 2;
+      break;
+    case Rarity.uncommon:
+      strength = petData.petLevel * 3;
+      break;
+    case Rarity.rare:
+      strength = petData.petLevel * 4;
+      break;
+  }
+  return strength;
+}
+
+export function getStrengthBonus() {
+
+
 }
   export function getRotaryRewardByIndex(idx){
     for (let i = 0; i < RotaryReward.length; i++) {
@@ -91,7 +110,7 @@ export enum Resource  {
 
 export class PetData {
   petId: string = "";
-  petName: string = "";
+  petName?: string = "";
   petLevel: number = 1;
 }
 
