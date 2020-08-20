@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity, PetType, getPetIntroByElements, PetData } from "../Config";
+import { getPetConfigById, Rarity, PetType, getPetIntroByElements, PetData, getStrengthByPetData } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
@@ -111,6 +111,7 @@ export default class PetRevealDialog extends ViewConnector {
         this.setPetRarity();
         this.setPetNeedtoUpgrade();
         this.setPetSpriteFrame();
+        this.setPetStrength(data)
 
        this.checkPetInAdventure(data);
        
@@ -279,6 +280,12 @@ export default class PetRevealDialog extends ViewConnector {
             this.node.getChildByName("ButtonBlock").active = false;
         }
 
+    }
+
+    setPetStrength(data: PetData) {
+        let strengthLabel = cc.find("Strength", this.petInfoNode).getComponent(cc.Label);
+        let strength = getStrengthByPetData(data);
+        strengthLabel.string = "Strength:" + strength
     }
     
     checkPetInAdventure(data:PetData){

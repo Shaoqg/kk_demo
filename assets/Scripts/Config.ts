@@ -112,6 +112,8 @@ export class PetData {
   petId: string = "";
   petName?: string = "";
   petLevel: number = 1;
+  nowUsing?: boolean = false;
+  UsingBy?: string = "";
 }
 
 export enum Rarity {

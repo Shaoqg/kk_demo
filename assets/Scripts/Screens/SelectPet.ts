@@ -1,7 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
-import { PetData, getPetConfigById } from "../Config";
+import { PetData, getPetConfigById, PetType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 const { ccclass, property } = cc._decorator;
 
@@ -16,6 +16,7 @@ export class SelectPet extends ViewConnector {
     root: cc.Node = null;
     pet: cc.Node;
     rewarditem: cc.Node;
+    petsInAdventure: PetData[];
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -51,7 +52,9 @@ export class SelectPet extends ViewConnector {
         let petList = [];
         petList=User.instance.getPetList();
         list.height = 11;
-
+        this.petsInAdventure = User.instance.getPetsInAdventure()
+        console.log("this.petsInAdventure",this.petsInAdventure);
+        
         petList.forEach((data, idx) => {
             this.createList(data, idx);
         });
@@ -69,25 +72,64 @@ export class SelectPet extends ViewConnector {
     async createList(petData: PetData, idx: number) {
 
         let petconfig=getPetConfigById(petData.petId);
-        let pet = cc.instantiate(this.pet);
-        pet.name=petData.petId;
+        let petNode = cc.instantiate(this.pet);
+        petNode.name=petData.petId;
         let list = cc.find("scrollview/list", this.root);
-        let petImage = pet.getChildByName("petimage").getComponent(cc.Sprite);
+        let petImage = petNode.getChildByName("petimage").getComponent(cc.Sprite);
         petImage.spriteFrame = await KKLoader.loadSprite("Pets/"+petconfig.art_asset);
         // petImage.spriteFrame = this.SpriteFrame[petListInfo];
 
-        list.addChild(pet);
+        list.addChild(petNode);
         if (idx % 5 == 0) {
-            list.height += pet.height + 11;
+            list.height += petNode.height + 11;
         }
 
-        pet.y = -(pet.height / 2 + 11) - (Math.floor(idx / 5) * (pet.height + 11));
-        pet.x = (idx % 5) * (pet.width + 11) + (pet.width / 2 + 11);
+        petNode.y = -(petNode.height / 2 + 11) - (Math.floor(idx / 5) * (petNode.height + 11));
+        petNode.x = (idx % 5) * (petNode.width + 11) + (petNode.width / 2 + 11);
 
-        pet.on(cc.Node.EventType.TOUCH_END, () => {
+        this.setType(petNode,petconfig);
+
+        this.petsInAdventure.forEach((pet)=>{
+            if(pet.petId==petData.petId){
+                console.log("pet.petId",petData);
+                petNode.getChildByName("underlay").active = true;
+                petNode.getChildByName("Label").active = true;
+                return;
+            }
+        })
+
+        petNode.on(cc.Node.EventType.TOUCH_END, () => {
             this.close(petData);
         });
 
+    }
+
+    setType(petNode: cc.Node, petconfig: PetType) {
+
+        let natureNode = cc.find("Types/type_land", petNode);
+        let fireNode = cc.find("Types/type_fire", petNode);
+        let waterNode = cc.find("Types/type_water", petNode);
+        let snackNode = cc.find("Types/type_snack", petNode);
+
+        natureNode.active = false;
+        fireNode.active = false;
+        waterNode.active = false;
+        snackNode.active = false;
+
+        switch (petconfig.elements) {
+            case "nature":
+                natureNode.active = true;
+                break;
+            case "fire":
+                fireNode.active = true;
+                break;
+            case "water":
+                waterNode.active = true;
+                break;
+            case "snack":
+                snackNode.active = true;
+                break;
+        }
     }
 
     adjustGameInterface() {
