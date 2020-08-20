@@ -301,140 +301,140 @@ export let RotaryReward = [
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 1,
     reward: {
-      rewardType: "coins",
+      rewardType: "wood",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 2,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 3,
     reward: {
-      rewardType: "coins",
+      rewardType: "food",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 4,
     reward: {
-      rewardType: "coins",
+      rewardType: "wood",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 5,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 6,
     reward: {
-      rewardType: "coins",
+      rewardType: "wood",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 7,
     reward: {
-      rewardType: "coins",
+      rewardType: "food",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 8,
     reward: {
-      rewardType: "coins",
+      rewardType: "magicStone",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 9,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 10,
     reward: {
       rewardType: "stone",
       rewardNum: 10,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 11,
     reward: {
-      rewardType: "coins",
+      rewardType: "magicStone",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 10,
   }, {
     index: 12,
     reward: {
       rewardType: "wood",
       rewardNum: 3,
     },
-    weight:20,
+    weight: 20,
   }, {
     index: 13,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 30,
   }, {
     index: 14,
     reward: {
-      rewardType: "coins",
+      rewardType: "magicStone",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 15,
   }, {
     index: 15,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 1,
   }, {
     index: 16,
     reward: {
-      rewardType: "coins",
+      rewardType: "magicStone",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 15,
   }, {
     index: 17,
     reward: {
-      rewardType: "coins",
+      rewardType: "food",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 20,
   }, {
     index: 18,
     reward: {
       rewardType: "coins",
       rewardNum: 50000,
     },
-    weight:1,
+    weight: 15,
   }, {
     index: 19,
     reward: {
-      rewardType: "coins",
+      rewardType: "food",
       rewardNum: 50000,
     },
-    weight:15,
+    weight: 15,
   },
 ]
 

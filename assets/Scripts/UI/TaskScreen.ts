@@ -165,22 +165,22 @@ export default class TaskScreen extends ViewConnector {
         let path = null;
         switch (task.reward.rewardType) {
             case Resource.coin:
-                path = "UI/hud_icon_coin";
+                path = "UI/coin_reward";
                 break;
             case Resource.wood:
                 path = "UI/wood";
                 break;
             case Resource.stone:
-                path = "UI/deco_fire-rock1_v2";
+                path = "UI/stone";
                 break;
             case Resource.food:
-                path = "UI/food_04";
+                path = "UI/food";
                 break;
             case Resource.magicStone:
                 path = "UI/magic_rock";
                 break;
             default:
-                path = "UI/hud_icon_coin";
+                path = "UI/coin_reward";
         }
         RewardImage.spriteFrame = await KKLoader.loadSprite(path);
         rewardLabel.string = task.reward.rewardNum.toString();

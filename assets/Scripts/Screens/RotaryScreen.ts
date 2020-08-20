@@ -80,7 +80,6 @@ export class RotaryScreen extends ViewConnector {
             btn_gry.active = true
             //debug
             let rewardSelected=this.chooseSlice();
-            console.log(rewardSelected);
             this.finsishItem=rewardSelected;
         });
 
@@ -161,22 +160,22 @@ export class RotaryScreen extends ViewConnector {
         let path = "";
         switch (itemConfig.reward.rewardType) {
             case "coins":
-                path = "UI/hud_icon_coin";
+                path = "UI/coin_reward";
                 break;
             case "wood":
                 path = "UI/wood";
                 break;
             case "stone":
-                path = "UI/deco_fire-rock1_v2";
+                path = "UI/stone";
                 break;
             case "food":
-                path = "UI/food_04";
+                path = "UI/food";
                 break;
             case "magicStone":
                 path = "UI/magic_rock";
                 break;
             default:
-                path = "UI/hud_icon_coin";
+                path = "UI/coin_reward";
         }
         rewardNum.string="x"+itemConfig.reward.rewardNum.toString();
         rewardImage.spriteFrame = await KKLoader.loadSprite(path);
