@@ -1,5 +1,6 @@
 import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
+import { SelectPet } from "../Screens/SelectPet";
 
 
 const {ccclass, property} = cc._decorator;
@@ -33,7 +34,8 @@ export default class UIManager extends cc.Component {
         let btn_addProgress = cc.find("top_right/btn_addProgress", this.node);
         btn_addProgress.on(cc.Node.EventType.TOUCH_END, this.onclick_progress.bind(this));
 
-
+        let btn_openSelectPet = cc.find("top_right/btn_openSelectPet", this.node);
+        btn_openSelectPet.on(cc.Node.EventType.TOUCH_END, this.onclick_select.bind(this));
     }
 
     onclick_barn(){
@@ -60,5 +62,9 @@ export default class UIManager extends cc.Component {
         User.instance.saveUse();
     }
 
+    async onclick_select(){
+        let res=await SelectPet.prompt();
+        console.log(res);
+    }
 
 }
