@@ -93,7 +93,9 @@ export class RotaryScreen extends ViewConnector {
             this.btn_gry.active = true;
         }
 
-        this.btn_start.on(cc.Node.EventType.TOUCH_END, this.onClickStart.bind(this));
+        this.btn_start.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onClickStart()
+        });
 
 
         this.root.stopAllActions();
@@ -105,8 +107,9 @@ export class RotaryScreen extends ViewConnector {
 
 
         let btn_addProgress = cc.find("btn_addProgress", this.node);
-        btn_addProgress.on(cc.Node.EventType.TOUCH_END, this.onclick_progress.bind(this));
-
+        btn_addProgress.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onClickStart()
+        });
         //this.adjustGameInterface();
     }
 
@@ -155,6 +158,9 @@ export class RotaryScreen extends ViewConnector {
 
     gotoNextItem() {
         this.itemidx++;
+
+        console.log(this.finsishItem);
+        
         if (this.itemidx > 19) {
             this.itemidx = 0;
             this.turns++;
@@ -370,7 +376,7 @@ export class RotaryScreen extends ViewConnector {
         let progress = 0;
         AdventureAreas.forEach((area) => {
             let areaprogress = User.instance.exploreTime[area.areaName] / area.areaCompletetime;
-            if (progress < areaprogress) {
+            if (progress <= areaprogress) {
                 progress = areaprogress;
                 areaHeightest = area;
             }
