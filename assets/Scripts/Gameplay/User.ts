@@ -87,6 +87,7 @@ export default class User {
         },
     ]
 
+    private _playerID = `Player:${Math.random()}`;
     public star = 1;
     public level_ship = 1;
     public level_castle = 1;
@@ -116,6 +117,10 @@ export default class User {
 
     getTimeStamp(name: string){
         return this._timeStamps[name];
+    }
+
+    public get playerID() {
+        return this._playerID;
     }
 
     public getPetList() {
@@ -196,6 +201,7 @@ export default class User {
             adventureWoodlist: this.adventureWoodlist,
             adventureStonelist: this.adventureStonelist,
             exploreTime:this.exploreTime,
+            playerID:this._playerID,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -229,6 +235,7 @@ export default class User {
             this.adventureWoodlist = data["adventureWoodlist"];
             this.adventureStonelist = data["adventureStonelist"];
             this.exploreTime = data["exploreTime"];
+            this._playerID = data["playerID"];
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;
