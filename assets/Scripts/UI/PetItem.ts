@@ -1,7 +1,6 @@
-import { PetData } from "./PetList";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity } from "../Config";
+import { getPetConfigById, Rarity, PetData } from "../Config";
 
 const {ccclass, property} = cc._decorator;
 
