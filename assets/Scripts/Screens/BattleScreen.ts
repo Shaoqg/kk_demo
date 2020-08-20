@@ -3,6 +3,8 @@ import { Resource, getTaskConfigById, getPetConfigById, PetData, getStrengthByPe
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import User from "../Gameplay/User";
 import ScreenSize from "../Tools/ScreenSize";
+import { SelectPet } from "./SelectPet";
+import { AdventureReward } from "./AdventureReward";
 
 
 export type BattleListType = { name: string, id: string, reward: RewardType };
@@ -29,6 +31,8 @@ export default class BattleScreen extends ViewConnector {
         if (!BattleScreen._instance) {
             let vc = BattleScreen._instance = await this.loadView<BattleScreen>(parentNode, BattleScreen);
             vc.applyData();
+        }else{
+            BattleScreen._instance.node.active = true;
         }
 
         let executor = (resolve: (any) => void, reject: (error) => void) => {
@@ -74,6 +78,7 @@ export default class BattleScreen extends ViewConnector {
         info: BattleListType,
         player: PlayerListType
     }} = {};
+    isDiging = false;
     initPlayerList() {
         let currentRes = Resource.stone;
         let rewardNum = 100;
@@ -172,7 +177,7 @@ export default class BattleScreen extends ViewConnector {
         //button
         let btn_node = cc.find("btn_button", node);
         btn_node.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onclickButton(node, info, player);
+            this.onclickButton(node, info);
         });
 
         return node;
@@ -214,28 +219,43 @@ export default class BattleScreen extends ViewConnector {
         }
     }
 
-    onclickButton(node: cc.Node, info: BattleListType, player: PlayerListType) {
+    onclickButton(node: cc.Node, info: BattleListType) {
+        let player = this.playerList[info.id].player;
         if (player) {
             if (player.playerID == User.instance.playerID) {
                 //TODO over
-                this.playerList[info.name].player = null;
-                this.addPlayerToList(this.playerList[info.id].player, this.playerList[info.name].node);
+                this.playerList[info.id].player = null;
+                this.isDiging =false;
+                this.lock();
+                this.addPlayerToList(this.playerList[info.id].player, this.playerList[info.id].node);
+                AdventureReward.prompt([this.playerList[info.id].info.reward]);
 
             } else {
                 //TODO Attack
-                                                                
+                if (this.isDiging) {
+                    return;
+                }
             }
         } else {
+            if (this.isDiging) {
+                return;
+            }
             //TODO 
             this.playerList[info.id].player = {
                 playerID:User.instance.playerID,
                 playerPets:this.selectPets,
                 friend:0
             };
+            this.isDiging = true;
+            this.lock();
             this.addPlayerToList(this.playerList[info.id].player, node);
         }
     }
 
+    lock() {
+        let lockNode = cc.find("playerInfo/lock", this.root);
+        lockNode.active = this.isDiging;
+    }
 
     initSelectInfo() {
         let selcetNodes = cc.find("playerInfo/petsOnShip", this.root).children;
@@ -279,15 +299,14 @@ export default class BattleScreen extends ViewConnector {
             return;
         }
         //TODO show selcet scrollview
-
-        let petData: PetData = null;
+        let petData: PetData = await SelectPet.prompt();
 
         this.selectPets[i] = petData;
         this.updateSelectPetInfo(petData, node);
         this.updateStrengthInfo();
     }
 
-    getStrength(petDatas: PetData[], type = Element.snack, friendBonus = 0.1) {
+    getStrength(petDatas: PetData[], type = Element.snack, friendBonus = 0) {
         let strength = 0;
         let typeNum = 0;
         let curType = type;
