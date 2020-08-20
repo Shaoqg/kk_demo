@@ -1,6 +1,6 @@
 import { TaskType } from "./UI/TaskScreen";
 
-export function getPetConfigById(id){
+export function getPetConfigById(id:string){
     for (let i = 0; i < PetConfig.length; i++) {
         if (PetConfig[i].petId == id) {
             return PetConfig[i]
@@ -29,7 +29,7 @@ export function getTaskConfigById(id, taskType) {
 export function getStrengthByPetData(petData:PetData) {
   let strength = 0;
 
-  let config = getPetConfigById(petData);
+  let config = getPetConfigById(petData.petId);
 
   switch (config.rarity) {
     case Rarity.common:
