@@ -168,7 +168,7 @@ export default class TaskScreen extends ViewConnector {
                 path = "UI/hud_icon_coin";
                 break;
             case Resource.wood:
-                path = "UI/timg";
+                path = "UI/wood";
                 break;
             case Resource.stone:
                 path = "UI/deco_fire-rock1_v2";

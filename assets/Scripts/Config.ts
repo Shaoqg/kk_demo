@@ -26,6 +26,15 @@ export function getTaskConfigById(id, taskType) {
   return null;
 }
 
+  export function getRotaryRewardByIndex(idx){
+    for (let i = 0; i < RotaryReward.length; i++) {
+        if (RotaryReward[i].index == idx) {
+            return RotaryReward[i]
+        }
+    }
+    return null;
+}
+
 export function getPetIntroByElements(pet:PetType){
     switch (pet.elements) {
         case Element.nature:
@@ -272,6 +281,150 @@ export let DailyTaskConfig: TaskType[] = [
       rewardType: Resource.magicStone,
       rewardNum: 800,
     },
+  },
+]
+
+export let RotaryReward = [
+  {
+    index: 0,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 1,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 2,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 3,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 4,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 5,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 6,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 7,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 8,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 9,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 10,
+    reward: {
+      rewardType: "stone",
+      rewardNum: 10,
+    },
+    weight:1,
+  }, {
+    index: 11,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 12,
+    reward: {
+      rewardType: "wood",
+      rewardNum: 3,
+    },
+    weight:20,
+  }, {
+    index: 13,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 14,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 15,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 16,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 17,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 18,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:1,
+  }, {
+    index: 19,
+    reward: {
+      rewardType: "coins",
+      rewardNum: 50000,
+    },
+    weight:15,
   },
 ]
 

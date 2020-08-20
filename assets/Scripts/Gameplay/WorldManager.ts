@@ -9,6 +9,7 @@ import TaskScreen from "../UI/TaskScreen";
 import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees } from "../Config";
+import { RotaryScreen } from "../Screens/RotaryScreen";
 
 const {ccclass, property} = cc._decorator;
 
@@ -32,6 +33,7 @@ export default class WorldManager extends cc.Component {
     btn_tree1: cc.Node;
     btn_tree2: cc.Node;
     btn_tree3: cc.Node;
+    btn_rotary: any;
 
 
 
@@ -85,6 +87,11 @@ export default class WorldManager extends cc.Component {
         this.btn_dailay = cc.find("DialogRoot/top_left/btn_dailay", this.node)
         this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickDaily();
+        })
+
+        this.btn_rotary = cc.find("DialogRoot/top_left/btn_rotary", this.node)
+        this.btn_rotary.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickRotary();
         })
 
         this.btn_tree1 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build1", worldNode);
@@ -208,6 +215,11 @@ export default class WorldManager extends cc.Component {
     onclickDaily(){
         this.switchShipState(false);
         TaskScreen.prompt();
+    }
+
+    onclickRotary(){
+        this.switchShipState(false);
+        RotaryScreen.prompt();
     }
 
     onclickTree(){
