@@ -50,7 +50,7 @@ export class AdventureArea extends ViewConnector {
         AdventureAreas.forEach((area) => {
             let areaNode = list.getChildByName("area_" + area.areaName);
             let progressLab = areaNode.getChildByName("areaProgress").getComponent(cc.Label);
-            if (User.instance.exploreTime[area.areaName] > area.areaCompletetime) {
+            if (User.instance.exploreTime[area.areaName] >= area.areaCompletetime) {
                 progressLab.string = "Complete";
             } else {
                 let UsrProgress = Math.round((User.instance.exploreTime[area.areaName] / area.areaCompletetime) * 1000) / 10;

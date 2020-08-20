@@ -86,6 +86,7 @@ export enum Resource  {
   "food" = "food",
   "stone" = "stone",
   "magicStone" = "magicStone",
+  "pet" = "pet",
 }
 
 export class PetData {
@@ -115,6 +116,20 @@ export type PetType = {
     "featuredCost"?:number,
     "featuredAmount"?:number,
 }
+
+export type RewardType = {
+  rewardType: Resource,
+  rewardNum: number,
+  bounds?: number,
+  petId?: string,
+}
+
+export type RotaryType = {
+  index: number,
+  reward: RewardType,
+  weight: number,
+}
+
 
 export let speeds: number[] = [24, 30, 42];
 export let capacitys: number[] = [1, 3, 5];
@@ -146,19 +161,19 @@ export let Trees = [
 export let AdventureAreas = [
   {
     areaName: "water",
-    areaCompletetime: 3,
+    areaCompletetime: 1,
   },
   {
     areaName: "fire",
-    areaCompletetime: 6,
+    areaCompletetime: 1,
   },
   {
     areaName: "food",
-    areaCompletetime: 9,
+    areaCompletetime: 1,
   },
   {
     areaName: "nature",
-    areaCompletetime: 12,
+    areaCompletetime: 1,
   }
 ];
 
@@ -293,146 +308,149 @@ export let DailyTaskConfig: TaskType[] = [
     },
   },
 ]
-
-export let RotaryReward = [
+export let RotaryReward:RotaryType[]= [
   {
     index: 0,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.pet,
+      rewardNum: 1,
+      petId: "meathead"
     },
     weight: 10,
   }, {
     index: 1,
     reward: {
-      rewardType: "wood",
-      rewardNum: 50000,
+      rewardType: Resource.stone,
+      rewardNum: 10,
     },
     weight: 10,
   }, {
     index: 2,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.coin,
+      rewardNum: 100,
     },
     weight: 10,
   }, {
     index: 3,
     reward: {
-      rewardType: "food",
-      rewardNum: 50000,
+      rewardType: Resource.food,
+      rewardNum: 150,
     },
     weight: 10,
   }, {
     index: 4,
     reward: {
-      rewardType: "wood",
-      rewardNum: 50000,
+      rewardType: Resource.wood,
+      rewardNum: 300,
     },
     weight: 10,
   }, {
     index: 5,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.coin,
+      rewardNum: 500,
     },
     weight: 10,
   }, {
     index: 6,
     reward: {
-      rewardType: "wood",
-      rewardNum: 50000,
+      rewardType: Resource.stone,
+      rewardNum: 150,
     },
     weight: 10,
   }, {
     index: 7,
     reward: {
-      rewardType: "food",
-      rewardNum: 50000,
+      rewardType: Resource.food,
+      rewardNum: 50,
     },
     weight: 10,
   }, {
     index: 8,
     reward: {
-      rewardType: "magicStone",
-      rewardNum: 50000,
+      rewardType: Resource.magicStone,
+      rewardNum: 10,
     },
     weight: 10,
   }, {
     index: 9,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.coin,
+      rewardNum: 300,
     },
     weight: 10,
   }, {
     index: 10,
     reward: {
-      rewardType: "stone",
-      rewardNum: 10,
+      rewardType: Resource.pet,
+      rewardNum: 1,
+      petId: "pandu"
     },
     weight: 10,
   }, {
     index: 11,
     reward: {
-      rewardType: "magicStone",
-      rewardNum: 50000,
+      rewardType: Resource.magicStone,
+      rewardNum: 15,
     },
     weight: 10,
   }, {
     index: 12,
     reward: {
-      rewardType: "wood",
-      rewardNum: 3,
+      rewardType: Resource.wood,
+      rewardNum: 30,
     },
     weight: 20,
   }, {
     index: 13,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.coin,
+      rewardNum: 70,
     },
     weight: 30,
   }, {
     index: 14,
     reward: {
-      rewardType: "magicStone",
-      rewardNum: 50000,
+      rewardType: Resource.magicStone,
+      rewardNum: 5,
     },
     weight: 15,
   }, {
     index: 15,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.pet,
+      rewardNum: 1,
+      petId: "fimpkin"
     },
     weight: 1,
   }, {
     index: 16,
     reward: {
-      rewardType: "magicStone",
-      rewardNum: 50000,
+      rewardType: Resource.magicStone,
+      rewardNum: 5,
     },
     weight: 15,
   }, {
     index: 17,
     reward: {
-      rewardType: "food",
-      rewardNum: 50000,
+      rewardType: Resource.pet,
+      rewardNum: 1,
+      petId: "leafbat"
     },
     weight: 20,
   }, {
     index: 18,
     reward: {
-      rewardType: "coins",
-      rewardNum: 50000,
+      rewardType: Resource.coin,
+      rewardNum: 500,
     },
     weight: 15,
   }, {
     index: 19,
     reward: {
-      rewardType: "food",
-      rewardNum: 50000,
+      rewardType: Resource.food,
+      rewardNum: 15,
     },
     weight: 15,
   },

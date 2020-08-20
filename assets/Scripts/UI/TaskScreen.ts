@@ -1,6 +1,6 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import User from "../Gameplay/User";
-import { Resource, getTaskConfigById } from "../Config";
+import { Resource, getTaskConfigById, RewardType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
@@ -22,10 +22,7 @@ export type TaskType = {
     useReward?: RewardType,
 }
 
-export type RewardType = {
-    rewardType: Resource,
-    rewardNum: number,
-}
+
 
 @ccclass
 export default class TaskScreen extends ViewConnector {

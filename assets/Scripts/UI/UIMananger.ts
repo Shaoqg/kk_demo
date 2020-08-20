@@ -30,6 +30,9 @@ export default class UIManager extends cc.Component {
         let btn_reset = cc.find("top_right/btn_reset", this.node);
         btn_reset.on(cc.Node.EventType.TOUCH_END, this.onclick_reset.bind(this));
 
+        let btn_addProgress = cc.find("top_right/btn_addProgress", this.node);
+        btn_addProgress.on(cc.Node.EventType.TOUCH_END, this.onclick_progress.bind(this));
+
 
     }
 
@@ -47,6 +50,14 @@ export default class UIManager extends cc.Component {
 
     onclick_reset(){
         User.instance.resetUse();
+    }
+
+    onclick_progress(){
+        User.instance.exploreTime["water"]=User.instance.exploreTime["water"] + 1 ;
+        User.instance.exploreTime["fire"]=User.instance.exploreTime["fire"] + 1 ;
+        User.instance.exploreTime["food"]=User.instance.exploreTime["food"] + 1 ;
+        User.instance.exploreTime["nature"]=User.instance.exploreTime["nature"] + 1 ;
+        User.instance.saveUse();
     }
 
 

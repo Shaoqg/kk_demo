@@ -5,6 +5,8 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import { RewardType, Resource, PetData } from "../Config";
+import PetItem from "../UI/PetItem";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -18,11 +20,11 @@ export class AdventureReward extends ViewConnector {
     root: cc.Node = null;
     rewarditem: cc.Node;
 
-    static async prompt(boundsAll: petBouns[]): Promise<any> {
+    static async prompt(rewards:RewardType[],issucess:boolean=true): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
         let vc = AdventureReward._instance = await this.loadView<AdventureReward>(parentNode, AdventureReward);
 
-        vc.applyData(boundsAll);
+        vc.applyData(rewards,issucess);
 
         let executor = (resolve: (any) => void, reject: (error) => void) => {
             vc.onCloseCallback = resolve;
@@ -39,40 +41,114 @@ export class AdventureReward extends ViewConnector {
         }
     }
 
-    applyData(boundsAll: petBouns[]) {
+    applyData(rewards:RewardType[],issucess:boolean=true) {
 
         let underlay = cc.find("underlay", this.node);
         this.root = cc.find("content", this.node);
         this.adjustGameInterface();
 
         let go = cc.find("button_primary", this.root);
+        let scroll=cc.find("scroll",this.root);
+        let petNode=cc.find("pet",this.root);
+        let rewardWoodNode = cc.find("scroll/rewards/rewardWood", this.root);
+        let rewardStoneNode = cc.find("scroll/rewards/rewardStone", this.root);
+        let rewardCoinNode = cc.find("scroll/rewards/rewardCoin", this.root);
+        let rewardFoodNode = cc.find("scroll/rewards/rewardFood", this.root);
+        let rewardMagicStoneNode = cc.find("scroll/rewards/rewardMagicStone", this.root);
 
-        let rewardWoodNode = cc.find("rewardWood", this.root);
-        let rewardStoneNode = cc.find("rewardStone", this.root);
-        let rewardCoinNode = cc.find("rewardCoin", this.root);
+        if (rewards.length == 2) {
+            let rewardNode = cc.find("scroll/rewards", this.root);
+            rewardNode.getComponent(cc.Layout).paddingTop = 70
+        } else if (rewards.length == 1) {
+            let rewardNode = cc.find("scroll/rewards", this.root);
+            rewardNode.getComponent(cc.Layout).paddingTop = 140
+        }
+
+
+
 
         //debug
+        rewards.forEach((reward) => {
+            switch (reward.rewardType) {
+                case Resource.coin:
+                    rewardCoinNode.active = true;
+                    rewardCoinNode.getChildByName("reward").getComponent(cc.Label).string = "Coins x" + reward.rewardNum;
+                    if (!reward.bounds) {
+                        rewardCoinNode.getChildByName("bounds").active = false;
+                    } else {
+                        rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
+                    }
+                    User.instance.coin += reward.rewardNum;
+                    break;
+                case Resource.wood:
+                    rewardWoodNode.active = true;
+                    rewardWoodNode.getChildByName("reward").getComponent(cc.Label).string = "Wood x" + reward.rewardNum;
+                    if (!reward.bounds) {
+                        rewardWoodNode.getChildByName("bounds").active = false;
+                    } else {
+                        rewardWoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
+                    }
+                    User.instance.wood += reward.rewardNum;
+                    break;
+                case Resource.stone:
+                    rewardStoneNode.active = true;
+                    rewardStoneNode.getChildByName("reward").getComponent(cc.Label).string = "Stone x" + reward.rewardNum;
+                    if (!reward.bounds) {
+                        rewardStoneNode.getChildByName("bounds").active = false;
+                    } else {
+                        rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
+                    }
+                    User.instance.stone += reward.rewardNum;
+                    break;
+                case Resource.food:
+                    rewardFoodNode.active = true;
+                    rewardFoodNode.getChildByName("reward").getComponent(cc.Label).string = "Food x" + reward.rewardNum;
+                    if (!reward.bounds) {
+                        rewardFoodNode.getChildByName("bounds").active = false;
+                    } else {
+                        rewardFoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
+                    }
+                    User.instance.food += reward.rewardNum;
+                    break;
+                case Resource.magicStone:
+                    rewardMagicStoneNode.active = true;
+                    rewardMagicStoneNode.getChildByName("reward").getComponent(cc.Label).string = "Magic Stone x" + reward.rewardNum;
+                    if (!reward.bounds) {
+                        rewardMagicStoneNode.getChildByName("bounds").active = false;
+                    } else {
+                        rewardMagicStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
+                    }
+                    User.instance.magic_stone += reward.rewardNum;
+                    break;
+                case Resource.pet:
+                    scroll.active = false;
+                    petNode.active = true;
+                    let petList=User.instance.getPetList();
+                   let petData:PetData;
 
-        let rewards=Adventure._instance.getResource(boundsAll)
-        
-        rewardWoodNode.getChildByName("reward").getComponent(cc.Label).string = "Wood x" + rewards.wood;
-        rewardStoneNode.getChildByName("reward").getComponent(cc.Label).string = "Stone x" + rewards.stone;
-        rewardCoinNode.getChildByName("reward").getComponent(cc.Label).string = "Coins x" + rewards.coins;
+                    petList.forEach((pet)=>{
+                        if(pet.petId==reward.petId){
+                            petData=pet;
+                        }
+                    })
+                    let petItem = petNode.getChildByName("PetItem").getComponent(PetItem);
+                    petItem.Init(petData);
 
-        rewardWoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsWood + "%";
-        rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsStone + "%";
-        rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + rewards.boundsCoin + "%";
-
-        User.instance.coin+=rewards.coins;
-        User.instance.stone+=rewards.stone;
-        User.instance.wood+=rewards.wood;   
-
+                    if(!issucess){
+                        cc.find("PetItem/New",petNode).active = false;
+                        let Tips =petNode.getChildByName("Tips").getComponent(cc.Label);
+                        Tips.string="You already have this pet";
+                    }else{
+                        cc.find("PetItem/Star",petNode).active = false;
+                    }
+                    
+            }
+        })
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
 
         go.once(cc.Node.EventType.TOUCH_END, () => {
             this.close(undefined);
-            Adventure.close();
         });
 
 

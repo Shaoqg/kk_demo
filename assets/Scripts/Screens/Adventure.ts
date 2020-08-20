@@ -4,7 +4,7 @@ import { AdventureReward } from "./AdventureReward";
 import User from "../Gameplay/User";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData,  } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType,  } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
@@ -264,40 +264,41 @@ export class Adventure extends ViewConnector {
     }
 
     setRandomResource(AllLine) {
-        let reward = this.getResource(this.boundsAll);
-
-        let randomCoins: number[] = [];
-        for (let i = 0; i < AllLine - 1; i++) {
-            randomCoins.push(this.random(1, reward.coins))
-        }
-
-        let randomWood: number[] = [];
-        for (let i = 0; i < AllLine - 1; i++) {
-            randomWood.push(this.random(1, reward.wood))
-        }
-
-        let randomStone: number[] = [];
-        for (let i = 0; i < AllLine - 1; i++) {
-            randomStone.push(this.random(1, reward.stone))
-        }
-
-        let finalRandomCoins = this.randomList(randomCoins)
-        let finalCoin = finalRandomCoins.random2
-        finalCoin.push(reward.coins - finalRandomCoins.count);
-
-        let finalRandomWood = this.randomList(randomWood)
-        let finalWood = finalRandomWood.random2
-        finalWood.push(reward.wood - finalRandomWood.count);
-
-        let finalRandomStone = this.randomList(randomStone)
-        let finalStone = finalRandomStone.random2
-        finalStone.push(reward.stone - finalRandomStone.count);
-
-
-        User.instance.adventureCoinslist = finalCoin;
-        User.instance.adventureWoodlist = finalWood;
-        User.instance.adventureStonelist = finalStone;
-
+        let rewards = this.getResource(this.boundsAll);
+        rewards.forEach((reward) => {
+            switch (reward.rewardType) {
+                case Resource.coin:
+                    let randomCoins: number[] = [];
+                    for (let i = 0; i < AllLine - 1; i++) {
+                        randomCoins.push(this.random(1, reward.rewardNum))
+                    }
+                    let finalRandomCoins = this.randomList(randomCoins)
+                    let finalCoin = finalRandomCoins.random2
+                    finalCoin.push(reward.rewardNum - finalRandomCoins.count);
+                    User.instance.adventureCoinslist = finalCoin;
+                    break;
+                case Resource.wood:
+                    let randomWood: number[] = [];
+                    for (let i = 0; i < AllLine - 1; i++) {
+                        randomWood.push(this.random(1, reward.rewardNum))
+                    }
+                    let finalRandomWood = this.randomList(randomWood)
+                    let finalWood = finalRandomWood.random2
+                    finalWood.push(reward.rewardNum - finalRandomWood.count);
+                    User.instance.adventureWoodlist = finalWood;
+                    break;
+                case Resource.stone:
+                    let randomStone: number[] = [];
+                    for (let i = 0; i < AllLine - 1; i++) {
+                        randomStone.push(this.random(1, reward.rewardNum))
+                    }
+                    let finalRandomStone = this.randomList(randomStone)
+                    let finalStone = finalRandomStone.random2
+                    finalStone.push(reward.rewardNum - finalRandomStone.count);
+                    User.instance.adventureStonelist = finalStone;
+                    break;
+            }
+        })
     }
     randomList(random: number[]) {
         for (let i = 1; i < random.length; i++) {
@@ -383,8 +384,10 @@ export class Adventure extends ViewConnector {
         this.updateTimeCountLabel(true);
         this.setButtomAndTimeBar("Go Collect!",true,true);
 
-        go.once(cc.Node.EventType.TOUCH_END, () => {
-            AdventureReward.prompt(this.boundsAll);
+        go.once(cc.Node.EventType.TOUCH_END, async () => {
+            let reward = this.getResource(this.boundsAll);
+            await AdventureReward.prompt(reward);
+            this.close(undefined)
             User.instance.setTimeStamp("Adventure",0);
             User.instance.AdventureTime = 0;
             User.instance.AdventurePets = [];
@@ -526,11 +529,32 @@ export class Adventure extends ViewConnector {
                     break;
             }
         });
-
+        console.log(stone,boundsStone);
+        
         wood = Math.floor(wood * (1 + boundsWood / 100));
         stone = Math.floor(stone * (1 + boundsStone / 100));
         coins = Math.floor(coins * (1 + boundsCoin / 100));
-        return { wood: wood, stone: stone, coins: coins, boundsWood: boundsWood, boundsStone: boundsStone, boundsCoin: boundsCoin }
+        console.log(stone);
+
+        let rewards:RewardType[]=[
+            {
+                rewardType:Resource.wood,
+                rewardNum:wood,
+                bounds:boundsWood
+            },
+            {
+                rewardType:Resource.stone,
+                rewardNum:stone,
+                bounds:boundsStone
+            },
+            {
+                rewardType:Resource.coin,
+                rewardNum:coins,
+                bounds:boundsCoin
+            },
+        ]
+
+        return rewards
     }
 
     adjustGameInterface() {

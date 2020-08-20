@@ -1,6 +1,6 @@
 {
   "ver": "2.3.3",
-  "uuid": "69bf8ce6-3873-48f3-aa96-b1873311e028",
+  "uuid": "2e544b6e-fa78-482c-b434-c226c5a89219",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -9,10 +9,10 @@
   "packable": true,
   "platformSettings": {},
   "subMetas": {
-    "unlock_area9": {
+    "area_water": {
       "ver": "1.0.4",
-      "uuid": "0e6cc54f-d8e3-4f66-83fb-b128deee6072",
-      "rawTextureUuid": "69bf8ce6-3873-48f3-aa96-b1873311e028",
+      "uuid": "5ed1f131-e22c-4dbe-8de7-366151e56426",
+      "rawTextureUuid": "2e544b6e-fa78-482c-b434-c226c5a89219",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,

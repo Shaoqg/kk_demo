@@ -9,7 +9,7 @@
   "packable": true,
   "platformSettings": {},
   "subMetas": {
-    "unlock_area6": {
+    "area_food": {
       "ver": "1.0.4",
       "uuid": "183996ed-06aa-4bd0-8d6a-d76ea1a0807a",
       "rawTextureUuid": "5dd00457-b382-4519-8a5e-a3662727148f",
