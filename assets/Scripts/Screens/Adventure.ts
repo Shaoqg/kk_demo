@@ -185,6 +185,7 @@ export class Adventure extends ViewConnector {
                 User.instance.saveUse();
                 
                 EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+                EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
             });
         }
 

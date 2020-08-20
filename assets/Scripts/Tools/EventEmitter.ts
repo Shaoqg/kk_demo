@@ -50,7 +50,8 @@ export enum EventType {
 
     UPDATE_RESOURCE = "UPDATE_RESOURCE",
     STAR_INCREASE = "STAR_INCREASE",
-    LEVEL_UP_TREE = "LEVEL_UP_TREE"
+    LEVEL_UP_TREE = "LEVEL_UP_TREE",
+    CHECK_AREA_COMPELETE = "CHECK_AREA_COMPELETE",
 };
 
 let globalKey = "global";

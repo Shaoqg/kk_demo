@@ -8,7 +8,7 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import TaskScreen from "../UI/TaskScreen";
 import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
-import { Trees } from "../Config";
+import { Trees, AdventureAreas } from "../Config";
 import { RotaryScreen } from "../Screens/RotaryScreen";
 
 const {ccclass, property} = cc._decorator;
@@ -34,6 +34,7 @@ export default class WorldManager extends cc.Component {
     btn_tree2: cc.Node;
     btn_tree3: cc.Node;
     btn_rotary: any;
+    rotateAnimNode: cc.Node;
 
 
 
@@ -51,8 +52,8 @@ export default class WorldManager extends cc.Component {
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
-        EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
-
+        EventEmitter.subscribeTo(EventType.CHECK_AREA_COMPELETE, this.checkAreaIsCompelete.bind(this));
+        EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
 
     init() {
@@ -116,6 +117,8 @@ export default class WorldManager extends cc.Component {
 
         this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
         this.star_label=cc.find("DialogRoot/top_left/animationNode/heart/button_background/desc",this.node);
+
+        this.rotateAnimNode=cc.find("DialogRoot/top_left/btn_rotary/rotate",this.node);
 
     }
 
@@ -224,6 +227,20 @@ export default class WorldManager extends cc.Component {
 
     onclickTree(){
         TreeUpgrade.prompt();
+    }
+
+    checkAreaIsCompelete() {
+        let count = 0
+        AdventureAreas.forEach((area) => {
+            let areaprogress = User.instance.exploreTime[area.areaName] / area.areaCompletetime;
+            if (areaprogress >= 1) {
+                this.rotateAnimNode.active = true;
+                count++;
+            }
+        });
+        if (count == 0) {
+            this.rotateAnimNode.active = false;
+        }
     }
 
     starIncrease() {

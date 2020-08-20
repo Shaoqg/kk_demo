@@ -224,6 +224,7 @@ export class RotaryScreen extends ViewConnector {
             }
         })
 
+        EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
         let reward: RewardType[]
@@ -413,6 +414,7 @@ export class RotaryScreen extends ViewConnector {
         User.instance.exploreTime["nature"] = User.instance.exploreTime["nature"] + 1;
         User.instance.saveUse();
         this.refreshRotary()
+        EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
 
     adjustGameInterface() {

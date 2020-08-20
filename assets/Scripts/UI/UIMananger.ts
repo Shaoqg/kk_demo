@@ -2,6 +2,7 @@ import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
 import BattleScreen from "../Screens/BattleScreen";
 import { SelectPet } from "../Screens/SelectPet";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
 const {ccclass, property} = cc._decorator;
@@ -67,6 +68,7 @@ export default class UIManager extends cc.Component {
         User.instance.exploreTime["food"]=User.instance.exploreTime["food"] + 1 ;
         User.instance.exploreTime["nature"]=User.instance.exploreTime["nature"] + 1 ;
         User.instance.saveUse();
+        EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
 
     async onclick_select(){
