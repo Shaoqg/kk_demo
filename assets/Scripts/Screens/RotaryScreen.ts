@@ -108,7 +108,7 @@ export class RotaryScreen extends ViewConnector {
 
         let btn_addProgress = cc.find("btn_addProgress", this.node);
         btn_addProgress.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onClickStart()
+            this.onclick_progress()
         });
         //this.adjustGameInterface();
     }
