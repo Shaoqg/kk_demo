@@ -159,8 +159,6 @@ export class RotaryScreen extends ViewConnector {
     gotoNextItem() {
         this.itemidx++;
 
-        console.log(this.finsishItem);
-        
         if (this.itemidx > 19) {
             this.itemidx = 0;
             this.turns++;
@@ -222,7 +220,7 @@ export class RotaryScreen extends ViewConnector {
 
         AdventureAreas.forEach((area) => {
             if (this.area.areaName == area.areaName) {
-                User.instance.exploreTime[area.areaName] -= area.areaCompletetime;
+                User.instance.exploreTime[area.areaName] = 0;
             }
         })
 
@@ -397,12 +395,13 @@ export class RotaryScreen extends ViewConnector {
         let progressBarCompelete = cc.find("progressBarCompelete", progressBar.node);
 
         let areaprogress = User.instance.exploreTime[this.area.areaName] / this.area.areaCompletetime;
-        progressLabel.string = Math.round(areaprogress * 1000) / 10 + "%"
-        progressBar.progress = areaprogress;
-
-        if (areaprogress >= 1) {
+        if(areaprogress>=1){
+            progressLabel.string = "100%"
+            progressBar.progress = 1;
             progressBarCompelete.active = true;
-        } else {
+        }else{
+            progressLabel.string = Math.round(areaprogress * 1000) / 10 + "%"
+            progressBar.progress = areaprogress;
             progressBarCompelete.active = false;
         }
     }
