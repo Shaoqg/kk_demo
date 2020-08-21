@@ -52,6 +52,7 @@ export default class WorldManager extends cc.Component {
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
+        EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.CHECK_AREA_COMPELETE, this.checkAreaIsCompelete.bind(this));
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
