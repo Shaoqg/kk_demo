@@ -6,6 +6,7 @@ import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
 import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType, AdventureAreas,  } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import { SelectNumber } from "./SelectNumber";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -34,9 +35,8 @@ export class Adventure extends ViewConnector {
     battleinfo: cc.Node;
     AllLine: number=10;
     foodNumLabel: cc.Label;
-    btn_reduce: cc.Node;
-    btn_increase: cc.Node;
     food: number = 1;
+    foodNumNode: any;
 
     static async prompt(areaName?:string): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -79,8 +79,7 @@ export class Adventure extends ViewConnector {
         let shipLevel = cc.find("shipInfo/level", this.root);
         let shipSpeed = cc.find("shipInfo/speed", this.root);
         let shipFood = cc.find("shipInfo/food", this.root);
-        this.btn_reduce = cc.find("reduce", shipFood);
-        this.btn_increase = cc.find("increase", shipFood);
+        this.foodNumNode = cc.find("foodNum", shipFood);
         this.foodNumLabel = cc.find("foodNum/number", shipFood).getComponent(cc.Label);
         let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
@@ -219,17 +218,8 @@ export class Adventure extends ViewConnector {
     initFoodBtn() {
         this.foodNumLabel.string = this.food.toString();
 
-        this.btn_increase.on(cc.Node.EventType.TOUCH_END, () => {
-            if (this.food < User.instance.food && this.food < AdventureShipMaxFood) {
-                this.food++;
-            }
-            this.foodNumLabel.string = this.food.toString();
-        })
-
-        this.btn_reduce.on(cc.Node.EventType.TOUCH_END, () => {
-            if (this.food > 1) {
-                this.food--;
-            }
+        this.foodNumNode.on(cc.Node.EventType.TOUCH_END, async () => {
+            this.food = await SelectNumber.prompt("food",this.food,1,Math.min(User.instance.food,AdventureShipMaxFood))
             this.foodNumLabel.string = this.food.toString();
         })
 
@@ -515,7 +505,7 @@ export class Adventure extends ViewConnector {
 
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
        
-        if ((this.petReady == this.seatNum) && !this.goAdventure && this.food < User.instance.food) {
+        if ((this.petReady == this.seatNum) && !this.goAdventure && this.food <= User.instance.food && this.food!=0) {
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
             go.getComponent(cc.Button).interactable = true;
