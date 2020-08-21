@@ -53,6 +53,9 @@ export default class PetItem extends cc.Component {
     @property(cc.Node)
     petShadowNode: cc.Node = null;
 
+    @property(cc.Node)
+    petLockedBg: cc.Node = null;
+
     Init(petData:PetData, touCallBack = null) {
         let petid =petData.petId;
         this.setLevelAndName(petid, petData);
@@ -60,12 +63,32 @@ export default class PetItem extends cc.Component {
         this.setRare(config.rarity.toString());
         this.SetElements(config.elements);
         this.setSpriteFrame(config.art_asset)
+        this.setPetLocked(petData.petLevel);
         // this.SetPortrait(petData, petConfig);
 
         this.node.off(cc.Node.EventType.TOUCH_END);
         this.node.off("click");
         touCallBack && this.node.on(cc.Node.EventType.TOUCH_END, touCallBack);
     }
+
+    setPetLocked(petLevel:number){
+        if(petLevel>0){
+            this.petLockedBg.active=false;
+            this.setPetBlack(false);
+        }else{
+            this.petLockedBg.active=true;
+            this.setPetBlack(true);
+        }
+    }
+    
+    setPetBlack(isblack:boolean) {
+        if(isblack){
+            this.PetImage.node.color = cc.color(0, 0, 0);
+        }else{
+            this.PetImage.node.color = cc.color(255, 255, 255);
+        }
+    }
+
     async setSpriteFrame(petSpriteFrameName: string) {
         let petSf = await KKLoader.loadSprite("Pets/" + petSpriteFrameName)
         if (petSf) {
@@ -133,12 +156,21 @@ export default class PetItem extends cc.Component {
     }
 
     setLevelAndName(petid:string,petData?:PetData){
-        this.petShadowNode.active = this.StarLevelLabel.node.getParent().active = !!petData;
-        this.petLabelNode.active = !petData;
-        
-        this.StarLevelLabel.string = petData ? petData.petLevel.toString():"1";
-
-        this.NameLabel.string =petData.petName;
+        if(petData.petLevel>0){
+            this.petShadowNode.active = this.StarLevelLabel.node.getParent().active = !!petData;
+            this.petLabelNode.active = !petData;
+            
+            this.StarLevelLabel.string = petData ? petData.petLevel.toString():"1";
+    
+            this.NameLabel.string =petData.petName;
+        }else{
+            this.petShadowNode.active = this.StarLevelLabel.node.getParent().active = !!petData;
+            this.petLabelNode.active = !petData;
+            
+            this.StarLevelLabel.string = petData ? petData.petLevel.toString():"0";
+    
+            this.NameLabel.string ="Unkonw";
+        }
     }
 
     SetDualBackGround(elements:string[]){

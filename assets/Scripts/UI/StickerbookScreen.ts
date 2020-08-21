@@ -1,6 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
 import PetList from "./PetList";
+import PetBookList from "./PetBookList";
 
 const {ccclass, property} = cc._decorator;
 
@@ -27,6 +28,7 @@ export default class StickerbookScreen extends ViewConnector {
     snapsNode:cc.Node = undefined;
 
     private alteredY:number = 0;
+    _bookList: PetList;
 
     
     static async prompt(): Promise<void> {
@@ -46,9 +48,34 @@ export default class StickerbookScreen extends ViewConnector {
         
         let b = cc.find("root/Pets/PetList", this.node);
         this._petList = cc.find("root/Pets/PetList", this.node).getComponent(PetList);
+        this._bookList = cc.find("root/BookPets/PetList", this.node).getComponent(PetBookList);
         this._petListContentNode = cc.find("root/Pets/PetList/PetScroll/PetScrollContent", this.node);
 
         this.setupPetList();
+        this.setupBookList();
+
+        this._activateTab(this._petList.node);
+    }
+
+    openPetTab() {
+        this._activateTab(this._petList.node);
+    }
+
+    openBookTab() {
+        this._activateTab(this._bookList.node);
+    }
+
+    openCoinsTab() {
+        // this._activateTab(StoreScreen.StoreType.Coin, this.coinShop);
+    }
+
+    _activateTab(tab:cc.Node) {
+       
+        this._petList.node.active = false;
+        this._bookList.node.active = false;
+
+        tab.active = true;
+
     }
 
     adjustGameInterface() {
@@ -68,6 +95,10 @@ export default class StickerbookScreen extends ViewConnector {
 
     setupPetList(){
         this._petList.init();
+    }
+
+    setupBookList(){
+        this._bookList.init();
     }
 
    
