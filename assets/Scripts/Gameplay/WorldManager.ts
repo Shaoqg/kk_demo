@@ -10,6 +10,7 @@ import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
 import { RotaryScreen } from "../Screens/RotaryScreen";
+import { GardenPets } from "../Pet/GardenPets";
 
 const {ccclass, property} = cc._decorator;
 
@@ -50,6 +51,7 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         this.initChangeArrow();
         this.updateAllResource();
+        this.setIslandPets()
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
@@ -173,6 +175,12 @@ export default class WorldManager extends cc.Component {
         })
     }
 
+    setIslandPets() {
+        let petsNowUsing = User.instance.getPetsNowUsing("onIsland")
+        petsNowUsing.forEach((pet)=>{
+            GardenPets.addpet(pet);
+        })
+    }
     onclickCastle() {
         StateManager.instance.changeState("CastleState");
     }
