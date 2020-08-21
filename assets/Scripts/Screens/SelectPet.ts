@@ -16,7 +16,7 @@ export class SelectPet extends ViewConnector {
     root: cc.Node = null;
     pet: cc.Node;
     rewarditem: cc.Node;
-    petsInAdventure: PetData[];
+    petsNowUsing: PetData[];
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -52,8 +52,7 @@ export class SelectPet extends ViewConnector {
         let petList = [];
         petList=User.instance.getPetList();
         list.height = 11;
-        this.petsInAdventure = User.instance.getPetsInAdventure()
-        console.log("this.petsInAdventure",this.petsInAdventure);
+        this.petsNowUsing = User.instance.getPetsNowUsing()
         
         petList.forEach((data, idx) => {
             this.createList(data, idx);
@@ -89,7 +88,7 @@ export class SelectPet extends ViewConnector {
 
         this.setType(petNode,petconfig);
 
-        this.petsInAdventure.forEach((pet)=>{
+        this.petsNowUsing.forEach((pet)=>{
             if(pet.petId==petData.petId){
                 console.log("pet.petId",petData);
                 petNode.getChildByName("underlay").active = true;

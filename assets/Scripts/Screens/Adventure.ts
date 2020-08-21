@@ -37,6 +37,7 @@ export class Adventure extends ViewConnector {
     foodNumLabel: cc.Label;
     food: number = 1;
     foodNumNode: any;
+    petsNowUsing: PetData[];
 
     static async prompt(areaName?:string): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -114,7 +115,7 @@ export class Adventure extends ViewConnector {
             let timeelapsed = (Date.now() / 1000 - this.time);
             this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
             this.updateTimeCountLabel();
-            let Pets = User.instance.getPetsInAdventure();
+            let Pets = User.instance.getPetsNowUsing("Adventure");
             Pets.forEach((pet) => {
                 let petconfig = getPetConfigById(pet.petId);
                 let petBouns = getPetBouns(petconfig)
@@ -147,6 +148,8 @@ export class Adventure extends ViewConnector {
             }
         }else{
             list.height = 11;
+
+            this.petsNowUsing = User.instance.getPetsNowUsing()
 
             petList.forEach((data, idx) => {
                 this.createList(data, idx);
@@ -421,6 +424,15 @@ export class Adventure extends ViewConnector {
 
         pet.y = -(pet.height / 2 + 11) - (Math.floor(idx / 5) * (pet.height + 11));
         pet.x = (idx % 5) * (pet.width + 11) + (pet.width / 2 + 11);
+
+        this.petsNowUsing.forEach((petNowUsing)=>{
+            if(petNowUsing.petId==petData.petId){
+                console.log("pet.petId",petData);
+                pet.getChildByName("underlay").active = true;
+                pet.getChildByName("Label").active = true;
+                return;
+            }
+        })
 
         pet.on(cc.Node.EventType.TOUCH_END, () => {
             this.setToReady(petData,petconfig,pet);

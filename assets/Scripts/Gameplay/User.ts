@@ -158,20 +158,30 @@ export default class User {
         return PetFind;
     }
 
-    getPetsInAdventure() {
+    getPetsNowUsing(usingBy:string="") {
         let Pets: PetData[] = [];
-        this.petList.forEach((petData) => {
-            if (petData.nowUsing) {
-                if (petData.UsingBy == "Adventure") {
-                    Pets.push(petData);
+        if(usingBy==""){
+            this.petList.forEach((petData) => {
+                if (petData.nowUsing) {
+                    if (petData.UsingBy != usingBy) {
+                        Pets.push(petData);
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            this.petList.forEach((petData) => {
+                if (petData.nowUsing) {
+                    if (petData.UsingBy == usingBy) {
+                        Pets.push(petData);
+                    }
+                }
+            })
+        }
         return Pets;
     }
 
     removePetFromInAdventure() {
-        let Pets = this.getPetsInAdventure();
+        let Pets = this.getPetsNowUsing("Adventure");
         this.petList.forEach((petData) => {
             if (petData.nowUsing) {
                 if (petData.UsingBy == "Adventure") {
