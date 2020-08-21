@@ -73,10 +73,10 @@ export default class PetItem extends cc.Component {
 
     setPetLocked(petLevel:number){
         if(petLevel>0){
-            this.petLockedBg.active=false;
+            this.petLockedBg&&(this.petLockedBg.active=false);
             this.setPetBlack(false);
         }else{
-            this.petLockedBg.active=true;
+            this.petLockedBg&&(this.petLockedBg.active=true);
             this.setPetBlack(true);
         }
     }
