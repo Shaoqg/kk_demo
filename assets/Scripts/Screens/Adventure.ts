@@ -573,4 +573,11 @@ export class Adventure extends ViewConnector {
     onClose() {
         this.node.stopAllActions();
     }
+
+    //debug
+    debugskiptime(){
+        User.instance.setTimeStamp("Adventure",this.time-(5*1000*60));
+        this.time-=(5*1000*60);
+        User.instance.saveUse();
+    }
 }
