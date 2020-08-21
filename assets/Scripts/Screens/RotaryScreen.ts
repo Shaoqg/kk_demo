@@ -408,10 +408,10 @@ export class RotaryScreen extends ViewConnector {
     }
 
     onclick_progress() {
-        User.instance.exploreTime["water"] = User.instance.exploreTime["water"] + 1;
-        User.instance.exploreTime["fire"] = User.instance.exploreTime["fire"] + 1;
-        User.instance.exploreTime["food"] = User.instance.exploreTime["food"] + 1;
-        User.instance.exploreTime["nature"] = User.instance.exploreTime["nature"] + 1;
+        User.instance.exploreTime["water"] = User.instance.exploreTime["water"] + 360;
+        User.instance.exploreTime["fire"] = User.instance.exploreTime["fire"] + 360;
+        User.instance.exploreTime["food"] = User.instance.exploreTime["food"] + 360;
+        User.instance.exploreTime["nature"] = User.instance.exploreTime["nature"] + 360;
         User.instance.saveUse();
         this.refreshRotary()
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);

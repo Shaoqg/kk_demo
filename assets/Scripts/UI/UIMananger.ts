@@ -69,10 +69,10 @@ export default class UIManager extends cc.Component {
     }
 
     onclick_progress(){
-        User.instance.exploreTime["water"]=User.instance.exploreTime["water"] + 1 ;
-        User.instance.exploreTime["fire"]=User.instance.exploreTime["fire"] + 1 ;
-        User.instance.exploreTime["food"]=User.instance.exploreTime["food"] + 1 ;
-        User.instance.exploreTime["nature"]=User.instance.exploreTime["nature"] + 1 ;
+        User.instance.exploreTime["water"]=User.instance.exploreTime["water"] + 360 ;
+        User.instance.exploreTime["fire"]=User.instance.exploreTime["fire"] + 360 ;
+        User.instance.exploreTime["food"]=User.instance.exploreTime["food"] + 360 ;
+        User.instance.exploreTime["nature"]=User.instance.exploreTime["nature"] + 360 ;
         User.instance.saveUse();
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
