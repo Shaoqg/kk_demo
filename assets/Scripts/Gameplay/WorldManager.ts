@@ -35,6 +35,7 @@ export default class WorldManager extends cc.Component {
     btn_tree3: cc.Node;
     btn_rotary: any;
     rotateAnimNode: cc.Node;
+    islandPos: number;
 
 
 
@@ -52,6 +53,7 @@ export default class WorldManager extends cc.Component {
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
+        EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.CHECK_AREA_COMPELETE, this.checkAreaIsCompelete.bind(this));
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
@@ -153,16 +155,21 @@ export default class WorldManager extends cc.Component {
     }
 
     initChangeArrow() {
-        let arrow_left = cc.find("world/island/islandUI/arrow_left", this.node);
-        let arrow_right = cc.find("world/island/islandUI/arrow_right", this.node);
+        let arrow_left = cc.find("world/island/arrow_left", this.node);
+        let arrow_right = cc.find("world/island/arrow_right", this.node);
         let islandUI = cc.find("world/island/islandUI", this.node);
-
+        this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
-            islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
+            if (this.islandPos > -2) {
+                islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
+                this.islandPos--;
+            }
         })
         arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
-            islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
-
+            if (this.islandPos < 2) {
+                islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
+                this.islandPos++;
+            }
         })
     }
 
