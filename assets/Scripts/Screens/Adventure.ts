@@ -4,7 +4,7 @@ import { AdventureReward } from "./AdventureReward";
 import User from "../Gameplay/User";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType,  } from "../Config";
+import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType, AdventureAreas,  } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
@@ -177,8 +177,18 @@ export class Adventure extends ViewConnector {
                 User.instance.food -= this.food;
                 User.instance.AdventureFood = this.food;
                 User.instance.AdventureDestination = areaName;
-                User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
-
+                let completeTime = 1;
+                AdventureAreas.forEach((area) => {
+                    if (area.areaName == areaName) {
+                        completeTime = area.areaCompletetime;
+                    }
+                })
+                if (User.instance.exploreTime[areaName] < completeTime && User.instance.exploreTime[areaName] + AdventureTime * this.food / speeds[0] > completeTime) {
+                    EventEmitter.emitEvent(EventType.STAR_INCREASE);
+                    User.instance.exploreTime[areaName] = completeTime;
+                }else{
+                    User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
+                }
                 this.startCountDown();
                 this.updateTimeCountLabel();
                 this.setRandomResource(this.AllLine);

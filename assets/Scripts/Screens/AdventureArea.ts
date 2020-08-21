@@ -50,11 +50,14 @@ export class AdventureArea extends ViewConnector {
         AdventureAreas.forEach((area) => {
             let areaNode = list.getChildByName("area_" + area.areaName);
             let progressLab = areaNode.getChildByName("areaProgress").getComponent(cc.Label);
+            let levelStar = cc.find("level_star/level_starProgress", areaNode).getComponent(cc.Sprite)
             if (User.instance.exploreTime[area.areaName] >= area.areaCompletetime) {
-                progressLab.string = "Complete";
+                progressLab.string = "100%";
+                levelStar.fillRange = 1;
             } else {
                 let UsrProgress = Math.round((User.instance.exploreTime[area.areaName] / area.areaCompletetime) * 1000) / 10;
                 progressLab.string = UsrProgress.toString() + "%";
+                levelStar.fillRange = User.instance.exploreTime[area.areaName] / area.areaCompletetime;
             }
 
             areaNode.on(cc.Node.EventType.TOUCH_END, () => {
