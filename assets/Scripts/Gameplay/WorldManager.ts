@@ -53,7 +53,6 @@ export default class WorldManager extends cc.Component {
         this.init();
         this.initCastle();
         this.initTrees();
-        this.initChangeArrow();
         this.updateAllResource();
         GardenPets.setIslandPets();
 
@@ -70,46 +69,6 @@ export default class WorldManager extends cc.Component {
     init() {
 
         let worldNode = cc.find("world", this.node);
-        let btn_build = cc.find("DialogRoot/ButtomHud/btn_build", this.node);
-        btn_build.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickCastle();
-        })
-
-        // this.btn_ship = cc.find("shipDock/btn_ship", worldNode);
-        // this.btn_ship.on(cc.Node.EventType.TOUCH_END, ()=>{
-        //     this.onclickShip();
-        // })
-
-        // this.selectButton_ship = cc.find("shipDock/selectButton", worldNode);
-        this.btn_levelup = cc.find("DialogRoot/ButtomHud/btn_levelup", this.node);
-        this.btn_levelup.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclicLevelup();
-        })
-
-        this.btn_adventure = cc.find("DialogRoot/ButtomHud/btn_adventure", this.node)
-        this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onpenBattle();
-        })
-
-        this.btn_barn = cc.find("DialogRoot/ButtomHud/btn_barn", this.node)
-        this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickPet();
-        })
-
-        this.btn_shop = cc.find("DialogRoot/ButtomHud/btn_shop", this.node)
-        this.btn_shop.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickShop();
-        })
-
-        // this.btn_dailay = cc.find("DialogRoot/top_left/btn_dailay", this.node)
-        // this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
-        //     this.onclickDaily();
-        // })
-
-        // this.btn_rotary = cc.find("DialogRoot/top_left/btn_rotary", this.node)
-        // this.btn_rotary.on(cc.Node.EventType.TOUCH_END, ()=>{
-        //     this.onclickRotary();
-        // })
 
         this.btn_tree1 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build1", worldNode);
         this.btn_tree1.on(cc.Node.EventType.TOUCH_END, ()=>{
@@ -168,33 +127,6 @@ export default class WorldManager extends cc.Component {
 
     }
 
-    initChangeArrow() {
-        let arrow_left = cc.find("DialogRoot/ButtomHud/arrow_left", this.node);
-        let arrow_right = cc.find("DialogRoot/ButtomHud/arrow_right", this.node);
-        let islandUI = cc.find("world/island/islandUI", this.node);
-        
-        this.islandPos = 0
-        arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onpenBattle(true);
-            if (this.islandPos > -2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
-                this.islandPos--;
-            }
-        })
-        arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onpenBattle(true);
-            if (this.islandPos < 2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
-                this.islandPos++;
-            }
-        })
-    }
-
-    onclickCastle() {
-        this.onpenBattle(true);
-        StateManager.instance.changeState("CastleState");
-    }
-
     onclickShip() {
         this.switchShipState(true);
         setTimeout(()=>{
@@ -207,16 +139,6 @@ export default class WorldManager extends cc.Component {
         // this.btn_ship.active= !openSelect;
     }
 
-    onclickShop(){
-        this.onpenBattle(true);
-        StoreScreen.prompt();
-    }
-
-    onclicLevelup(){
-        this.switchShipState(false);
-        this.onpenBattle(true);
-        ShipUpgrade.prompt();
-    }
 
     onclickAdventure() {
         this.switchShipState(false);
@@ -228,28 +150,7 @@ export default class WorldManager extends cc.Component {
         }
     }
 
-    onpenBattle(close:boolean=false) {
-        let battleNode = cc.find("DialogRoot/BattleHud", this.node);
-        let underlay = cc.find("underlay", battleNode);
-        if(this.battleIsOpen||close){
-            battleNode.active=false;
-            this.battleIsOpen=false;
-        }else{
-            battleNode.active=true;
-            battleNode.stopAllActions();
-            underlay.stopAllActions();
-            battleNode.opacity = 0;
-            underlay.opacity = 0;
-            battleNode.runAction(cc.fadeTo(0.1, 255));
-            underlay.runAction(cc.fadeTo(0.1, 100));
-            this.battleIsOpen=true;
-        }
-        
-    }
-
-
     onLevelUp(){
-        this.onpenBattle(true);
         this.initCastle();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
@@ -259,22 +160,6 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
-    }
-
-	onclickPet() {
-        this.onpenBattle(true);
-        this.switchShipState(false);
-        StickerbookScreen.prompt();
-    }
-
-    onclickDaily(){
-        this.switchShipState(false);
-        TaskScreen.prompt();
-    }
-
-    onclickRotary(){
-        this.switchShipState(false);
-        RotaryScreen.prompt();
     }
 
     onclickTree(){

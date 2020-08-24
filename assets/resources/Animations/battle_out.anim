@@ -1,0 +1,243 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "battle_out",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3333333333333333,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "btn_shop": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                150,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                120,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_barn": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                280,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                240,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_adventure": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                120,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                82,
+                0
+              ]
+            }
+          ],
+          "width": [
+            {
+              "frame": 0,
+              "value": 150
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 108
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 150
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 108
+            }
+          ]
+        }
+      },
+      "btn_adventure/menu_empty": {
+        "props": {
+          "position": [
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                -92,
+                0
+              ]
+            }
+          ],
+          "width": [
+            {
+              "frame": 0,
+              "value": 150
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 108
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 330
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 300
+            }
+          ]
+        }
+      },
+      "btn_adventure/label": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                -80,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                -41.617,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_adventure/button_foodbowl": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                -2.885,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                12.708,
+                0
+              ]
+            }
+          ],
+          "width": [
+            {
+              "frame": 0,
+              "value": 120
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 85
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 100
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 70
+            }
+          ]
+        }
+      },
+      "btn_levelup": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -150,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                -120,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_build": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -280,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                -240,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

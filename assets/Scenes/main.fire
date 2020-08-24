@@ -81,10 +81,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 1040
+        "__id__": 1041
       },
       {
-        "__id__": 1041
+        "__id__": 1042
       }
     ],
     "_prefab": null,
@@ -174,7 +174,7 @@
       "array": [
         0,
         0,
-        508.3569120214655,
+        541.2658773652742,
         0,
         0,
         0,
@@ -28372,7 +28372,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 1039
+        "__id__": 1040
       }
     ],
     "_prefab": null,
@@ -37421,7 +37421,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -406.806,
+        -338.811,
         0,
         0,
         0,
@@ -38814,6 +38814,9 @@
     "_components": [
       {
         "__id__": 1038
+      },
+      {
+        "__id__": 1039
       }
     ],
     "_prefab": null,
@@ -38902,7 +38905,7 @@
       "ctor": "Float64Array",
       "array": [
         -300,
-        250.574,
+        325.652,
         0,
         0,
         0,
@@ -38996,7 +38999,7 @@
       "ctor": "Float64Array",
       "array": [
         300,
-        250.574,
+        325.652,
         0,
         0,
         0,
@@ -39105,8 +39108,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        150,
-        82.053,
+        120,
+        82,
         0,
         0,
         0,
@@ -39262,7 +39265,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92.097,
+        -92,
         0,
         0,
         0,
@@ -39727,8 +39730,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        280,
-        82.292,
+        240,
+        82,
         0,
         0,
         0,
@@ -39884,7 +39887,7 @@
       "ctor": "Float64Array",
       "array": [
         2.676,
-        -94.586,
+        -92,
         0,
         0,
         0,
@@ -40282,8 +40285,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 150
+      "width": 108,
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -40295,7 +40298,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        99.899,
+        82,
         0,
         0,
         0,
@@ -40438,8 +40441,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 350
+      "width": 108,
+      "height": 300
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -40451,7 +40454,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -101.02,
+        -92,
         0,
         0,
         0,
@@ -40548,7 +40551,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -61.376,
+        -44.11,
         0,
         0,
         0,
@@ -40647,8 +40650,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 100,
-      "height": 85
+      "width": 85,
+      "height": 70
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -40919,8 +40922,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -150,
-        82.053,
+        -120,
+        82,
         0,
         0,
         0,
@@ -41076,7 +41079,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92.097,
+        -92,
         0,
         0,
         0,
@@ -41544,8 +41547,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -280,
-        82.053,
+        -240,
+        82,
         0,
         0,
         0,
@@ -41701,7 +41704,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92.097,
+        -92,
         0,
         0,
         0,
@@ -42142,6 +42145,26 @@
     "_originalWidth": 0,
     "_originalHeight": 0,
     "_id": "06bxb2JntIGbXsM8/V84Q2"
+  },
+  {
+    "__type__": "cc.Animation",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 969
+    },
+    "_enabled": true,
+    "_defaultClip": null,
+    "_clips": [
+      {
+        "__uuid__": "0a752a5f-2407-4cd5-880a-e12ac10c5348"
+      },
+      {
+        "__uuid__": "5ee2ce6d-7474-4915-b59f-4b280a6c3fe4"
+      }
+    ],
+    "playOnLoad": false,
+    "_id": "e8z6AsajJOF7IQDl/Ymfxh"
   },
   {
     "__type__": "b7cf4wPA5BDh5JHRRNIj+h4",
