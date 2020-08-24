@@ -1,18 +1,13 @@
 import User from "./User";
-import { CastleScreen } from "../Screens/CastleScreen";
 import { StateManager } from "./State/StateManager";
-import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import { Adventure } from "../Screens/Adventure";
-import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import TaskScreen from "../UI/TaskScreen";
 import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
-import { RotaryScreen } from "../Screens/RotaryScreen";
 import { GardenPets } from "../Pet/GardenPets";
 import ScreenSize from "../Tools/ScreenSize";
-import StoreScreen from "../UI/StoreScreen";
+import { DebugScreen } from "../Screens/DebugScreen";
 
 const {ccclass, property} = cc._decorator;
 
@@ -55,6 +50,9 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         this.updateAllResource();
         GardenPets.setIslandPets();
+
+        //debug
+        this.setDebugEvents()
 
         this.adjustGameInterface();
 
@@ -224,5 +222,23 @@ export default class WorldManager extends cc.Component {
         let scale = ScreenSize.getScale(1, 0.8);
 
         this.node.scale = scale;
+    }
+
+     setDebugEvents() {
+        let cavnasNode = cc.find("Canvas", cc.director.getScene());
+        cavnasNode.on(cc.Node.EventType.TOUCH_MOVE, this.showDebugMenu, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.showDebugMenu, this);
+    }
+
+     showDebugMenu(event) {
+         
+        let boolean1 = event._touches ? true : false;
+        let boolean2 = event.keyCode ? true : false;
+
+        if ((boolean1 ? event._touches.length >= 3 : false) || (boolean2 ? event.keyCode === cc.macro.KEY.space : false)) {
+            if(!DebugScreen.isShowing) {
+                DebugScreen.prompt();
+            }
+        }
     }
 }

@@ -46,15 +46,6 @@ export default class UIManager extends cc.Component {
         // this.btn_shop.on(cc.Node.EventType.TOUCH_END, this.onclick_shop.bind(this));
         // this.btn_battle.on(cc.Node.EventType.TOUCH_END, this.onclick_battle.bind(this));
 
-        let btn_reset = cc.find("top_right/btn_reset", this.node);
-        btn_reset.on(cc.Node.EventType.TOUCH_END, this.onclick_reset.bind(this));
-
-        let btn_addProgress = cc.find("top_right/btn_addProgress", this.node);
-        btn_addProgress.on(cc.Node.EventType.TOUCH_END, this.onclick_progress.bind(this));
-
-        let btn_openSelectPet = cc.find("top_right/btn_openSelectPet", this.node);
-        btn_openSelectPet.on(cc.Node.EventType.TOUCH_END, this.onclick_select.bind(this));
-
         let btn_build = cc.find("ButtomHud/btn_build", this.node);
         btn_build.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickCastle();
@@ -95,10 +86,6 @@ export default class UIManager extends cc.Component {
 
     onclick_battle() {
         BattleScreen.prompt();
-    }
-
-    onclick_reset(){
-        User.instance.resetUse();
     }
 
     onclickCastle() {
@@ -166,24 +153,8 @@ export default class UIManager extends cc.Component {
         })
     }
 
-    onclick_progress(){
-        User.instance.exploreTime["water"]=User.instance.exploreTime["water"] + 360 ;
-        User.instance.exploreTime["fire"]=User.instance.exploreTime["fire"] + 360 ;
-        User.instance.exploreTime["food"]=User.instance.exploreTime["food"] + 360 ;
-        User.instance.exploreTime["nature"]=User.instance.exploreTime["nature"] + 360 ;
-        User.instance.saveUse();
-        EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
-    }
+    
 
-    async onclick_select(){
-        let petdata=await SelectPet.prompt();
-        // if(petdata){
-        //     let UserPet=User.instance.findPetDataByPetId(petdata.petId);
-        //     UserPet.nowUsing=true;
-        //     UserPet.UsingBy="onIsland"
-        //     User.instance.saveUse()
-        //     GardenPets.addpet(petdata);
-        // }
-    }
+   
 
 }
