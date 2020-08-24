@@ -211,12 +211,5 @@ export default class GlobalResources {
         GlobalResources.spawnPool.addNode(petitem);
     }*/
 
-    /**
-     * 在身边显示星星效果
-     */
-    static startStarFXAnimation(node, dir = 1, posSetting= {
-        star1:{x:-50,y:100},
-        star2:{x:30,y: 70}
-    } ) {
-    }
+}
 

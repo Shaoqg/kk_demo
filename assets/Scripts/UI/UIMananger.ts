@@ -1,6 +1,6 @@
 import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
-import BattleScreen from "../Screens/BattleScreen";
+import ResourcePointScreen from "../Screens/BattleScreen";
 import { SelectPet } from "../Screens/SelectPet";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { Wander } from "../Pet/Wander";
@@ -61,7 +61,7 @@ export default class UIManager extends cc.Component {
     }
 
     onclick_battle() {
-        BattleScreen.prompt();
+        ResourcePointScreen.prompt();
     }
 
     onclick_reset(){
