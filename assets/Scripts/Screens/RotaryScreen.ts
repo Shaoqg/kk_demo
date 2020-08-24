@@ -10,6 +10,7 @@ import { KKLoader } from "../Util/KKLoader";
 import { AdventureReward } from "./AdventureReward";
 import { delay } from "../kk/DataUtils";
 import UIManager from "../UI/UIMananger";
+import { GardenPets } from "../Pet/GardenPets";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -215,6 +216,8 @@ export class RotaryScreen extends ViewConnector {
                 let petconfig = getPetConfigById(this.finsishItem.reward.petId);
                 console.log("get pet ", petconfig);
                 this.petissucess = User.instance.addPet(petconfig)
+                GardenPets.setIslandPets(true);
+                
                 break;
         }
 
