@@ -11,6 +11,7 @@ import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
 import { RotaryScreen } from "../Screens/RotaryScreen";
 import { GardenPets } from "../Pet/GardenPets";
+import ScreenSize from "../Tools/ScreenSize";
 
 const {ccclass, property} = cc._decorator;
 
@@ -52,6 +53,9 @@ export default class WorldManager extends cc.Component {
         this.initChangeArrow();
         this.updateAllResource();
         GardenPets.setIslandPets();
+
+        this.adjustGameInterface();
+        
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
@@ -295,5 +299,11 @@ export default class WorldManager extends cc.Component {
 
     updateStar(){
         this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+    }
+
+    adjustGameInterface() {
+        let scale = ScreenSize.getScale(1, 0.8);
+
+        this.node.scale = scale;
     }
 }
