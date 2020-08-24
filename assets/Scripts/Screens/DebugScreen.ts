@@ -2,6 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import { SelectPet } from "./SelectPet";
 import User from "../Gameplay/User";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import { BattleReward } from "./BattleReward";
 
 
 const { ccclass, property } = cc._decorator;
@@ -99,5 +100,9 @@ export class DebugScreen extends ViewConnector {
         //     GardenPets.addpet(petdata);
         // }
     }
- 
+    battlereward(){
+        this.close(undefined)
+       let pets= User.instance.getPetList()
+       BattleReward.prompt(2,521,pets[0]);
+    }
 }
