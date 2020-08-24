@@ -1,6 +1,6 @@
 import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
-import ResourcePointScreen from "../Screens/BattleScreen";
+import ResourcePointScreen from "../Screens/ResourcePointScreen";
 import { SelectPet } from "../Screens/SelectPet";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { Wander } from "../Pet/Wander";
