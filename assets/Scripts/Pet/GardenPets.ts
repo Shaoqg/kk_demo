@@ -39,13 +39,12 @@ export class GardenPets {
 
         parent.addChild(preppedPetNode);
 
-        preppedPetNode.on(cc.Node.EventType.TOUCH_END, () => {
-            PetUpgrade.prompt(petdata)
-            // parent.removeChild(preppedPetNode,true);
-            // let UserPet=User.instance.findPetDataByPetId(petdata.petId);
-            // UserPet.nowUsing = false;
-            // UserPet.UsingBy = "";
-            // User.instance.saveUse()
+        preppedPetNode.on(cc.Node.EventType.TOUCH_END, async () => {
+            preppedPetNode.getComponent(PetObject).clearBehavior(false);
+            await PetUpgrade.prompt(petdata)
+            let wanderBehavior = new Wander();
+            wanderBehavior.init(preppedPetNode.getComponent(PetObject), "spawnpet", { position: preppedPetNode.position, wanderRadius: 10 });
+            wanderBehavior.start()
         });
 
 
@@ -55,12 +54,6 @@ export class GardenPets {
     static removeAllPets(){
         let island = cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
         island.removeAllChildren(true);
-        // let pets=User.instance.getPetList();
-        // pets.forEach((petdata)=>{
-        //     let UserPet=User.instance.findPetDataByPetId(petdata.petId);
-        //     UserPet.nowUsing = false;
-        //     UserPet.UsingBy = "";
-        // })
         User.instance.saveUse()
     }
 
