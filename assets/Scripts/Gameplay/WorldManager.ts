@@ -157,9 +157,11 @@ export default class WorldManager extends cc.Component {
     }
 
     initChangeArrow() {
-        let arrow_left = cc.find("world/island/arrow_left", this.node);
-        let arrow_right = cc.find("world/island/arrow_right", this.node);
+        let arrow_left = cc.find("DialogRoot/ButtomHud/arrow_left", this.node);
+        let arrow_right = cc.find("DialogRoot/ButtomHud/arrow_right", this.node);
         let islandUI = cc.find("world/island/islandUI", this.node);
+        let adventureUi = cc.find("DialogRoot/ButtomHud/mask", this.node);
+        
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
             if (this.islandPos > -2) {
@@ -173,6 +175,9 @@ export default class WorldManager extends cc.Component {
                 this.islandPos++;
             }
         })
+        adventureUi.on(cc.Node.EventType.TOUCH_END, () => {
+            this.onclickAdventure()
+        });
     }
 
     onclickCastle() {
