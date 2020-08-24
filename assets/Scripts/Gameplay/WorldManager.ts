@@ -11,6 +11,7 @@ import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
 import { RotaryScreen } from "../Screens/RotaryScreen";
 import { GardenPets } from "../Pet/GardenPets";
+import ScreenSize from "../Tools/ScreenSize";
 
 const {ccclass, property} = cc._decorator;
 
@@ -51,7 +52,10 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         this.initChangeArrow();
         this.updateAllResource();
-        this.setIslandPets()
+        GardenPets.setIslandPets();
+
+        this.adjustGameInterface();
+        
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
@@ -157,9 +161,11 @@ export default class WorldManager extends cc.Component {
     }
 
     initChangeArrow() {
-        let arrow_left = cc.find("world/island/arrow_left", this.node);
-        let arrow_right = cc.find("world/island/arrow_right", this.node);
+        let arrow_left = cc.find("DialogRoot/ButtomHud/arrow_left", this.node);
+        let arrow_right = cc.find("DialogRoot/ButtomHud/arrow_right", this.node);
         let islandUI = cc.find("world/island/islandUI", this.node);
+        let adventureUi = cc.find("DialogRoot/ButtomHud/mask", this.node);
+        
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
             if (this.islandPos > -2) {
@@ -173,14 +179,11 @@ export default class WorldManager extends cc.Component {
                 this.islandPos++;
             }
         })
+        adventureUi.on(cc.Node.EventType.TOUCH_END, () => {
+            this.onclickAdventure()
+        });
     }
 
-    setIslandPets() {
-        let petsNowUsing = User.instance.getPetsNowUsing("onIsland")
-        petsNowUsing.forEach((pet)=>{
-            GardenPets.addpet(pet);
-        })
-    }
     onclickCastle() {
         StateManager.instance.changeState("CastleState");
     }
@@ -296,5 +299,11 @@ export default class WorldManager extends cc.Component {
 
     updateStar(){
         this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+    }
+
+    adjustGameInterface() {
+        let scale = ScreenSize.getScale(1, 0.8);
+
+        this.node.scale = scale;
     }
 }

@@ -79,13 +79,13 @@ export default class UIManager extends cc.Component {
 
     async onclick_select(){
         let petdata=await SelectPet.prompt();
-        if(petdata){
-            let UserPet=User.instance.findPetDataByPetId(petdata.petId);
-            UserPet.nowUsing=true;
-            UserPet.UsingBy="onIsland"
-            User.instance.saveUse()
-            GardenPets.addpet(petdata);
-        }
+        // if(petdata){
+        //     let UserPet=User.instance.findPetDataByPetId(petdata.petId);
+        //     UserPet.nowUsing=true;
+        //     UserPet.UsingBy="onIsland"
+        //     User.instance.saveUse()
+        //     GardenPets.addpet(petdata);
+        // }
     }
 
 }

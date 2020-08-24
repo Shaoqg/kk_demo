@@ -3,6 +3,7 @@ import { Wander } from "./Wander";
 import { KKLoader } from "../Util/KKLoader";
 import { PetObject } from "./PetObject";
 import User from "../Gameplay/User";
+import { PetUpgrade } from "../Screens/PetUpgrade";
 
 export class GardenPets {
     static async addpet(petdata: PetData) {
@@ -38,16 +39,31 @@ export class GardenPets {
 
         parent.addChild(preppedPetNode);
 
-        preppedPetNode.on(cc.Node.EventType.TOUCH_END, () => {
-            parent.removeChild(preppedPetNode,true);
-            let UserPet=User.instance.findPetDataByPetId(petdata.petId);
-            UserPet.nowUsing = false;
-            UserPet.UsingBy = "";
-            User.instance.saveUse()
+        preppedPetNode.on(cc.Node.EventType.TOUCH_END, async () => {
+            preppedPetNode.getComponent(PetObject).clearBehavior(false);
+            await PetUpgrade.prompt(petdata)
+            let wanderBehavior = new Wander();
+            wanderBehavior.init(preppedPetNode.getComponent(PetObject), "spawnpet", { position: preppedPetNode.position, wanderRadius: 10 });
+            wanderBehavior.start()
         });
 
 
         return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
     }
 
+    static removeAllPets(){
+        let island = cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
+        island.removeAllChildren(true);
+        User.instance.saveUse()
+    }
+
+    static setIslandPets(isRemove:boolean=false) {
+        if(isRemove){
+            this.removeAllPets();
+        }
+        let petsNowUsing = User.instance.getPetList();
+        petsNowUsing.forEach((pet)=>{
+            this.addpet(pet);
+        })
+    }   
 }
