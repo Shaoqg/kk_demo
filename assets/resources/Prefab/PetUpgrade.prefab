@@ -1814,7 +1814,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 317.48,
+      "width": 157.88,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1865,8 +1865,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "resouce we need",
-    "_N$string": "resouce we need",
+    "_string": "Level up",
+    "_N$string": "Level up",
     "_fontSize": 40,
     "_lineHeight": 40,
     "_enableWrapText": true,
