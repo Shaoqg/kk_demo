@@ -137,17 +137,6 @@ export default class WorldManager extends cc.Component {
         // this.btn_ship.active= !openSelect;
     }
 
-
-    onclickAdventure() {
-        this.switchShipState(false);
-        let timestamp = User.instance.getTimeStamp("Adventure");
-        if (timestamp > 0) {
-            Adventure.prompt();
-        } else {
-            AdventureArea.prompt();
-        }
-    }
-
     onLevelUp(){
         this.initCastle();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);

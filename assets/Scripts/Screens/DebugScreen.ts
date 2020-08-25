@@ -3,6 +3,7 @@ import { SelectPet } from "./SelectPet";
 import User from "../Gameplay/User";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { BattleReward } from "./BattleReward";
+import { BattleRewardOld } from "./BattleRewardOld";
 
 
 const { ccclass, property } = cc._decorator;
@@ -103,6 +104,6 @@ export class DebugScreen extends ViewConnector {
     battlereward(){
         this.close(undefined)
        let pets= User.instance.getPetList()
-       BattleReward.prompt(2,61,pets[0]);
+       BattleRewardOld.prompt(2,61,pets[0]);
     }
 }

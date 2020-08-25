@@ -12,6 +12,8 @@ import { GardenPets } from "../Pet/GardenPets";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
+import { Adventure } from "../Screens/Adventure";
+import { AdventureArea } from "../Screens/AdventureArea";
 
 
 const {ccclass, property} = cc._decorator;
@@ -70,6 +72,11 @@ export default class UIManager extends cc.Component {
         this.btn_shop.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickShop();
         })
+
+        this.btn_battle = cc.find("BattleHud/btn_battle", this.node)
+        this.btn_battle.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickAdventure();
+        })
     }
 
     onclick_barn(){
@@ -106,6 +113,15 @@ export default class UIManager extends cc.Component {
     onclickPet() {
         this.onpenBattle(true);
         StickerbookScreen.prompt();
+    }
+
+    onclickAdventure() {
+        // let timestamp = User.instance.getTimeStamp("Adventure");
+        // if (timestamp > 0) {
+        //     Adventure.prompt();
+        // } else {
+            AdventureArea.prompt();
+        // }
     }
 
     onpenBattle(close: boolean = false) {

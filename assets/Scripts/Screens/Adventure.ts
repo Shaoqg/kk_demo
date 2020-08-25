@@ -7,6 +7,7 @@ import { KKLoader } from "../Util/KKLoader";
 import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType, AdventureAreas,  } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { SelectNumber } from "./SelectNumber";
+import { BattleArea } from "./BattleArea";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -38,6 +39,7 @@ export class Adventure extends ViewConnector {
     food: number = 1;
     foodNumNode: any;
     petsNowUsing: PetData[];
+    unknowArea: boolean = false;
 
     static async prompt(areaName?:string): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -93,11 +95,17 @@ export class Adventure extends ViewConnector {
             areaName=User.instance.AdventureDestination;
         }
         destinationLabel.string = "destination: area " + areaName;
+        if(areaName=="area_unknown"){
+            console.log("aaaaaa");
+            
+            this.seatNum=4;
+        }
 
         for(let i=1;i<=this.seatNum;i++){
             let petSeat = cc.find("petsOnShip/pet" + i, this.root);
             petSeat.active=true
             this.seats.push(false);
+            this.unknowArea=true
         }
 
         this.initFoodBtn();
@@ -109,7 +117,7 @@ export class Adventure extends ViewConnector {
         this.AllLine = AdventureLogLines;
 
         let timestamp = User.instance.getTimeStamp("Adventure");
-        if (timestamp > 0) {
+        if (timestamp > 0 && !this.unknowArea) {
             this.time = timestamp
             this.counttime = User.instance.AdventureTime;
             let timeelapsed = (Date.now() / 1000 - this.time);
@@ -154,51 +162,56 @@ export class Adventure extends ViewConnector {
             petList.forEach((data, idx) => {
                 this.createList(data, idx);
             });
-    
-            go.on(cc.Node.EventType.TOUCH_END, () => {
-                if (!this.boatReady) {
-                    return;
-                }
-                list.active = false;
-                shipFood.active = false;
-                scrollview.getComponent(cc.ScrollView).content = this.battleinfo;
-                this.battleinfo.active = true;
-                subtitleLabel.string = "Adventure Log"
-    
-                this.setButtomAndTimeBar("Exploring",false,true);
-                go.off(cc.Node.EventType.TOUCH_END);
-                let loadingbar = cc.find("loading_bar", this.root);
-                loadingbar.active = true
-
-                this.seatPet.forEach((seatpet)=>{
-                    let UserPet=User.instance.findPetDataByPetId(seatpet.petId);
-                    UserPet.nowUsing=true;
-                    UserPet.UsingBy="Adventure"
-                })
-
-                User.instance.food -= this.food;
-                User.instance.AdventureFood = this.food;
-                User.instance.AdventureDestination = areaName;
-                let completeTime = 1;
-                AdventureAreas.forEach((area) => {
-                    if (area.areaName == areaName) {
-                        completeTime = area.areaCompletetime;
+            if (this.unknowArea) {
+                go.on(cc.Node.EventType.TOUCH_END, () => {
+                    BattleArea.prompt(this.seatPet)
+                });
+            } else {
+                go.on(cc.Node.EventType.TOUCH_END, () => {
+                    if (!this.boatReady) {
+                        return;
                     }
-                })
-                if (User.instance.exploreTime[areaName] < completeTime && User.instance.exploreTime[areaName] + AdventureTime * this.food / speeds[0] > completeTime) {
-                    EventEmitter.emitEvent(EventType.STAR_INCREASE);
-                    User.instance.exploreTime[areaName] = completeTime;
-                }else{
-                    User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
-                }
-                this.startCountDown();
-                this.updateTimeCountLabel();
-                this.setRandomResource(this.AllLine);
-                User.instance.saveUse();
-                
-                EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
-                EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
-            });
+                    list.active = false;
+                    shipFood.active = false;
+                    scrollview.getComponent(cc.ScrollView).content = this.battleinfo;
+                    this.battleinfo.active = true;
+                    subtitleLabel.string = "Adventure Log"
+
+                    this.setButtomAndTimeBar("Exploring", false, true);
+                    go.off(cc.Node.EventType.TOUCH_END);
+                    let loadingbar = cc.find("loading_bar", this.root);
+                    loadingbar.active = true
+
+                    this.seatPet.forEach((seatpet) => {
+                        let UserPet = User.instance.findPetDataByPetId(seatpet.petId);
+                        UserPet.nowUsing = true;
+                        UserPet.UsingBy = "Adventure"
+                    })
+
+                    User.instance.food -= this.food;
+                    User.instance.AdventureFood = this.food;
+                    User.instance.AdventureDestination = areaName;
+                    let completeTime = 1;
+                    AdventureAreas.forEach((area) => {
+                        if (area.areaName == areaName) {
+                            completeTime = area.areaCompletetime;
+                        }
+                    })
+                    if (User.instance.exploreTime[areaName] < completeTime && User.instance.exploreTime[areaName] + AdventureTime * this.food / speeds[0] > completeTime) {
+                        EventEmitter.emitEvent(EventType.STAR_INCREASE);
+                        User.instance.exploreTime[areaName] = completeTime;
+                    } else {
+                        User.instance.exploreTime[areaName] += AdventureTime * this.food / speeds[0];
+                    }
+                    this.startCountDown();
+                    this.updateTimeCountLabel();
+                    this.setRandomResource(this.AllLine);
+                    User.instance.saveUse();
+
+                    EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+                    EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
+                });
+            }
         }
 
 
