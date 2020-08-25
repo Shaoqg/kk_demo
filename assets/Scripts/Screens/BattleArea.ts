@@ -5,12 +5,13 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig } from "../Config";
+import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig, ElementType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { delay } from "../kk/DataUtils";
 import { BattleReward } from "./BattleReward";
 import { PetObject } from "../Pet/PetObject";
 import { Wander } from "../Pet/Wander";
+import VSModel from "../UI/VSModel";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -54,11 +55,13 @@ export class BattleArea extends ViewConnector {
 
         let act = cc.moveBy(3, cc.v2(500.0)).easing(cc.easeOut(5))
         
-        this.setIslandPets()
+        let opponent = this.setIslandPets()
 
         ship.runAction(act);
         await delay(4);
 
+        let isWin = await VSModel.prompt(Pets, opponent, ElementType.fire);
+        
         //judge sucess or failed
         let issucess=this.checkSucess(Pets)
         if (issucess) {
@@ -102,8 +105,15 @@ export class BattleArea extends ViewConnector {
         petsconfigs.forEach(async (petConfig,idx)=>{
             let pet = await this._preparePetNode(petConfig,idx);
         })
-       
 
+        let petDatas:PetData[] = [];
+        petsconfigs.forEach((config)=>{
+            petDatas.push({
+                petId: config.petId,
+                petLevel: Math.floor(Math.random()*8)
+            })
+        });
+        return petDatas;
     }
 
     checkSucess(Pets: PetData[]) {

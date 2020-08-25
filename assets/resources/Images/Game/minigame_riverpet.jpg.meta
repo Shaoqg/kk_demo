@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "822bde03-361e-47f6-b160-14b1921c5d57",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "minigame_riverpet": {
+      "ver": "1.0.4",
+      "uuid": "0963bda0-982e-4b93-8df4-60c06a77cf0c",
+      "rawTextureUuid": "822bde03-361e-47f6-b160-14b1921c5d57",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 750,
+      "height": 456,
+      "rawWidth": 750,
+      "rawHeight": 456,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
