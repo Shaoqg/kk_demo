@@ -174,7 +174,7 @@
       "array": [
         0,
         0,
-        541.2658773652742,
+        546.4620297879808,
         0,
         0,
         0,
@@ -39109,7 +39109,7 @@
       "ctor": "Float64Array",
       "array": [
         120,
-        82,
+        110,
         0,
         0,
         0,
@@ -39253,7 +39253,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 108,
-      "height": 300
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -39265,7 +39265,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92,
+        0,
         0,
         0,
         0,
@@ -39362,7 +39362,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -55,
+        -70,
         0,
         0,
         0,
@@ -39731,7 +39731,7 @@
       "ctor": "Float64Array",
       "array": [
         240,
-        82,
+        110,
         0,
         0,
         0,
@@ -39875,7 +39875,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 108,
-      "height": 300
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -39887,7 +39887,7 @@
       "ctor": "Float64Array",
       "array": [
         2.676,
-        -92,
+        0,
         0,
         0,
         0,
@@ -39971,8 +39971,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 101.78,
-      "height": 67
+      "width": 98.3,
+      "height": 67.28
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -39984,7 +39984,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -55.087,
+        -70,
         0,
         0,
         0,
@@ -40022,10 +40022,10 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "Setting",
-    "_N$string": "Setting",
+    "_string": "Sticker\n Book",
+    "_N$string": "Sticker\n Book",
     "_fontSize": 28,
-    "_lineHeight": 50,
+    "_lineHeight": 28,
     "_enableWrapText": true,
     "_N$file": {
       "__uuid__": "1e872b72-2627-4099-852d-887f4bb83de2"
@@ -40298,7 +40298,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        82,
+        110,
         0,
         0,
         0,
@@ -40442,7 +40442,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 108,
-      "height": 300
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -40454,7 +40454,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92,
+        0,
         0,
         0,
         0,
@@ -40538,8 +40538,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 93.63,
-      "height": 67.28
+      "width": 64.9,
+      "height": 39.28
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -40551,7 +40551,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -44.11,
+        -70,
         0,
         0,
         0,
@@ -40589,8 +40589,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "Game\nRoyale",
-    "_N$string": "Game\nRoyale",
+    "_string": "Ship",
+    "_N$string": "Ship",
     "_fontSize": 28,
     "_lineHeight": 28,
     "_enableWrapText": true,
@@ -40923,7 +40923,7 @@
       "ctor": "Float64Array",
       "array": [
         -120,
-        82,
+        110,
         0,
         0,
         0,
@@ -41067,7 +41067,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 108,
-      "height": 300
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -41079,7 +41079,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92,
+        0,
         0,
         0,
         0,
@@ -41176,7 +41176,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -55,
+        -70,
         0,
         0,
         0,
@@ -41548,7 +41548,7 @@
       "ctor": "Float64Array",
       "array": [
         -240,
-        82,
+        110,
         0,
         0,
         0,
@@ -41692,7 +41692,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 108,
-      "height": 300
+      "height": 108
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -41704,7 +41704,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -92,
+        -1.028,
         0,
         0,
         0,
@@ -41788,7 +41788,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 98.7,
+      "width": 85.93,
       "height": 67
     },
     "_anchorPoint": {
@@ -41801,7 +41801,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -55,
+        -70,
         0,
         0,
         0,
@@ -41839,8 +41839,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "Arcade",
-    "_N$string": "Arcade",
+    "_string": "Castle",
+    "_N$string": "Castle",
     "_fontSize": 28,
     "_lineHeight": 50,
     "_enableWrapText": true,

@@ -14,11 +14,11 @@ export type PlayerListType = { playerID: string, playerPets: PetData[], friend:n
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class BattleScreen extends ViewConnector {
+export default class ResourcePointScreen extends ViewConnector {
 
-    static prefabPath = 'Screens/BattleScreen';
+    static prefabPath = 'Screens/ResourcePointScreen';
 
-    static _instance: BattleScreen = null;
+    static _instance: ResourcePointScreen = null;
 
     root: cc.Node = null;
     rewarditem: cc.Node;
@@ -28,15 +28,15 @@ export default class BattleScreen extends ViewConnector {
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
-        if (!BattleScreen._instance) {
-            let vc = BattleScreen._instance = await this.loadView<BattleScreen>(parentNode, BattleScreen);
+        if (!ResourcePointScreen._instance) {
+            let vc = ResourcePointScreen._instance = await this.loadView<ResourcePointScreen>(parentNode, ResourcePointScreen);
             vc.applyData();
         }else{
-            BattleScreen._instance.node.active = true;
+            ResourcePointScreen._instance.node.active = true;
         }
 
         let executor = (resolve: (any) => void, reject: (error) => void) => {
-            BattleScreen._instance.onCloseCallback = resolve;
+            ResourcePointScreen._instance.onCloseCallback = resolve;
         }
 
         return new Promise<any>(executor);

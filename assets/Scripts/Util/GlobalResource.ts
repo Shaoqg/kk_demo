@@ -13,7 +13,8 @@ export enum SpriteType {
     Pet = "Pets",
     FX = "fx",
     Tutorial = "tutorial",
-    IAP = "iap"
+    IAP = "iap",
+    Game = "Game"
 };
 
 @ccclass
@@ -22,6 +23,7 @@ export default class GlobalResources {
     static spriteFrames = {};  // 图片存档
     static buildingFrames = {};
     static UIFrames = {}
+    static GameFrames = {}
     static petFrames = {};
     static prefabs = {};
     static animations = {};
@@ -114,6 +116,7 @@ export default class GlobalResources {
         let desiredAsset: cc.SpriteFrame | undefined;
         let targetMap: any;
 
+        let path_temp = "";
         //Separating these out due to naming conflicts...
         switch(type) {
             case SpriteType.Building:
@@ -128,6 +131,11 @@ export default class GlobalResources {
                 desiredAsset = this.UIFrames[assetName];
                 targetMap = this.UIFrames;
                 break;
+            case SpriteType.Game:
+                desiredAsset = this.GameFrames[assetName];
+                targetMap = this.GameFrames;
+                path_temp = "Images";
+                break;
             default:
                 desiredAsset = this.spriteFrames[assetName];
                 targetMap = this.spriteFrames;
@@ -135,7 +143,7 @@ export default class GlobalResources {
         }
 
         if(!desiredAsset) {
-            let path = `${type}/${assetName}`;
+            let path =path_temp + `${type}/${assetName}`;
 
             let newAsset: cc.SpriteFrame;
 
@@ -211,12 +219,5 @@ export default class GlobalResources {
         GlobalResources.spawnPool.addNode(petitem);
     }*/
 
-    /**
-     * 在身边显示星星效果
-     */
-    static startStarFXAnimation(node, dir = 1, posSetting= {
-        star1:{x:-50,y:100},
-        star2:{x:30,y: 70}
-    } ) {
-    }
+}
 
