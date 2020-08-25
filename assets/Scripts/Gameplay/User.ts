@@ -110,7 +110,7 @@ export default class User {
     public adventureWoodlist: number[] = []
     public adventureStonelist: number[] = []
     public exploreTime:object={"water":0,"fire":0,"food":0,"nature":0}
-    public currentExp = 200;
+    public currentExp = 5;
     public currentLevel = 2;
 
 

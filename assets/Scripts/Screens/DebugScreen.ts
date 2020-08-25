@@ -103,6 +103,6 @@ export class DebugScreen extends ViewConnector {
     battlereward(){
         this.close(undefined)
        let pets= User.instance.getPetList()
-       BattleReward.prompt(2,521,pets[0]);
+       BattleReward.prompt(2,61,pets[0]);
     }
 }

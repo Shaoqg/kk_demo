@@ -63,6 +63,7 @@ export class BattleReward extends ViewConnector {
         subtitle.string = "+ " + exp + " XP";
 
         this.userExp = User.instance.currentExp;
+        this.userLevel = getUserLevelAndLevelExpByCurrentExp(this.userExp);
         let pet = await this._preparePetNode(petdata, this.node);
 
         this.setprogress();
@@ -79,24 +80,30 @@ export class BattleReward extends ViewConnector {
 
     async setprogress() {
         let levelUp=false;
+        let level = this.userLevel.level.level
         this.userLevel = getUserLevelAndLevelExpByCurrentExp(this.userExp);
-
+        console.log(this.userExp,this.userLevel.levelExpCount);
         
-        this.progress.getComponent(cc.ProgressBar).progress = (this.userLevel.level.levelExp - (this.userLevel.levelExpCount - this.userExp)) / this.userLevel.level.levelExp;
-        this.progressLabel.getComponent(cc.Label).string = (this.userLevel.level.levelExp - (this.userLevel.levelExpCount - this.userExp)) + "/" + this.userLevel.level.levelExp + "XP"
+        if(level!=this.userLevel.level.level){
+            console.log(this.userExp,this.userLevel);
+            levelUp=true;
+        }
         
-        if((this.userLevel.level.levelExp - (this.userLevel.levelExpCount - this.userExp)) == this.userLevel.level.levelExp){
+        
+  
+        if(levelUp){
             this.needUpdate = false;
             this.progress.getChildByName("progressBarCompelete").active = true;
+            let lastlevel=getUserLevelAndLevelExpByCurrentExp(this.userExp-1);
+            this.progressLabel.getComponent(cc.Label).string = lastlevel.level.levelExp + "/" + lastlevel.level.levelExp + "XP"
+
             await delay(1);
             await this.getReward()
-            levelUp=true;
-            this.userExp = this.userLevel.levelExpCount;
-
             this.progress.getChildByName("progressBarCompelete").active = false;
             this.needUpdate = true;
         }
-
+        this.progress.getComponent(cc.ProgressBar).progress = (this.userLevel.level.levelExp - (this.userLevel.levelExpCount - this.userExp)) / this.userLevel.level.levelExp;
+        this.progressLabel.getComponent(cc.Label).string = (this.userLevel.level.levelExp - (this.userLevel.levelExpCount - this.userExp)) + "/" + this.userLevel.level.levelExp + "XP"
         if(!this.setRewardPet||levelUp){
             this.setRewardPet = true;
             this.setRewardPetImage()
@@ -201,8 +208,8 @@ export class BattleReward extends ViewConnector {
             return;
         }
         this.updateTime += dt;
-        if (this.updateTime >= 0.05) {
-            this.updateTime -= 0.05;
+        if (this.updateTime >= 1/this.userLevel.level.levelExp) {
+            this.updateTime -= 1/this.userLevel.level.levelExp;
             this.refreshProgress();
         }
     }

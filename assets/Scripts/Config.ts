@@ -97,8 +97,11 @@ export function getUserLevelAndLevelExpByCurrentExp(exp) {
   let findlevel = false
   let currentlevel;
   let currentExp;
+  if(exp == 0){
+    return { level: { level: 1, levelExp: LevelExp[0].levelExp }, levelExpCount:  LevelExp[0].levelExp }
+  }
   LevelExp.forEach((level) => {
-    if (count < exp && !findlevel) {
+    if (count <= exp && !findlevel) {
       count += level.levelExp
       currentlevel = level;
       currentExp = count
@@ -370,45 +373,53 @@ export let DailyTaskConfig: TaskType[] = [
 export let LevelExp = [
   {
     level: 1,
-    levelExp: 50,
+    levelExp: 5,
   },
   {
     level: 2,
-    levelExp: 100,
+    levelExp: 10,
   },
   {
     level: 3,
-    levelExp: 100,
+    levelExp: 15,
   },
   {
     level: 4,
-    levelExp: 100,
+    levelExp: 25,
   },
   {
     level: 5,
-    levelExp: 100,
+    levelExp: 30,
   },
 ]
 
 export let RewardPet = [
   {
+    level: 1,
+    pet: "catbob",
+  },
+  {
     level: 2,
-    pet: "oink",
+    pet: "moby_esq",
   },
   {
     level: 3,
-    pet: "doofus",
+    pet: "oink",
   },
   {
     level: 4,
-    pet: "katburns",
+    pet: "doofus",
   },
   {
     level: 5,
-    pet: "goobert",
+    pet: "katburns",
   },
   {
     level: 6,
+    pet: "goobert",
+  },
+  {
+    level: 7,
     pet: "oxford",
   },
 
