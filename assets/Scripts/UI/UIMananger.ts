@@ -12,6 +12,8 @@ import { GardenPets } from "../Pet/GardenPets";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
+import { Adventure } from "../Screens/Adventure";
+import { AdventureArea } from "../Screens/AdventureArea";
 
 
 const {ccclass, property} = cc._decorator;
@@ -58,7 +60,7 @@ export default class UIManager extends cc.Component {
 
         this.btn_adventure = cc.find("ButtomHud/btn_adventure", this.node)
         this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onOpenBattle();
+            this.onpenBattle();
         })
 
         this.btn_barn = cc.find("ButtomHud/btn_barn", this.node)
@@ -69,6 +71,11 @@ export default class UIManager extends cc.Component {
         this.btn_shop = cc.find("ButtomHud/btn_shop", this.node)
         this.btn_shop.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickShop();
+        })
+
+        this.btn_battle = cc.find("BattleHud/btn_battle", this.node)
+        this.btn_battle.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclickAdventure();
         })
     }
 
@@ -89,29 +96,38 @@ export default class UIManager extends cc.Component {
     }
 
     onclickCastle() {
-        this.onOpenBattle(true);
+        this.onpenBattle(true);
         StateManager.instance.changeState("CastleState");
     }
     
     onclickShop(){
-        this.onOpenBattle(true);
+        this.onpenBattle(true);
         StoreScreen.prompt();
     }
 
     onclicLevelup(){
-        this.onOpenBattle(true);
+        this.onpenBattle(true);
         ShipUpgrade.prompt();
     }
 
     onclickPet() {
-        this.onOpenBattle(true);
+        this.onpenBattle(true);
         StickerbookScreen.prompt();
     }
 
-    onOpenBattle(close: boolean = false) {
+    onclickAdventure() {
+        // let timestamp = User.instance.getTimeStamp("Adventure");
+        // if (timestamp > 0) {
+        //     Adventure.prompt();
+        // } else {
+            AdventureArea.prompt();
+        // }
+    }
+
+    onpenBattle(close: boolean = false) {
         let battleNode = cc.find("BattleHud", this.node);
         let underlay = cc.find("underlay", battleNode);
-        // let ButtomHud = cc.find("ButtomHud", this.node);
+        let ButtomHud = cc.find("ButtomHud", this.node);
         if (this.battleIsOpen||close) {
             // if (this.battleIsOpen) {
             //     ButtomHud.getComponent(cc.Animation).play("battle_out");
@@ -138,14 +154,14 @@ export default class UIManager extends cc.Component {
         
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onOpenBattle(true);
+            this.onpenBattle(true);
             if (this.islandPos > -2) {
                 islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
                 this.islandPos--;
             }
         })
         arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onOpenBattle(true);
+            this.onpenBattle(true);
             if (this.islandPos < 2) {
                 islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
                 this.islandPos++;
