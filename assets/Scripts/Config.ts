@@ -101,6 +101,46 @@ export function getPetBouns(pet: PetType) {
   return null;
 }
 
+export function getUserLevelAndLevelExpByCurrentExp(exp) {
+  let count = 0;
+  let findlevel = false
+  let currentlevel;
+  let currentExp;
+  if(exp == 0){
+    return { level: { level: 1, levelExp: LevelExp[0].levelExp }, levelExpCount:  LevelExp[0].levelExp }
+  }
+  LevelExp.forEach((level) => {
+    if (count <= exp && !findlevel) {
+      count += level.levelExp
+      currentlevel = level;
+      currentExp = count
+    } else {
+      findlevel = true;
+    }
+  })
+  let levelCount = LevelExp.length - 1;
+  while (!findlevel) {
+    if (count < exp && !findlevel) {
+      count += LevelExp[LevelExp.length - 1].levelExp
+      levelCount++;
+      currentlevel = { level: levelCount, levelExp: LevelExp[LevelExp.length - 1].levelExp };
+      currentExp = count
+    } else {
+      findlevel = true;
+    }
+  }
+  return { level: currentlevel, levelExpCount: count }
+}
+
+export function getRewardPetByLevel(level){
+  for(let i=0;i<RewardPet.length;i++){
+    if(RewardPet[i].level==level){
+      return RewardPet[i].pet;
+    }
+  }
+}
+
+
 export enum Rarity  {
     "nature",
     "fire",
@@ -399,6 +439,63 @@ export let DailyTaskConfig: TaskType[] = [
     },
   },
 ]
+
+export let LevelExp = [
+  {
+    level: 1,
+    levelExp: 5,
+  },
+  {
+    level: 2,
+    levelExp: 10,
+  },
+  {
+    level: 3,
+    levelExp: 15,
+  },
+  {
+    level: 4,
+    levelExp: 25,
+  },
+  {
+    level: 5,
+    levelExp: 30,
+  },
+]
+
+export let RewardPet = [
+  {
+    level: 1,
+    pet: "catbob",
+  },
+  {
+    level: 2,
+    pet: "moby_esq",
+  },
+  {
+    level: 3,
+    pet: "oink",
+  },
+  {
+    level: 4,
+    pet: "doofus",
+  },
+  {
+    level: 5,
+    pet: "katburns",
+  },
+  {
+    level: 6,
+    pet: "goobert",
+  },
+  {
+    level: 7,
+    pet: "oxford",
+  },
+
+]
+
+
 export let RotaryReward:RotaryType[]= [
   {
     index: 0,

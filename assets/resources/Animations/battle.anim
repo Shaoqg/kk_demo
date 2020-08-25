@@ -1,0 +1,245 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "battle",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.3333333333333333,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            0,
+            -667,
+            0
+          ]
+        }
+      ]
+    },
+    "paths": {
+      "btn_barn": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                240,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                280,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_adventure": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                120,
+                0
+              ]
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 108
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 150
+            }
+          ],
+          "width": [
+            {
+              "frame": 0,
+              "value": 108
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 150
+            }
+          ]
+        }
+      },
+      "btn_levelup": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -120,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                -150,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_build": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -240,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                -280,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_adventure/menu_empty": {
+        "props": {
+          "width": [
+            {
+              "frame": 0,
+              "value": 108
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 150
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 300
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 330
+            }
+          ]
+        }
+      },
+      "btn_adventure/label": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                -41.617,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                -80,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_shop": {
+        "props": {
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                120,
+                82,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                150,
+                82,
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "btn_adventure/button_foodbowl": {
+        "props": {
+          "width": [
+            {
+              "frame": 0,
+              "value": 85
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 120
+            }
+          ],
+          "height": [
+            {
+              "frame": 0,
+              "value": 70
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 100
+            }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                0,
+                12.708,
+                0
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                0,
+                -2.885,
+                0
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}

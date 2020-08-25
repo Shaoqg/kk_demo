@@ -1,17 +1,13 @@
 import User from "./User";
-import { CastleScreen } from "../Screens/CastleScreen";
 import { StateManager } from "./State/StateManager";
-import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import { Adventure } from "../Screens/Adventure";
-import StickerbookScreen from "../UI/StickerbookScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import TaskScreen from "../UI/TaskScreen";
 import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
-import { RotaryScreen } from "../Screens/RotaryScreen";
 import { GardenPets } from "../Pet/GardenPets";
 import ScreenSize from "../Tools/ScreenSize";
+import { DebugScreen } from "../Screens/DebugScreen";
 
 const {ccclass, property} = cc._decorator;
 
@@ -38,6 +34,8 @@ export default class WorldManager extends cc.Component {
     btn_rotary: any;
     rotateAnimNode: cc.Node;
     islandPos: number;
+    btn_shop: cc.Node;
+    battleIsOpen: boolean=false;
 
 
 
@@ -50,12 +48,14 @@ export default class WorldManager extends cc.Component {
         this.init();
         this.initCastle();
         this.initTrees();
-        this.initChangeArrow();
         this.updateAllResource();
         GardenPets.setIslandPets();
 
+        //debug
+        this.setDebugEvents()
+
         this.adjustGameInterface();
-        
+
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
@@ -67,41 +67,6 @@ export default class WorldManager extends cc.Component {
     init() {
 
         let worldNode = cc.find("world", this.node);
-        let btn_build = cc.find("island/islandUI/islandNode/island/mapblocks/btn_build", worldNode);
-        btn_build.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickCastle();
-        })
-
-        this.btn_ship = cc.find("shipDock/btn_ship", worldNode);
-        this.btn_ship.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickShip();
-        })
-
-        this.selectButton_ship = cc.find("shipDock/selectButton", worldNode);
-        this.btn_levelup = cc.find("btn_levelup", this.selectButton_ship);
-        this.btn_levelup.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclicLevelup();
-        })
-
-        this.btn_adventure = cc.find("btn_adventure", this.selectButton_ship)
-        this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickAdventure();
-        })
-
-        this.btn_barn = cc.find("DialogRoot/top_left/btn_barn", this.node)
-        this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickPet();
-        })
-
-        this.btn_dailay = cc.find("DialogRoot/top_left/btn_dailay", this.node)
-        this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickDaily();
-        })
-
-        this.btn_rotary = cc.find("DialogRoot/top_left/btn_rotary", this.node)
-        this.btn_rotary.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickRotary();
-        })
 
         this.btn_tree1 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build1", worldNode);
         this.btn_tree1.on(cc.Node.EventType.TOUCH_END, ()=>{
@@ -160,34 +125,6 @@ export default class WorldManager extends cc.Component {
 
     }
 
-    initChangeArrow() {
-        let arrow_left = cc.find("DialogRoot/ButtomHud/arrow_left", this.node);
-        let arrow_right = cc.find("DialogRoot/ButtomHud/arrow_right", this.node);
-        let islandUI = cc.find("world/island/islandUI", this.node);
-        let adventureUi = cc.find("DialogRoot/ButtomHud/mask", this.node);
-        
-        this.islandPos = 0
-        arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
-            if (this.islandPos > -2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
-                this.islandPos--;
-            }
-        })
-        arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
-            if (this.islandPos < 2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
-                this.islandPos++;
-            }
-        })
-        adventureUi.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onclickAdventure()
-        });
-    }
-
-    onclickCastle() {
-        StateManager.instance.changeState("CastleState");
-    }
-
     onclickShip() {
         this.switchShipState(true);
         setTimeout(()=>{
@@ -196,14 +133,10 @@ export default class WorldManager extends cc.Component {
     }
 
     switchShipState(openSelect = true){
-        this.selectButton_ship.active = openSelect;
-        this.btn_ship.active= !openSelect;
+        // this.selectButton_ship.active = openSelect;
+        // this.btn_ship.active= !openSelect;
     }
 
-    onclicLevelup(){
-        this.switchShipState(false);
-        ShipUpgrade.prompt();
-    }
 
     onclickAdventure() {
         this.switchShipState(false);
@@ -215,7 +148,6 @@ export default class WorldManager extends cc.Component {
         }
     }
 
-
     onLevelUp(){
         this.initCastle();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
@@ -226,21 +158,6 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
 
-    }
-
-	onclickPet() {
-        this.switchShipState(false);
-        StickerbookScreen.prompt();
-    }
-
-    onclickDaily(){
-        this.switchShipState(false);
-        TaskScreen.prompt();
-    }
-
-    onclickRotary(){
-        this.switchShipState(false);
-        RotaryScreen.prompt();
     }
 
     onclickTree(){
@@ -305,5 +222,23 @@ export default class WorldManager extends cc.Component {
         let scale = ScreenSize.getScale(1, 0.8);
 
         this.node.scale = scale;
+    }
+
+     setDebugEvents() {
+        let cavnasNode = cc.find("Canvas", cc.director.getScene());
+        cavnasNode.on(cc.Node.EventType.TOUCH_MOVE, this.showDebugMenu, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.showDebugMenu, this);
+    }
+
+     showDebugMenu(event) {
+         
+        let boolean1 = event._touches ? true : false;
+        let boolean2 = event.keyCode ? true : false;
+
+        if ((boolean1 ? event._touches.length >= 3 : false) || (boolean2 ? event.keyCode === cc.macro.KEY.space : false)) {
+            if(!DebugScreen.isShowing) {
+                DebugScreen.prompt();
+            }
+        }
     }
 }

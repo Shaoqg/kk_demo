@@ -14,6 +14,7 @@ export type BehaviorParams = {
     duration?: number,
     animationSpeed?: number,
     startTime?: number,
+    forever?: boolean,
 }
 
 export class Behavior {

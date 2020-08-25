@@ -4,6 +4,7 @@ import { KKLoader } from "../Util/KKLoader";
 import { PetObject } from "./PetObject";
 import User from "../Gameplay/User";
 import { PetUpgrade } from "../Screens/PetUpgrade";
+import { PerformAnimation } from "./PerformAnimation";
 
 export class GardenPets {
     static async addpet(petdata: PetData) {
@@ -49,6 +50,12 @@ export class GardenPets {
 
 
         return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+    }
+
+    static petjumping(pet:PetObject){
+        let behavior = new PerformAnimation();
+        behavior.init(pet, "Battle reward", {animation:"island_complete_celebration", startTime:0, duration:15000, forever:true});
+        behavior.start(true);
     }
 
     static removeAllPets(){
