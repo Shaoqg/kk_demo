@@ -5,10 +5,12 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData } from "../Config";
+import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { delay } from "../kk/DataUtils";
 import { BattleReward } from "./BattleReward";
+import { PetObject } from "../Pet/PetObject";
+import { Wander } from "../Pet/Wander";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -96,7 +98,12 @@ export class BattleArea extends ViewConnector {
     }
 
     setIslandPets(){
-        
+        let petsconfigs=getRandomConfigs(4);
+        petsconfigs.forEach(async (petConfig,idx)=>{
+            let pet = await this._preparePetNode(petConfig,idx);
+        })
+       
+
     }
 
     checkSucess(Pets: PetData[]) {
@@ -112,6 +119,32 @@ export class BattleArea extends ViewConnector {
         } else {
             return false;
         }
+    }
+
+    async _preparePetNode(petconfig: PetType,idx:number) {
+        let petNode = cc.find("island/islandUI/islandNode/island/pet"+(idx+1),this.node);
+
+        //Hide the pet node by default, but make sure we have a pet prepared
+        let prefab = await KKLoader.loadPrefab("Prefab/pet");
+        let preppedPetNode = cc.instantiate(prefab)
+
+        //Hide the pet node by default, but make sure we have a pet prepared
+        preppedPetNode.name = petconfig.petId;
+        preppedPetNode.position = petNode.position;
+        let petImage: cc.Node = preppedPetNode.getChildByName("image");
+        let sprite = petImage.getComponent(cc.Sprite);
+        sprite.trim = false;
+        sprite.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
+
+        petImage.width = petNode.width;
+        petImage.height = petNode.height;
+
+        preppedPetNode.width = petNode.width;
+        preppedPetNode.height = petNode.height;
+
+        petNode.parent.addChild(preppedPetNode);
+
+        return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
     }
 
     getIslandDef() {

@@ -129,9 +129,9 @@ export default class UIManager extends cc.Component {
         let underlay = cc.find("underlay", battleNode);
         let ButtomHud = cc.find("ButtomHud", this.node);
         if (this.battleIsOpen||close) {
-            if (this.battleIsOpen) {
-                ButtomHud.getComponent(cc.Animation).play("battle_out");
-            }
+            // if (this.battleIsOpen) {
+            //     ButtomHud.getComponent(cc.Animation).play("battle_out");
+            // }
             battleNode.active = false;
             this.battleIsOpen = false;
         } else {
@@ -142,7 +142,7 @@ export default class UIManager extends cc.Component {
             underlay.opacity = 0;
             battleNode.runAction(cc.fadeTo(0.1, 255));
             underlay.runAction(cc.fadeTo(0.1, 100));
-            ButtomHud.getComponent(cc.Animation).play("battle");
+            // ButtomHud.getComponent(cc.Animation).play("battle");
             this.battleIsOpen = true;
         }
     }
