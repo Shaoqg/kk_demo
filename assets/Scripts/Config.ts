@@ -9,6 +9,15 @@ export function getPetConfigById(id:string){
     return null;
 }
 
+export function getRandomConfigs(num:number) {
+  let configs:PetType[] = [];
+  while (num--) {
+    let index = Math.floor(Math.random()*PetConfig.length);
+    configs.push(PetConfig[index]) 
+  }
+  return configs;
+}
+
 export function getTaskConfigById(id, taskType) {
   if (taskType == "daily") {
     for (let i = 0; i < DailyTaskConfig.length; i++) {
@@ -274,6 +283,67 @@ export let AcheievementConfig: TaskType[] = [
       rewardNum: 30,
     },
   },
+]
+
+export type GameConfigType = { ID: string, Name: string, Art: string, Icon: string, Enabled: boolean,};
+
+export let GameConfig: GameConfigType[] = [
+  {
+    "ID": "tenten",
+    "Name": "Pet Puzzle",
+    "Art": "minigame_tenten",
+    "Icon": "icon_blocky",
+    "Enabled": true,
+  },
+  {
+    "ID": "drop",
+    "Name": "Drop Food",
+    "Art": "minigame_fooddrop",
+    "Icon": "icon_game_fooddrop",
+    "Enabled": true,
+  },
+  {
+    "ID": "riverPet",
+    "Name": "River Adventure",
+    "Art": "minigame_riverpet",
+    "Icon": "icon_ducky",
+    "Enabled": true,
+  },
+  {
+    "ID": "2048#",
+    "Name": "2048#",
+    "Art": "minigame_2048",
+    "Icon": "icon_2048",
+    "Enabled": true,
+  },
+  {
+    "ID": "whack",
+    "Name": "Whack-A-Pet",
+    "Art": "minigame_whack",
+    "Icon": "icon_whack",
+    "Enabled": true,
+  },
+  {
+    "ID": "jump",
+    "Name": "Pet Jump",
+    "Art": "minigame_jump",
+    "Icon": "icon_game_jump",
+    "Enabled": true,
+  },
+  {
+    "ID": "flappy",
+    "Name": "Flappy Pets",
+    "Art": "minigame_flappy",
+    "Icon": "icon_flappy",
+    "Enabled": true,
+  },
+  {
+    "ID": "ttt",
+    "Name": "Tic-Tac-Toe",
+    "Art": "minigame_ttt",
+    "Icon": "icon_ttt",
+    "Enabled": true,
+  }
 ]
 
 export let DailyTaskConfig: TaskType[] = [
