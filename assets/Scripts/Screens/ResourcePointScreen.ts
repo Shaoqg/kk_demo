@@ -1,5 +1,5 @@
 import { ViewConnector } from "../Tools/ViewConnector";
-import { Resource, getTaskConfigById, getPetConfigById, PetData, getStrengthByPetData, Element, RewardType } from "../Config";
+import { Resource, getTaskConfigById, getPetConfigById, PetData, getStrengthByPetData, ElementType, RewardType } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import User from "../Gameplay/User";
 import ScreenSize from "../Tools/ScreenSize";
@@ -24,7 +24,7 @@ export default class ResourcePointScreen extends ViewConnector {
     rewarditem: cc.Node;
 
 
-    environmentType: Element = Element.fire;
+    environmentType: ElementType = ElementType.fire;
 
     static async prompt(): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -306,7 +306,7 @@ export default class ResourcePointScreen extends ViewConnector {
         this.updateStrengthInfo();
     }
 
-    getStrength(petDatas: PetData[], type = Element.snack, friendBonus = 0) {
+    getStrength(petDatas: PetData[], type = ElementType.snack, friendBonus = 0) {
         let strength = 0;
         let typeNum = 0;
         let curType = type;

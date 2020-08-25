@@ -35,6 +35,27 @@ export function getTaskConfigById(id, taskType) {
   return null;
 }
 
+
+export function getStrength(petDatas: PetData[], type = ElementType.snack, friendBonus = 0) {
+  let strength = 0;
+  let typeNum = 0;
+  let curType = type;
+
+  petDatas.forEach((petData) => {
+      if (petData) {
+          strength += getStrengthByPetData(petData);
+          let type = getPetConfigById(petData.petId);
+          type.elements == curType && (typeNum++);
+      }
+  });
+
+  return {
+      strength: strength,
+      typeNum: typeNum,
+      allStrenght: Math.floor(10*(strength * (1 + typeNum * 0.1 + friendBonus)))/10
+  }
+}
+
 export function getStrengthByPetData(petData:PetData) {
   let strength = 0;
 
@@ -69,13 +90,13 @@ export function getStrengthBonus() {
 
 export function getPetIntroByElements(pet:PetType){
     switch (pet.elements) {
-        case Element.nature:
+        case ElementType.nature:
                 return pet.rarity == Rarity.common ? "Can get little food bonus": "Can get more food bonus";
-        case Element.fire:
+        case ElementType.fire:
                 return pet.rarity == Rarity.common ? "Can get little coin bonus":"Can get more coin bonus"
-        case Element.water:
+        case ElementType.water:
                 return pet.rarity == Rarity.common ? "Can get little wood bonus":"Can get more wood bonus"
-        case Element.snack:
+        case ElementType.snack:
                 return pet.rarity == Rarity.common ? "Can get little stone bonus":"Can get more stone bonus"
         default:
             break;
@@ -86,13 +107,13 @@ export function getPetIntroByElements(pet:PetType){
 
 export function getPetBouns(pet: PetType) {
   switch (pet.elements) {
-    case Element.nature:
+    case ElementType.nature:
       return { BounsName: "Food", BounsNum: 10 };
-    case Element.fire:
+    case ElementType.fire:
       return { BounsName: "Coin", BounsNum: 10 };
-    case Element.water:
+    case ElementType.water:
       return { BounsName: "Wood", BounsNum: 10 };
-    case Element.snack:
+    case ElementType.snack:
       return { BounsName: "Stone", BounsNum: 10 };
     default:
       break;
@@ -171,7 +192,7 @@ export enum Rarity {
     "rare" = "rare",
 }
 
-export enum Element{
+export enum ElementType{
     "nature" = "nature" ,
     "fire" = "fire",
     "water" = "water",

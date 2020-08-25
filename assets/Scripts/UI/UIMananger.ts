@@ -58,7 +58,7 @@ export default class UIManager extends cc.Component {
 
         this.btn_adventure = cc.find("ButtomHud/btn_adventure", this.node)
         this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onpenBattle();
+            this.onOpenBattle();
         })
 
         this.btn_barn = cc.find("ButtomHud/btn_barn", this.node)
@@ -89,33 +89,33 @@ export default class UIManager extends cc.Component {
     }
 
     onclickCastle() {
-        this.onpenBattle(true);
+        this.onOpenBattle(true);
         StateManager.instance.changeState("CastleState");
     }
     
     onclickShop(){
-        this.onpenBattle(true);
+        this.onOpenBattle(true);
         StoreScreen.prompt();
     }
 
     onclicLevelup(){
-        this.onpenBattle(true);
+        this.onOpenBattle(true);
         ShipUpgrade.prompt();
     }
 
     onclickPet() {
-        this.onpenBattle(true);
+        this.onOpenBattle(true);
         StickerbookScreen.prompt();
     }
 
-    onpenBattle(close: boolean = false) {
+    onOpenBattle(close: boolean = false) {
         let battleNode = cc.find("BattleHud", this.node);
         let underlay = cc.find("underlay", battleNode);
-        let ButtomHud = cc.find("ButtomHud", this.node);
+        // let ButtomHud = cc.find("ButtomHud", this.node);
         if (this.battleIsOpen||close) {
-            if (this.battleIsOpen) {
-                ButtomHud.getComponent(cc.Animation).play("battle_out");
-            }
+            // if (this.battleIsOpen) {
+            //     ButtomHud.getComponent(cc.Animation).play("battle_out");
+            // }
             battleNode.active = false;
             this.battleIsOpen = false;
         } else {
@@ -126,7 +126,7 @@ export default class UIManager extends cc.Component {
             underlay.opacity = 0;
             battleNode.runAction(cc.fadeTo(0.1, 255));
             underlay.runAction(cc.fadeTo(0.1, 100));
-            ButtomHud.getComponent(cc.Animation).play("battle");
+            // ButtomHud.getComponent(cc.Animation).play("battle");
             this.battleIsOpen = true;
         }
     }
@@ -138,14 +138,14 @@ export default class UIManager extends cc.Component {
         
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onpenBattle(true);
+            this.onOpenBattle(true);
             if (this.islandPos > -2) {
                 islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
                 this.islandPos--;
             }
         })
         arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
-            this.onpenBattle(true);
+            this.onOpenBattle(true);
             if (this.islandPos < 2) {
                 islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
                 this.islandPos++;

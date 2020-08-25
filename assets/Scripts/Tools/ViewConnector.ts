@@ -61,9 +61,9 @@ export abstract class ViewConnector extends cc.Component {
     }
 
     close(results:any){
-        this.node.removeFromParent(true);
         this.onClose();
         this.onCloseCallback && this.onCloseCallback(results);
+        this.node.destroy();
     }
 
     onClose(){ // override; but probably just use onCloseCallback or prompt() ?

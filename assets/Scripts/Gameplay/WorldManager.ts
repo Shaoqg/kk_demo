@@ -219,9 +219,8 @@ export default class WorldManager extends cc.Component {
     }
 
     adjustGameInterface() {
-        let scale = ScreenSize.getScale(1, 0.8);
-
-        this.node.scale = scale;
+        // let scale = ScreenSize.getScale(1, 0.8);
+        // this.node.scale = scale;
     }
 
      setDebugEvents() {
