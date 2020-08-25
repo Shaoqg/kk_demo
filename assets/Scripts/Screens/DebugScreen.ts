@@ -106,4 +106,13 @@ export class DebugScreen extends ViewConnector {
        let pets= User.instance.getPetList()
        BattleRewardOld.prompt(2,61,pets[0]);
     }
+
+    lostIsland(){
+        this.close(undefined)
+    
+
+        User.instance.areaCapture["unknow"]=false;
+        User.instance.areaCaptureStopTime["unknow"] = Date.now()
+        User.instance.saveUse();
+    }
 }

@@ -165,6 +165,7 @@ export class Adventure extends ViewConnector {
             if (this.unknowArea) {
                 go.on(cc.Node.EventType.TOUCH_END, () => {
                     BattleArea.prompt(this.seatPet)
+                    this.close(undefined);
                 });
             } else {
                 go.on(cc.Node.EventType.TOUCH_END, () => {
@@ -412,7 +413,7 @@ export class Adventure extends ViewConnector {
             this.close(undefined)
             User.instance.setTimeStamp("Adventure",0);
             User.instance.AdventureTime = 0;
-            User.instance.removePetFromInAdventure();
+            User.instance.removePetFromInAdventure("Adventure");
             User.instance.adventureStonelist = []
             User.instance.adventureCoinslist = []
             User.instance.adventureWoodlist = []

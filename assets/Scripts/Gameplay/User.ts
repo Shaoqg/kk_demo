@@ -112,7 +112,11 @@ export default class User {
     public exploreTime:object={"water":0,"fire":0,"food":0,"nature":0}
     public currentExp = 5;
     public currentLevel = 2;
-
+    public areaExploring={"water":false,"fire":false,"food":false,"nature":false,"unknow":false}
+    public areaCapture={"unknow":false}
+    public areaCaptureStartTime={"unknow":0}
+    public areaCaptureTimeTakenReward={"unknow":0}
+    public areaCaptureStopTime={"unknow":0}
 
     setTimeStamp(name: string, timeStamp: number){
         this._timeStamps[name]=timeStamp;
@@ -183,11 +187,12 @@ export default class User {
         return Pets;
     }
 
-    removePetFromInAdventure() {
-        let Pets = this.getPetsNowUsing("Adventure");
+    removePetFromInAdventure(usingBy:string="") {
+        let Pets = this.getPetsNowUsing(usingBy);
+        console.log(Pets);
         this.petList.forEach((petData) => {
             if (petData.nowUsing) {
-                if (petData.UsingBy == "Adventure") {
+                if (petData.UsingBy == usingBy) {
                     Pets.forEach((pet) => {
                         if (pet.petId == petData.petId) {
                             console.log(petData);
@@ -254,6 +259,10 @@ export default class User {
             adventureStonelist: this.adventureStonelist,
             exploreTime:this.exploreTime,
             playerID:this._playerID,
+            areaExploring:this.areaExploring,
+            areaCapture:this.areaCapture,
+            areaCaptureStartTime:this.areaCaptureStartTime,
+            areaCaptureTimeTakenReward:this.areaCaptureTimeTakenReward,
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -288,6 +297,10 @@ export default class User {
             this.adventureStonelist = data["adventureStonelist"];
             this.exploreTime = data["exploreTime"];
             this._playerID = data["playerID"];
+            this.areaCapture = data["areaCapture"];
+            this.areaExploring = data["areaExploring"];
+            this.areaCaptureStartTime = data["areaCaptureStartTime"];
+            this.areaCaptureTimeTakenReward = data["areaCaptureTimeTakenReward"];
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;

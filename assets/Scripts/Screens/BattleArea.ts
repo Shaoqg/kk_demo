@@ -51,14 +51,28 @@ export class BattleArea extends ViewConnector {
         let ship = await this.setShip(Pets)
 
         let act = cc.moveBy(3, cc.v2(500.0)).easing(cc.easeOut(5))
+        
+        this.setIslandPets()
 
         ship.runAction(act);
         await delay(4);
 
         //judge sucess or failed
         let issucess=this.checkSucess(Pets)
+        if (issucess) {
+            Pets.forEach((pet) => {
+                let UserPet = User.instance.findPetDataByPetId(pet.petId);
+                UserPet.nowUsing = true;
+                UserPet.UsingBy = "Defence"
+            })
+            User.instance.areaExploring["unknow"] = true
+            User.instance.areaCapture["unknow"] = true
+            User.instance.areaCaptureStartTime["unknow"] = Date.now();
+            User.instance.areaCaptureTimeTakenReward["unknow"] =  Date.now();
+            User.instance.saveUse();
+            EventEmitter.emitEvent(EventType.GO_CAPTURE);
+        }
         await BattleReward.prompt(issucess,Pets);
-        console.log(issucess)
         this.close(undefined);
     }
 
@@ -81,13 +95,17 @@ export class BattleArea extends ViewConnector {
         return shipNode;
     }
 
+    setIslandPets(){
+        
+    }
+
     checkSucess(Pets: PetData[]) {
         let myStrength = 0
         Pets.forEach((pet, idx) => {
             myStrength += getStrengthByPetData(pet);
         })
         let def = this.getIslandDef();
-        console.log("myStrength",myStrength,"IslandDef",def);
+        console.log("myStrength",myStrength,"IslandDef",def,(myStrength > def));
         
         if (myStrength > def) {
             return true;

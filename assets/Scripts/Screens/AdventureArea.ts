@@ -7,6 +7,7 @@ import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { AdventureAreas } from "../Config";
 import { BattleArea } from "./BattleArea";
+import { BattleInDefende } from "./BattleInDefende";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -71,7 +72,11 @@ export class AdventureArea extends ViewConnector {
             areaNode.on(cc.Node.EventType.TOUCH_END, () => {
                 // this.close(undefined);
                 console.log("area_unknown");
-                Adventure.prompt("area_unknown");
+                if(User.instance.areaExploring["unknow"]){
+                    BattleInDefende.prompt(User.instance.areaCapture["unknow"]);
+                }else{
+                    Adventure.prompt("area_unknown");
+                }
             });
 
         this.root.stopAllActions();

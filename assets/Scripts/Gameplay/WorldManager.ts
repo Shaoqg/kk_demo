@@ -36,6 +36,8 @@ export default class WorldManager extends cc.Component {
     islandPos: number;
     btn_shop: cc.Node;
     battleIsOpen: boolean=false;
+    isCap: boolean = false;
+    updateTime: number = 0;
 
 
 
@@ -56,11 +58,15 @@ export default class WorldManager extends cc.Component {
 
         this.adjustGameInterface();
 
+        this.checkCaptureReward();
+
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.CHECK_AREA_COMPELETE, this.checkAreaIsCompelete.bind(this));
+        EventEmitter.subscribeTo(EventType.GO_CAPTURE, this.checkCaptureReward.bind(this));
+        
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
     }
 
@@ -228,6 +234,44 @@ export default class WorldManager extends cc.Component {
             if(!DebugScreen.isShowing) {
                 DebugScreen.prompt();
             }
+        }
+    }
+
+    checkCaptureReward() {
+        let time = 0;
+        this.isCap=User.instance.areaCapture["unknow"];
+        
+        if (User.instance.areaCaptureStopTime["unknow"] != 0) {
+            time = Math.floor((User.instance.areaCaptureStopTime["unknow"] - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
+            this.isCap=false
+            User.instance.wood += 5 * time
+            User.instance.stone += 15 * time
+            User.instance.food += 10 * time
+            User.instance.areaCaptureTimeTakenReward["unknow"] = User.instance.areaCaptureStopTime["unknow"];
+        }else{
+            this.isCap=User.instance.areaCapture["unknow"];
+            time = Math.floor((Date.now() - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
+            if(this.isCap&&time > 0){
+                User.instance.wood += 5 * time
+                User.instance.stone += 15 * time
+                User.instance.food += 10 * time
+                User.instance.areaCaptureTimeTakenReward["unknow"] = Date.now();
+                User.instance.saveUse();
+            }
+        }
+        console.log(time,this.isCap);
+
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+    }
+
+    update(dt) {
+        if (!this.isCap) {
+            return;
+        }
+        this.updateTime += dt;
+        if (this.updateTime >= 60) {
+            this.updateTime -= 60;
+            this.checkCaptureReward();
         }
     }
 }
