@@ -4,6 +4,7 @@ import User from "../Gameplay/User";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { BattleReward } from "./BattleReward";
 import { BattleRewardOld } from "./BattleRewardOld";
+import TaskScreen from "../UI/TaskScreen";
 
 
 const { ccclass, property } = cc._decorator;
@@ -109,10 +110,12 @@ export class DebugScreen extends ViewConnector {
 
     lostIsland(){
         this.close(undefined)
-    
-
         User.instance.areaCapture["unknow"]=false;
         User.instance.areaCaptureStopTime["unknow"] = Date.now()
         User.instance.saveUse();
+    }
+
+    DailyTask(){
+        TaskScreen.prompt()
     }
 }
