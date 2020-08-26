@@ -1,6 +1,6 @@
-import { Rarity, ElementType } from "../Config";
+import {ElementType } from "../Config";
 
-export function SetElements(element: ElementType[] | ElementType | string, node) {
+export function setElementType(element: ElementType[] | ElementType | string, node) {
     // background graphics
 
     let natureNode = cc.find("type_land", node);
