@@ -1,5 +1,9 @@
 import { Behavior } from "./Behavior";
 import { Wander } from "./Wander";
+import { Idle } from "./Idle";
+import { SetElements } from "../Util/UIUtils";
+import { PetData, getPetConfigById, ElementType } from "../Config";
+import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 
 
 const {ccclass, property} = cc._decorator;
@@ -20,9 +24,48 @@ export class PetObject extends cc.Component {
     _id: string;
     _anchor: cc.Vec2;
 
+    private _root: cc.Node = null;
+
     async start () {
-        this._sprite = this.node.getChildByName("image").getComponent<cc.Sprite>(cc.Sprite);
+        this._root = cc.find("root", this.node)
+        this._sprite = this._root.getChildByName("image").getComponent<cc.Sprite>(cc.Sprite);
         this.resetScale();
+    }
+
+    init(petData:PetData, originNode?:cc.Node) {
+        this._root = this._root || cc.find("root", this.node)
+
+        let config = getPetConfigById(petData.petId);
+
+        //set name
+        this.node.name = petData.petId;
+
+        //set image
+        let petImage: cc.Node = this._root.getChildByName("image");
+        petImage.width = originNode.width;
+        petImage.height = originNode.height;
+
+        let sprite = petImage.getComponent(cc.Sprite);
+        sprite.trim = false;
+        GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
+            sprite.spriteFrame =  sf;
+        })
+
+
+        let infoNode = cc.find("info", this.node);
+        infoNode.opacity = 125;
+        infoNode.setPosition(infoNode.x, originNode.height + 25);
+
+        //set info
+        let typesNode = cc.find("info/typeLayout", this.node);
+        SetElements(config.elements, typesNode);
+
+        //set level
+        let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
+        label_level.string = `lvl: ${petData.petLevel + 1}`
+
+
+
     }
 
     setAnchor(anchor: cc.Vec2) {
@@ -64,7 +107,7 @@ export class PetObject extends cc.Component {
 
         this._currentBehavior = undefined;
         if (goIdle) {
-            this._currentBehavior = new Wander();
+            this._currentBehavior = new Idle();
             this._currentBehavior.init(this, "petMainWander", {});
             this._currentBehavior.start();
         }
@@ -109,7 +152,7 @@ export class PetObject extends cc.Component {
 
     setFlip(dir: number, dur: number = 0.5) {
         dir *= this._spriteScale;
-        if (this.node.scaleX == dir)
+        if (this._root.scaleX == dir)
             return;
 
         // let refresh = false;
@@ -117,9 +160,9 @@ export class PetObject extends cc.Component {
         //     refresh = true;
 
         if (this._turnTarget!=dir) {
-            this.node.stopAllActions();
-            this._turnAnimAction = cc.scaleTo(dur, dir, this.node.scaleY);
-            this.node.runAction(this._turnAnimAction);
+            this._root.stopAllActions();
+            this._turnAnimAction = cc.scaleTo(dur, dir, this._root.scaleY);
+            this._root.runAction(this._turnAnimAction);
             this._turnTarget = dir;
         }
     }
@@ -129,7 +172,7 @@ export class PetObject extends cc.Component {
     }
 
     resetScale() {
-        this.node.scale = this._spriteScale;
+        this._root.scale = this.node.scale = this._spriteScale;
         this._sprite.node.scale = 1;
     }
 }
