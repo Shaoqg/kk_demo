@@ -99,13 +99,13 @@ export class Adventure extends ViewConnector {
             console.log("aaaaaa");
             
             this.seatNum=4;
+            this.unknowArea=true
         }
 
         for(let i=1;i<=this.seatNum;i++){
             let petSeat = cc.find("petsOnShip/pet" + i, this.root);
             petSeat.active=true
             this.seats.push(false);
-            this.unknowArea=true
         }
 
         this.initFoodBtn();
@@ -164,6 +164,9 @@ export class Adventure extends ViewConnector {
             });
             if (this.unknowArea) {
                 go.on(cc.Node.EventType.TOUCH_END, async () => {
+                    if (!this.boatReady) {
+                        return;
+                    }
                     await BattleArea.prompt(this.seatPet)
                     this.close(undefined);
                 });
