@@ -218,6 +218,7 @@ export class Adventure extends ViewConnector {
             }
         }
 
+        this.setShip()
 
         this.root.stopAllActions();
         underlay.stopAllActions();
@@ -226,13 +227,21 @@ export class Adventure extends ViewConnector {
         underlay.runAction(cc.fadeTo(0.1, 100));
         this.root.runAction(cc.scaleTo(0.4, this._originScale).easing(cc.easeBackOut()));
 
+       
+        //this.adjustGameInterface();
+    }
+
+    async setShip() {
         let ship = cc.find("ship_bg/ship", this.root);
+        let shipPrefeb = await KKLoader.loadPrefab("Prefab/ShipObject");
+        let shipNode = cc.instantiate(shipPrefeb);
+        ship.addChild(shipNode)
+        
         ship.runAction(cc.repeatForever(
             cc.sequence(
                 cc.moveBy(1.2, 0, 8).easing(cc.easeInOut(1.2)),
                 cc.moveBy(1.2, 0, -8).easing(cc.easeInOut(1.2))
             )));
-        //this.adjustGameInterface();
     }
 
     initFoodBtn() {

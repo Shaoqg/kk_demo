@@ -4,6 +4,7 @@ import User from "../Gameplay/User";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { speeds, capacitys, bounss, speedLevelUpInfo, capacityLevelUpInfo, bounsLevelUpInfo } from "../Config";
+import { KKLoader } from "../Util/KKLoader";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -56,6 +57,8 @@ export class ShipUpgrade extends ViewConnector {
         this.getShipInfo("speed").string = "Speed：" + this.speeds[User.instance.ship_speed_level] + "kn"
         this.getShipInfo("capacity").string = "Capacity：" + User.instance.AdventurePets.length + "/" + this.capacitys[User.instance.ship_capacity_level];
         this.getShipInfo("bouns").string = "Bouns：+" + this.bounss[User.instance.ship_bouns_level] + "%"
+
+        this.setShip()
         this.updateShipLevel();
 
         let timestamp = User.instance.getTimeStamp("Adventure");
@@ -97,6 +100,19 @@ export class ShipUpgrade extends ViewConnector {
         this.root.runAction(cc.scaleTo(0.4, this._originScale).easing(cc.easeBackOut()));
 
         //this.adjustGameInterface();
+    }
+
+    async setShip() {
+        let ship = cc.find("ship_bg/ship", this.root);
+        let shipPrefeb = await KKLoader.loadPrefab("Prefab/ShipObject");
+        let shipNode = cc.instantiate(shipPrefeb);
+        ship.addChild(shipNode)
+        
+        ship.runAction(cc.repeatForever(
+            cc.sequence(
+                cc.moveBy(1.2, 0, 8).easing(cc.easeInOut(1.2)),
+                cc.moveBy(1.2, 0, -8).easing(cc.easeInOut(1.2))
+            )));
     }
 
     showDisableButton(idx:number,isMax:boolean,isShow:boolean) {
@@ -182,6 +198,7 @@ export class ShipUpgrade extends ViewConnector {
         this.updateShipLevel();
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         EventEmitter.emitEvent(EventType.STAR_INCREASE);
+        EventEmitter.emitEvent(EventType.UPDATE_SPEED);
     }
 
     checkMaxLevel(part: string, upgrade: cc.Node) {

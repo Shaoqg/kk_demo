@@ -15,6 +15,7 @@ import VSModel from "../UI/VSModel";
 import { MoveToPosition } from "../Pet/MoveToPosition";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import { Land } from "../Pet/Land";
+import ShipObject from "../Tools/ShipObject";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -96,14 +97,7 @@ export class BattleArea extends ViewConnector {
         shipNode.x = shipNode.x - 500
 
         //setPets
-        Pets.forEach(async (pet, idx) => {
-            let petNode = cc.find("PetNode" + (idx + 1), shipNode)
-            let petImage = petNode.getChildByName("image").getComponent(cc.Sprite);
-
-            let petconfig = getPetConfigById(pet.petId);
-
-            petImage.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.Pet,petconfig.art_asset);
-        })
+       shipNode.getComponent(ShipObject).setPets(Pets);
 
         return shipNode;
     }
