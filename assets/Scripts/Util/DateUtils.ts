@@ -1,6 +1,6 @@
-import KKGClient from "../kk/KKGClient";
+// import KKGClient from "../kk/KKGClient";
 // import { I18N } from "../Tools/I18N";
-import { GetServerTimeResponse, GetServerTimeRequest } from "../kk/ServiceTypes";
+// import { GetServerTimeResponse, GetServerTimeRequest } from "../kk/ServiceTypes";
 
 export type DateData = {
     minute: number,
@@ -21,44 +21,44 @@ export class DateUtils {
     private static _retrievalTime: number;
 
     private static _kkgClient;
-    static set kkgClient(client: KKGClient) {
-        this._kkgClient = client;
-        DateUtils.retrieveServerTime();
-    }
+    // static set kkgClient(client: KKGClient) {
+    //     this._kkgClient = client;
+    //     DateUtils.retrieveServerTime();
+    // }
 
-    static retrieveServerTime() {
-        if(this._kkgClient) {
+    // static retrieveServerTime() {
+    //     if(this._kkgClient) {
 
-            let request : GetServerTimeRequest = {clientTime: Date.now()};
-            this._kkgClient.getServerTime(request).then((res: GetServerTimeResponse) => {
-                if(res && res.time) {
-                    this._serverTime = res.time;
-                    this._retrievalTime = Date.now();
-                } else {
-                    this._serverTime = this._retrievalTime = Date.now();
-                }
-            }).catch((e) => {
-                this._serverTime = this._retrievalTime = Date.now();
-            });
+    //         let request : GetServerTimeRequest = {clientTime: Date.now()};
+    //         this._kkgClient.getServerTime(request).then((res: GetServerTimeResponse) => {
+    //             if(res && res.time) {
+    //                 this._serverTime = res.time;
+    //                 this._retrievalTime = Date.now();
+    //             } else {
+    //                 this._serverTime = this._retrievalTime = Date.now();
+    //             }
+    //         }).catch((e) => {
+    //             this._serverTime = this._retrievalTime = Date.now();
+    //         });
 
-            return;
-        }
+    //         return;
+    //     }
 
-        this._serverTime = this._retrievalTime = Date.now();
-    }
+    //     this._serverTime = this._retrievalTime = Date.now();
+    // }
     
-    static getServerTime() {
-        if(!this._kkgClient){
-            console.error('no time from server');
-            return Date.now();
-        }
+    // static getServerTime() {
+    //     if(!this._kkgClient){
+    //         console.error('no time from server');
+    //         return Date.now();
+    //     }
 
-        let delta = Date.now() - this._retrievalTime;
-        if(delta > this.MS_PER_MINUTE * 5) {
-            this.retrieveServerTime();
-        }
-        return this._serverTime + delta;
-    }
+    //     let delta = Date.now() - this._retrievalTime;
+    //     if(delta > this.MS_PER_MINUTE * 5) {
+    //         this.retrieveServerTime();
+    //     }
+    //     return this._serverTime + delta;
+    // }
 
     static getCurrentHourMin(timestamp?: number): string {
         let timeString = new Date(timestamp).toISOString().split("T")[1];

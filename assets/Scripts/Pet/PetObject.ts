@@ -1,9 +1,8 @@
 import { Behavior } from "./Behavior";
-import { Wander } from "./Wander";
 import { Idle } from "./Idle";
-import { SetElements } from "../Util/UIUtils";
 import { PetData, getPetConfigById, ElementType } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
+import { setElementType } from "../Util/UIUtils";
 
 
 const {ccclass, property} = cc._decorator;
@@ -61,7 +60,7 @@ export class PetObject extends cc.Component {
 
         //set info
         let typesNode = cc.find("info/typeLayout", this.node);
-        SetElements(config.elements, typesNode);
+        setElementType(config.elements, typesNode);
 
         //set level
         let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
