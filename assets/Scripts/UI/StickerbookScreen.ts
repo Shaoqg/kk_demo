@@ -44,7 +44,7 @@ export default class StickerbookScreen extends ViewConnector {
     }
 
     async applyData(){
-        this.adjustGameInterface()
+        this.AdjustGameInterface()
         
         let b = cc.find("root/Pets/PetList", this.node);
         this._petList = cc.find("root/Pets/PetList", this.node).getComponent(PetList);
@@ -78,10 +78,46 @@ export default class StickerbookScreen extends ViewConnector {
 
     }
 
-    adjustGameInterface() {
-        let scale = ScreenSize.getScale(1, 0.8);
+    readonly width = 750;
+    readonly Height = 1334;
+    readonly MaxScale = 1;
+    readonly MinScale = 0.80;
+    
+    AdjustGameInterface() {
+        let scale = 1;
+        let size = cc.view.getFrameSize();
+        // console.log(size);
+        // let oldValue = this.Height * size.width / size.height;//得出屏幕需要的宽度（即完美自适应的尺寸）
 
-        this._originScale = this.node.scale = scale;
+        let oldValue = this.width / this.Height * size.height;//得出屏幕需要的宽度（即完美自适应的尺寸）
+        scale = size.width / oldValue;
+
+        if (scale > this.MaxScale) {
+            scale = this.MaxScale;
+        } else if (scale < this.MinScale) {
+            scale = this.MinScale;
+        }
+
+        // this.node.width = GameManager.instance.canvas.node.width;
+
+        let blockInput = this.node.getChildByName("block");
+        blockInput.width = this.node.width;
+        blockInput.height = 1334;
+
+        let rootNode = this.node.getChildByName("root");
+        rootNode.scale = scale;
+
+        //adjust root position
+        // let posY = 1334 / 2 - CurrencyHud.instance.getTopDistance() - 60;
+        // rootNode.y = posY;
+
+        let height = Math.floor( rootNode.convertToWorldSpaceAR(cc.Vec2.ZERO).y / scale);
+        rootNode.height = height;
+
+        let bg = rootNode.getChildByName("Background");
+        // bg.width = Math.fround(this.node.width / scale);
+        // bg.height = Math.ceil(this.Height / scale > bg.height ? this.Height / scale : bg.height) + 20;
+
     }
 
 
