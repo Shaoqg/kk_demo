@@ -260,6 +260,26 @@ export type RotaryType = {
 }
 
 
+let RestraintConfig = {
+  [ElementType.water]:ElementType.fire,
+  [ElementType.fire]:ElementType.snack,
+  [ElementType.snack]:ElementType.nature,
+  [ElementType.nature]:ElementType.water,
+}
+
+export function getRestraint(element1: ElementType, element2: ElementType) {
+    //  ElementType.water->ElementType.fire-> ElementType.snack-> ElementType.nature-> ElementType.water
+
+  if (RestraintConfig[element1] == element2) {
+    return 1;
+  } else if (RestraintConfig[element2] == element1) {
+    return -1;
+  }
+  return 0;
+}
+
+
+
 export let speeds: number[] = [24, 30, 42];
 export let capacitys: number[] = [1, 3, 5];
 export let bounss: number[] = [10, 50, 200];

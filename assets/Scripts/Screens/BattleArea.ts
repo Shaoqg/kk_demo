@@ -5,7 +5,7 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig, ElementType } from "../Config";
+import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig, ElementType, getRestraint } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { delay } from "../kk/DataUtils";
 import { BattleReward } from "./BattleReward";
@@ -57,7 +57,7 @@ export class BattleArea extends ViewConnector {
         let ship = await this.setShip(Pets)
 
         let act = cc.moveBy(2, cc.v2(500.0)).easing(cc.easeOut(1))
-        
+
         let opponent = this.setOpponentPets()
 
         ship.runAction(act);
@@ -65,13 +65,16 @@ export class BattleArea extends ViewConnector {
 
         this.setSelfPets(Pets);
 
-        await delay(3);
+        delay(2).then(()=>{
+            this.updateArrow(Pets, opponent);
+        })
 
+        await delay(4);
 
         let isWin = await VSModel.prompt(Pets, opponent, ElementType.fire);
-        
+
         //judge sucess or failed
-        let issucess=this.checkSucess(Pets)
+        let issucess = this.checkSucess(Pets)
         if (issucess) {
             Pets.forEach((pet) => {
                 let UserPet = User.instance.findPetDataByPetId(pet.petId);
@@ -81,11 +84,11 @@ export class BattleArea extends ViewConnector {
             User.instance.areaExploring["unknow"] = true
             User.instance.areaCapture["unknow"] = true
             User.instance.areaCaptureStartTime["unknow"] = Date.now();
-            User.instance.areaCaptureTimeTakenReward["unknow"] =  Date.now();
+            User.instance.areaCaptureTimeTakenReward["unknow"] = Date.now();
             User.instance.saveUse();
             EventEmitter.emitEvent(EventType.GO_CAPTURE);
         }
-        await BattleReward.prompt(issucess,Pets);
+        await BattleReward.prompt(issucess, Pets);
         this.close(undefined);
     }
 
@@ -102,7 +105,7 @@ export class BattleArea extends ViewConnector {
 
             let petconfig = getPetConfigById(pet.petId);
 
-            petImage.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.Pet,petconfig.art_asset);
+            petImage.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.Pet, petconfig.art_asset);
         })
 
         return shipNode;
@@ -113,7 +116,7 @@ export class BattleArea extends ViewConnector {
         Pets.forEach(async (pet, idx) => {
             let petNode = cc.find("ShipObject/PetNode" + (idx + 1), this.shipDock)
             let petAni = petNode.getChildByName("image").getComponent(cc.Animation);
-            await delay(idx*0.2);
+            await delay(idx * 0.2);
             petAni.play("jump");
             await delay(0.55);
             this._preparePetNode(pet, idx, false);
@@ -121,18 +124,18 @@ export class BattleArea extends ViewConnector {
 
     }
 
-    setOpponentPets(){
-        let petsconfigs=getRandomConfigs(4);
+    setOpponentPets() {
+        let petsconfigs = getRandomConfigs(4);
 
-        let petDatas:PetData[] = [];
-        petsconfigs.forEach((config,idx)=>{
+        let petDatas: PetData[] = [];
+        petsconfigs.forEach((config, idx) => {
             let petData = {
                 petId: config.petId,
-                petLevel: Math.floor(Math.random()*8)
+                petLevel: Math.floor(Math.random() * 8)
             }
             petDatas.push(petData)
 
-            this._preparePetNode(petData,idx);
+            this._preparePetNode(petData, idx);
         });
         return petDatas;
     }
@@ -143,8 +146,8 @@ export class BattleArea extends ViewConnector {
             myStrength += getStrengthByPetData(pet);
         })
         let def = this.getIslandDef();
-        console.log("myStrength",myStrength,"IslandDef",def,(myStrength > def));
-        
+        console.log("myStrength", myStrength, "IslandDef", def, (myStrength > def));
+
         if (myStrength > def) {
             return true;
         } else {
@@ -152,10 +155,10 @@ export class BattleArea extends ViewConnector {
         }
     }
 
-    async _preparePetNode(petData: PetData,idx:number, isOpponent= true) {
+    async _preparePetNode(petData: PetData, idx: number, isOpponent = true) {
 
         let islandNode = cc.find("island/islandUI/islandNode/island", this.node);
-        let petNode = cc.find("pet"+(idx+1),islandNode);
+        let petNode = cc.find("pet" + (idx + 1), islandNode);
 
         //Hide the pet node by default, but make sure we have a pet prepared
         let prefab = await KKLoader.loadPrefab("Prefab/pet");
@@ -167,15 +170,15 @@ export class BattleArea extends ViewConnector {
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
         petObject.init(petData, petNode);
 
-        let path = isOpponent ? "vs/opponent/pet":"vs/self/pet";
-        let targeNode = cc.find(path + (idx+1), islandNode).convertToWorldSpaceAR(cc.v2(0,0));
+        let path = isOpponent ? "vs/opponent/pet" : "vs/self/pet";
+        let targeNode = cc.find(path + (idx + 1), islandNode).convertToWorldSpaceAR(cc.v2(0, 0));
         let targePos = petNode.getParent().convertToNodeSpaceAR(targeNode);
 
         if (isOpponent) {
             preppedPetNode.position = petNode.position;
-            
+
             let wanderBehavior = new Wander();
-            wanderBehavior.init(petObject, "landPet", { position: targePos, wanderRadius: 30, useAnchor: true,target:targePos.sub(cc.v2(0,1))});
+            wanderBehavior.init(petObject, "landPet", { position: targePos, wanderRadius: 15, useAnchor: true, target: targePos.sub(cc.v2(0, 1)) });
             wanderBehavior.start()
         } else {
             preppedPetNode.position = targePos;
@@ -188,9 +191,26 @@ export class BattleArea extends ViewConnector {
         return petObject;
     }
 
+    updateArrow(self: PetData[], opponent: PetData[]) {
+        let arrows = cc.find("island/islandUI/islandNode/island/vs/arrows", this.node);
+        arrows.children.forEach((node, i) => {
+            let green = node.getChildByName("green");
+            let red = node.getChildByName("red");
+
+            if (self.length - 1 >= i && opponent.length - 1 >= i) {
+                let config1 = getPetConfigById(self[i].petId);
+                let config2 = getPetConfigById(opponent[i].petId);
+
+                let result = getRestraint(config1.elements as ElementType, config2.elements as ElementType);
+                green.active = (result == 1);
+                red.active = (result == -1);
+            }
+        })
+    }
+
     getIslandDef() {
         //debug
-        return 15-Math.random() * 10
+        return 15 - Math.random() * 10
     }
 
     adjustGameInterface() {
