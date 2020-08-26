@@ -5,9 +5,10 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas } from "../Config";
+import { AdventureAreas, getPetConfigById } from "../Config";
 import { BattleArea } from "./BattleArea";
 import { BattleInDefende } from "./BattleInDefende";
+import { KKLoader } from "../Util/KKLoader";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -68,16 +69,19 @@ export class AdventureArea extends ViewConnector {
             });
         })
 
-        let areaNode = list.getChildByName("area_unknown" );
-            areaNode.on(cc.Node.EventType.TOUCH_END, () => {
-                // this.close(undefined);
-                console.log("area_unknown");
-                if(User.instance.areaExploring["unknow"]){
-                    BattleInDefende.prompt(User.instance.areaCapture["unknow"]);
-                }else{
-                    Adventure.prompt("area_unknown");
-                }
-            });
+        let areaNode = list.getChildByName("area_unknown");
+        this.PlacePetsInBattle();
+        areaNode.on(cc.Node.EventType.TOUCH_END, async () => {
+            // this.close(undefined);
+            console.log("area_unknown");
+            if (User.instance.areaExploring["unknow"]) {
+                await BattleInDefende.prompt(User.instance.areaCapture["unknow"]);
+                this.PlacePetsInBattle();
+            } else {
+                await Adventure.prompt("area_unknown");
+                this.PlacePetsInBattle();
+            }
+        });
 
         this.root.stopAllActions();
         underlay.stopAllActions();
@@ -87,6 +91,33 @@ export class AdventureArea extends ViewConnector {
         this.root.runAction(cc.scaleTo(0.4, this._originScale).easing(cc.easeBackOut()));
 
         //this.adjustGameInterface();
+    }
+
+    PlacePetsInBattle() {
+        if (User.instance.areaExploring["unknow"]) {
+            let pets = User.instance.getPetsNowUsing("Defence");
+            pets.forEach(async (pet, idx) => {
+                let petNode = cc.find("scrollview/list/area_unknown/defencePets/pet" + (idx + 1), this.root);
+                let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
+                let empty = cc.find("empty", petNode);
+
+                empty.active = false;
+
+                let petconfig = getPetConfigById(pet.petId)
+                petImage.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
+
+            })
+        } else {
+            for (let i = 0; i < 4; i++) {
+                let petNode = cc.find("scrollview/list/area_unknown/defencePets/pet" + (i + 1), this.root);
+                let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
+                let empty = cc.find("empty", petNode);
+
+                empty.active = true;
+                petImage.spriteFrame = null
+            }
+
+        }
     }
 
     adjustGameInterface() {

@@ -163,8 +163,8 @@ export class Adventure extends ViewConnector {
                 this.createList(data, idx);
             });
             if (this.unknowArea) {
-                go.on(cc.Node.EventType.TOUCH_END, () => {
-                    BattleArea.prompt(this.seatPet)
+                go.on(cc.Node.EventType.TOUCH_END, async () => {
+                    await BattleArea.prompt(this.seatPet)
                     this.close(undefined);
                 });
             } else {
