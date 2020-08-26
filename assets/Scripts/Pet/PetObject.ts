@@ -37,6 +37,9 @@ export class PetObject extends cc.Component {
 
         let config = getPetConfigById(petData.petId);
 
+        this.node.width = originNode.width;
+        this.node.height = originNode.height;
+
         //set name
         this.node.name = petData.petId;
 

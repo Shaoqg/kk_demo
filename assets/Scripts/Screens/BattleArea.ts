@@ -65,7 +65,7 @@ export class BattleArea extends ViewConnector {
 
         this.setSelfPets(Pets);
 
-        await delay(40);
+        await delay(3);
 
 
         let isWin = await VSModel.prompt(Pets, opponent, ElementType.fire);
