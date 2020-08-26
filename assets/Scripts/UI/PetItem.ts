@@ -1,6 +1,6 @@
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity, PetData } from "../Config";
+import { getPetConfigById, Rarity, PetData, ElementType } from "../Config";
 
 const {ccclass, property} = cc._decorator;
 
@@ -100,7 +100,7 @@ export default class PetItem extends cc.Component {
     fireNode:cc.Node = null;
     waterNode:cc.Node = null;
     snackNode:cc.Node = null;
-    SetElements(element:Rarity| string){ 
+    SetElements(element:any){ 
         // background graphics
         
         this.SetSingleBackground(element);
@@ -135,7 +135,7 @@ export default class PetItem extends cc.Component {
         }
     }
 
-    SetSingleBackground(element:Rarity| string){
+    SetSingleBackground(element:ElementType| string){
         let bp = 1;
         this.BackgroundAlt.enabled = false;
 

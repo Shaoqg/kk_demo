@@ -1,8 +1,7 @@
 import { Behavior } from "./Behavior";
 import { Idle } from "./Idle";
-import { PetData, getPetConfigById, ElementType } from "../Config";
+import { PetData, getPetConfigById, setElementType } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
-import { setElementType } from "../Util/UIUtils";
 
 
 const {ccclass, property} = cc._decorator;
