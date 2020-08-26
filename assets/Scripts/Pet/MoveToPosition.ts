@@ -7,7 +7,7 @@ export class MoveToPosition extends Behavior {
     protected _position:cc.Vec2;
 
     // walk speed
-    protected _baseSpeed:number = 75;
+    protected _baseSpeed:number = 50;
     protected _speed:number = this._baseSpeed;
 
     // generated path to position

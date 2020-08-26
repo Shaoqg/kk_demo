@@ -203,7 +203,7 @@ export type PetType = {
     "petId": string,
     "art_asset": string,
     "rarity": Rarity| string,
-    "elements": Rarity| string,
+    "elements": ElementType| string |ElementType[],
     "featuredCost"?:number,
     "featuredAmount"?:number,
 }

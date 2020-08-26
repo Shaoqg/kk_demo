@@ -7,12 +7,13 @@ import { PetUpgrade } from "../Screens/PetUpgrade";
 import { PerformAnimation } from "./PerformAnimation";
 
 export class GardenPets {
-    static async addpet(petdata: PetData) {
-        let island = cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
+    static async addpet(petdata: PetData, island?:cc.Node) {
+        island = island || cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
         let pet = await this._preparePetNode(petdata, island);
         let wanderBehavior = new Wander();
         wanderBehavior.init(pet, "spawnpet", { position: pet.node.position, wanderRadius: 10 });
-        wanderBehavior.start()
+        wanderBehavior.start();
+        return pet;
     }
 
     static async _preparePetNode(petdata: PetData, parent: cc.Node) {
@@ -25,31 +26,23 @@ export class GardenPets {
         let preppedPetNode = cc.instantiate(prefab)
 
         //Hide the pet node by default, but make sure we have a pet prepared
-        preppedPetNode.name = petconfig.petId;
         preppedPetNode.position = petNode.position;
-        let petImage: cc.Node = preppedPetNode.getChildByName("image");
-        let sprite = petImage.getComponent(cc.Sprite);
-        sprite.trim = false;
-        sprite.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
-
-        petImage.width = petNode.width;
-        petImage.height = petNode.height;
-
-        preppedPetNode.width = petNode.width;
-        preppedPetNode.height = petNode.height;
 
         parent.addChild(preppedPetNode);
 
+        let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+        petObject.init(petdata, petNode);
+
         preppedPetNode.on(cc.Node.EventType.TOUCH_END, async () => {
-            preppedPetNode.getComponent(PetObject).clearBehavior(false);
+            petObject.clearBehavior(false);
             await PetUpgrade.prompt(petdata)
             let wanderBehavior = new Wander();
-            wanderBehavior.init(preppedPetNode.getComponent(PetObject), "spawnpet", { position: preppedPetNode.position, wanderRadius: 10 });
+            wanderBehavior.init(petObject, "spawnpet", { position: preppedPetNode.position, wanderRadius: 10 });
             wanderBehavior.start()
         });
 
 
-        return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+        return petObject;
     }
 
     static petjumping(pet:PetObject){

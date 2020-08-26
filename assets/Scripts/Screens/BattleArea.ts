@@ -12,6 +12,9 @@ import { BattleReward } from "./BattleReward";
 import { PetObject } from "../Pet/PetObject";
 import { Wander } from "../Pet/Wander";
 import VSModel from "../UI/VSModel";
+import { MoveToPosition } from "../Pet/MoveToPosition";
+import GlobalResources, { SpriteType } from "../Util/GlobalResource";
+import { Land } from "../Pet/Land";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -53,12 +56,17 @@ export class BattleArea extends ViewConnector {
 
         let ship = await this.setShip(Pets)
 
-        let act = cc.moveBy(3, cc.v2(500.0)).easing(cc.easeOut(5))
+        let act = cc.moveBy(2, cc.v2(500.0)).easing(cc.easeOut(1))
         
-        let opponent = this.setIslandPets()
+        let opponent = this.setOpponentPets()
 
         ship.runAction(act);
-        await delay(4);
+        await delay(3);
+
+        this.setSelfPets(Pets);
+
+        await delay(40);
+
 
         let isWin = await VSModel.prompt(Pets, opponent, ElementType.fire);
         
@@ -94,24 +102,37 @@ export class BattleArea extends ViewConnector {
 
             let petconfig = getPetConfigById(pet.petId);
 
-            petImage.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
+            petImage.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.Pet,petconfig.art_asset);
         })
 
         return shipNode;
     }
 
-    setIslandPets(){
-        let petsconfigs=getRandomConfigs(4);
-        petsconfigs.forEach(async (petConfig,idx)=>{
-            let pet = await this._preparePetNode(petConfig,idx);
+
+    setSelfPets(Pets: PetData[]) {
+        Pets.forEach(async (pet, idx) => {
+            let petNode = cc.find("ShipObject/PetNode" + (idx + 1), this.shipDock)
+            let petAni = petNode.getChildByName("image").getComponent(cc.Animation);
+            await delay(idx*0.2);
+            petAni.play("jump");
+            await delay(0.55);
+            this._preparePetNode(pet, idx, false);
         })
 
+    }
+
+    setOpponentPets(){
+        let petsconfigs=getRandomConfigs(4);
+
         let petDatas:PetData[] = [];
-        petsconfigs.forEach((config)=>{
-            petDatas.push({
+        petsconfigs.forEach((config,idx)=>{
+            let petData = {
                 petId: config.petId,
                 petLevel: Math.floor(Math.random()*8)
-            })
+            }
+            petDatas.push(petData)
+
+            this._preparePetNode(petData,idx);
         });
         return petDatas;
     }
@@ -131,30 +152,40 @@ export class BattleArea extends ViewConnector {
         }
     }
 
-    async _preparePetNode(petconfig: PetType,idx:number) {
-        let petNode = cc.find("island/islandUI/islandNode/island/pet"+(idx+1),this.node);
+    async _preparePetNode(petData: PetData,idx:number, isOpponent= true) {
+
+        let islandNode = cc.find("island/islandUI/islandNode/island", this.node);
+        let petNode = cc.find("pet"+(idx+1),islandNode);
 
         //Hide the pet node by default, but make sure we have a pet prepared
         let prefab = await KKLoader.loadPrefab("Prefab/pet");
         let preppedPetNode = cc.instantiate(prefab)
 
         //Hide the pet node by default, but make sure we have a pet prepared
-        preppedPetNode.name = petconfig.petId;
-        preppedPetNode.position = petNode.position;
-        let petImage: cc.Node = preppedPetNode.getChildByName("image");
-        let sprite = petImage.getComponent(cc.Sprite);
-        sprite.trim = false;
-        sprite.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
-
-        petImage.width = petNode.width;
-        petImage.height = petNode.height;
-
-        preppedPetNode.width = petNode.width;
-        preppedPetNode.height = petNode.height;
-
         petNode.parent.addChild(preppedPetNode);
 
-        return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+        let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+        petObject.init(petData, petNode);
+
+        let path = isOpponent ? "vs/opponent/pet":"vs/self/pet";
+        let targeNode = cc.find(path + (idx+1), islandNode).convertToWorldSpaceAR(cc.v2(0,0));
+        let targePos = petNode.getParent().convertToNodeSpaceAR(targeNode);
+
+        if (isOpponent) {
+            preppedPetNode.position = petNode.position;
+            
+            let wanderBehavior = new Wander();
+            wanderBehavior.init(petObject, "landPet", { position: targePos, wanderRadius: 30, useAnchor: true,target:targePos.sub(cc.v2(0,1))});
+            wanderBehavior.start()
+        } else {
+            preppedPetNode.position = targePos;
+
+            let landBehavior = new Land();
+            landBehavior.init(petObject, "landPet");
+            landBehavior.start();
+        }
+
+        return petObject;
     }
 
     getIslandDef() {

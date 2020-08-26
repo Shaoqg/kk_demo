@@ -7,6 +7,7 @@ export class Wander extends MoveToPosition {
     protected _actorAnimation: cc.Animation;
     protected _timeoutHandler;
     protected _anchor: cc.Vec2;
+    protected _useAnchor:boolean;
     protected _wanderRadius: number;
     protected _position: cc.Vec2;
     protected _baseTimeoutDurationMs: number;
@@ -15,12 +16,12 @@ export class Wander extends MoveToPosition {
         return "Wander";
     }
 
-    init(pet:PetObject, source:string, options:{ position?: cc.Vec2, wanderRadius?: number }) {
+    init(pet:PetObject, source:string, options:{ position?: cc.Vec2, wanderRadius?: number, useAnchor?: boolean, target?:cc.Vec2}) {
         this._wanderRadius = options.wanderRadius || pet.node.getParent().width/2;
         this._anchor = options.position || cc.v2(0,0);
         this._actor = pet;
-        
-        this._position = this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
+        this._useAnchor = options.useAnchor || false;
+        this._position = options.target || this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
         //super.init(pet, source, { position: this._position });
 
         this._baseTimeoutDurationMs = 5000;
@@ -40,7 +41,11 @@ export class Wander extends MoveToPosition {
                 if (!this._isActive) {//The behavior may have ended after the delay
                     return;
                 }
-                this._position = this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
+                if (this._useAnchor) {
+                    this._position = cc.v2(this._anchor.x + (Math.random() * this._wanderRadius), this._anchor.y + (Math.random() * this._wanderRadius));
+                } else {
+                    this._position = this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
+                }
                 if(this._actorAnimation) {
                     let player = this._actorAnimation.play("walk");
                     if(player) {

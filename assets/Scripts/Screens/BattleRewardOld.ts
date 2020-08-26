@@ -119,24 +119,15 @@ export class BattleRewardOld extends ViewConnector {
         let preppedPetNode = cc.instantiate(prefab)
 
         //Hide the pet node by default, but make sure we have a pet prepared
-        preppedPetNode.name = petconfig.petId;
         preppedPetNode.position = petNode.position;
-        let petImage: cc.Node = preppedPetNode.getChildByName("image");
-        let sprite = petImage.getComponent(cc.Sprite);
-        sprite.trim = false;
-        sprite.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
-        console.log(sprite.spriteFrame);
-
-        petImage.width = petNode.width;
-        petImage.height = petNode.height;
-
-        preppedPetNode.width = petNode.width;
-        preppedPetNode.height = petNode.height;
 
         parent.addChild(preppedPetNode);
 
+        let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+        petObject.init(petdata, petNode);
 
-        return preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
+
+        return petObject
     }
 
     async getReward(petId?:string){
