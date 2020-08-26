@@ -14,6 +14,7 @@ import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
 import { Adventure } from "../Screens/Adventure";
 import { AdventureArea } from "../Screens/AdventureArea";
+import ScreenSize from "../Tools/ScreenSize";
 
 
 const {ccclass, property} = cc._decorator;
@@ -34,6 +35,7 @@ export default class UIManager extends cc.Component {
     onLoad() {
         this.initBtn();
         this.initChangeArrow();
+        this.adjustGameInterface();
     }
 
     initBtn(){
@@ -60,7 +62,7 @@ export default class UIManager extends cc.Component {
 
         this.btn_adventure = cc.find("ButtomHud/btn_adventure", this.node)
         this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onOpenBattle();
+            this.onclickAdventure();
         })
 
         this.btn_barn = cc.find("ButtomHud/btn_barn", this.node)
@@ -169,6 +171,10 @@ export default class UIManager extends cc.Component {
         })
     }
 
+    adjustGameInterface() {
+        let scale = ScreenSize.getScale(1, 0.8);
+        this.node.scale = scale;
+    }
     
 
    
