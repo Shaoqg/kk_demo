@@ -1,0 +1,145 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "label_Ready",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 3,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "scale": [
+        {
+          "frame": 0,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 2,
+            "y": 2
+          },
+          "curve": [
+            0.18,
+            0.89,
+            0.31,
+            1.21
+          ]
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 1,
+            "y": 1
+          },
+          "curve": "constant"
+        },
+        {
+          "frame": 1,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 2,
+            "y": 2
+          },
+          "curve": [
+            0.18,
+            0.89,
+            0.31,
+            1.21
+          ]
+        },
+        {
+          "frame": 1.3333333333333333,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 1,
+            "y": 1
+          },
+          "curve": "constant"
+        },
+        {
+          "frame": 2,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 2,
+            "y": 2
+          },
+          "curve": [
+            0.18,
+            0.89,
+            0.31,
+            1.21
+          ]
+        },
+        {
+          "frame": 2.3333333333333335,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 1,
+            "y": 1
+          },
+          "curve": "constant"
+        },
+        {
+          "frame": 3,
+          "value": {
+            "__type__": "cc.Vec2",
+            "x": 2,
+            "y": 2
+          }
+        }
+      ],
+      "opacity": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 0.3333333333333333,
+          "value": 255,
+          "curve": "constant"
+        },
+        {
+          "frame": 1,
+          "value": 0
+        },
+        {
+          "frame": 1.3333333333333333,
+          "value": 255,
+          "curve": "constant"
+        },
+        {
+          "frame": 2,
+          "value": 0
+        },
+        {
+          "frame": 2.3333333333333335,
+          "value": 255,
+          "curve": "constant"
+        },
+        {
+          "frame": 3,
+          "value": 0
+        }
+      ]
+    },
+    "comps": {
+      "cc.Label": {
+        "string": [
+          {
+            "frame": 0,
+            "value": "3"
+          },
+          {
+            "frame": 1,
+            "value": "2"
+          },
+          {
+            "frame": 2,
+            "value": "1"
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

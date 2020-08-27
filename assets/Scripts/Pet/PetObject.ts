@@ -1,6 +1,6 @@
 import { Behavior } from "./Behavior";
 import { Idle } from "./Idle";
-import { PetData, getPetConfigById, setElementType } from "../Config";
+import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 
 
@@ -22,6 +22,8 @@ export class PetObject extends cc.Component {
     _id: string;
     _anchor: cc.Vec2;
 
+    petData:PetData = null;
+
     private _root: cc.Node = null;
 
     async start () {
@@ -32,6 +34,7 @@ export class PetObject extends cc.Component {
 
     init(petData:PetData, originNode?:cc.Node) {
         this._root = this._root || cc.find("root", this.node)
+        this.petData = petData;
 
         let config = getPetConfigById(petData.petId);
 
@@ -65,8 +68,15 @@ export class PetObject extends cc.Component {
         let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
         label_level.string = `lvl: ${petData.petLevel + 1}`
 
-
-
+        //set rar
+        let colorInfo = getColorByRarity(config.rarity as Rarity);
+        let shadow = cc.find("root/shadow2", this.node);
+        shadow.color = colorInfo.color;
+        shadow.opacity = colorInfo.opacity;
+        shadow.runAction(cc.sequence(
+            cc.scaleTo(0.8, 1.1),
+            cc.scaleTo(0.8, 1)
+        ).repeatForever())
     }
 
     setAnchor(anchor: cc.Vec2) {
@@ -80,6 +90,7 @@ export class PetObject extends cc.Component {
             if(finished) {
                 this._currentBehavior.end();
             }
+            this.node.zIndex = Math.floor((667 - this.node.y)/5);
         }
     }
 

@@ -101,13 +101,13 @@ export function getStrengthByPetData(petData:PetData) {
 
   switch (config.rarity) {
     case Rarity.common:
-      strength = petData.petLevel * 2;
+      strength = petData.petLevel * 2 +5;
       break;
     case Rarity.uncommon:
-      strength = petData.petLevel * 3;
+      strength = petData.petLevel * 3 + 7;
       break;
     case Rarity.rare:
-      strength = petData.petLevel * 4;
+      strength = petData.petLevel * 4 + 10;
       break;
   }
   return strength;
@@ -199,12 +199,17 @@ export function getRewardPetByLevel(level){
   }
 }
 
-
-export enum Rarity  {
-    "nature",
-    "fire",
-    "water",
-    "snack"
+export function getColorByRarity(rarity:Rarity) {
+  switch (rarity) {
+    case Rarity.common:
+      return {color: cc.color(240, 255, 255), opacity:180};
+    case Rarity.uncommon:
+      return {color: cc.color(152, 0, 253), opacity:200};
+    case Rarity.rare:
+      return  {color: cc.color(255, 255, 0), opacity:220};
+    default:
+      return {color: cc.color(240, 255, 255), opacity:180};
+  }
 }
 
 export enum Resource  {
