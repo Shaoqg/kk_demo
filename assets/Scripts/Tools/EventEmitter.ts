@@ -53,6 +53,7 @@ export enum EventType {
     LEVEL_UP_TREE = "LEVEL_UP_TREE",
     CHECK_AREA_COMPELETE = "CHECK_AREA_COMPELETE",
     GO_CAPTURE = "GO_CAPTURE",
+    UPDATE_SPEED = "UPDATE_SPEED",
 };
 
 let globalKey = "global";

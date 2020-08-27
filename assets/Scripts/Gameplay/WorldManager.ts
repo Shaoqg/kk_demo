@@ -8,6 +8,8 @@ import { Trees, AdventureAreas } from "../Config";
 import { GardenPets } from "../Pet/GardenPets";
 import ScreenSize from "../Tools/ScreenSize";
 import { DebugScreen } from "../Screens/DebugScreen";
+import { KKLoader } from "../Util/KKLoader";
+import ShipObject from "../Tools/ShipObject";
 
 const {ccclass, property} = cc._decorator;
 
@@ -38,6 +40,7 @@ export default class WorldManager extends cc.Component {
     battleIsOpen: boolean=false;
     isCap: boolean = false;
     updateTime: number = 0;
+    shipDock: cc.Node;
 
 
 
@@ -52,6 +55,7 @@ export default class WorldManager extends cc.Component {
         this.initTrees();
         this.updateAllResource();
         GardenPets.setIslandPets();
+        this.setship();
 
         //debug
         this.setDebugEvents()
@@ -98,6 +102,8 @@ export default class WorldManager extends cc.Component {
         this.star_label=cc.find("DialogRoot/top_left/animationNode/heart/button_background/desc",this.node);
 
         this.rotateAnimNode=cc.find("DialogRoot/top_left/btn_rotary/rotate",this.node);
+
+        this.shipDock = cc.find("world/shipDock",this.node);
 
     }
 
@@ -261,6 +267,12 @@ export default class WorldManager extends cc.Component {
         console.log(time,this.isCap);
 
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+    }
+
+    async setship() {
+        let shipPrefeb = await KKLoader.loadPrefab("Prefab/ShipObject");
+        let shipNode = cc.instantiate(shipPrefeb);
+        this.shipDock.addChild(shipNode)
     }
 
     update(dt) {
