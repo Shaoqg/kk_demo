@@ -255,7 +255,7 @@ export class BattleArea extends ViewConnector {
         petNode.parent.addChild(preppedPetNode);
 
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
-        petObject.init(petData, petNode);
+        petObject.init(petData, petNode, true);
 
         let path = isOpponent ? "vs/opponent/pet" : "vs/self/pet";
         let targeNode = cc.find(path + (idx + 1), islandNode).convertToWorldSpaceAR(cc.v2(0, 0));
@@ -280,6 +280,8 @@ export class BattleArea extends ViewConnector {
 
     updateArrow(self: PetData[], opponent: PetData[]) {
         let arrows = cc.find("vs/arrows", this.petArea);
+        let selfNodes = cc.find("vs/self", this.petArea);
+        let opponentNodes = cc.find("vs/opponent", this.petArea);
         arrows.children.forEach((node, i) => {
             let green = node.getChildByName("green");
             let red = node.getChildByName("red");
@@ -291,6 +293,17 @@ export class BattleArea extends ViewConnector {
                 let result = getRestraint(config1.elements as ElementType, config2.elements as ElementType);
                 green.active = (result == 1);
                 red.active = (result == -1);
+
+                let strength_self = getStrengthByPetData(self[i]);
+                let strength_opponent =  getStrengthByPetData(opponent[i]);
+
+                let label_self = cc.find(`pet${i+1}/label`,selfNodes).getComponent(cc.Label);
+                let label_opponent = cc.find(`pet${i+1}/label`,opponentNodes).getComponent(cc.Label);
+
+                let bonus_self = Math.floor(strength_self*0.1*10)/10;
+                label_self.string = green.active?`${strength_self + bonus_self}(${bonus_self})`:""+strength_self;
+                let bouns_opponent = Math.floor(strength_opponent*0.1*10)/10;
+                label_opponent.string = red.active?`${strength_opponent+bouns_opponent}(${bouns_opponent})`:""+strength_opponent;
             }
         })
     }

@@ -7,8 +7,10 @@ import { PetUpgrade } from "../Screens/PetUpgrade";
 import { PerformAnimation } from "./PerformAnimation";
 
 export class GardenPets {
+    static PetPath = "Canvas/world/island/islandUI/islandNode/island/mapblocks/pet";
+
     static async addpet(petdata: PetData, island?:cc.Node) {
-        island = island || cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
+        island = island || cc.find(GardenPets.PetPath);
         let pet = await this._preparePetNode(petdata, island);
         let wanderBehavior = new Wander();
         wanderBehavior.init(pet, "spawnpet", { position: pet.node.position, wanderRadius: 10 });
@@ -17,7 +19,7 @@ export class GardenPets {
     }
 
     static async _preparePetNode(petdata: PetData, parent: cc.Node) {
-        let petNode = cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
+        let petNode = cc.find(GardenPets.PetPath);
 
         // let preppedPetNode = SagaManager.getPet();
         let petconfig = getPetConfigById(petdata.petId)
@@ -52,7 +54,7 @@ export class GardenPets {
     }
 
     static removeAllPets(){
-        let island = cc.find("Canvas/world/island/islandUI/farmNode/island/mapblocks/pet");
+        let island = cc.find(GardenPets.PetPath);
         island.removeAllChildren(true);
         User.instance.saveUse()
     }

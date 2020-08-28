@@ -32,22 +32,25 @@ export class PetObject extends cc.Component {
         this.resetScale();
     }
 
-    init(petData:PetData, originNode?:cc.Node) {
+    init(petData:PetData, originNode?:cc.Node, isBattle = false) {
         this._root = this._root || cc.find("root", this.node)
         this.petData = petData;
 
         let config = getPetConfigById(petData.petId);
 
-        this.node.width = originNode.width;
-        this.node.height = originNode.height;
+        let rarityScaleConfig = {[Rarity.common]:1, [Rarity.uncommon]:1.1, [Rarity.rare]:1.2, };
+        let scale = rarityScaleConfig[config.rarity];
+
+        this.node.width = originNode.width * scale;
+        this.node.height = originNode.height * scale;
 
         //set name
         this.node.name = petData.petId;
 
         //set image
         let petImage: cc.Node = this._root.getChildByName("image");
-        petImage.width = originNode.width;
-        petImage.height = originNode.height;
+        petImage.width = originNode.width * scale;
+        petImage.height = originNode.height * scale;
 
         let sprite = petImage.getComponent(cc.Sprite);
         sprite.trim = false;
@@ -57,8 +60,8 @@ export class PetObject extends cc.Component {
 
 
         let infoNode = cc.find("info", this.node);
-        infoNode.opacity = 125;
-        infoNode.setPosition(infoNode.x, originNode.height + 25);
+        infoNode.opacity = 180;
+        infoNode.setPosition(infoNode.x, originNode.height + 20);
 
         //set info
         let typesNode = cc.find("info/typeLayout", this.node);
@@ -66,7 +69,7 @@ export class PetObject extends cc.Component {
 
         //set level
         let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
-        label_level.string = `lvl: ${petData.petLevel + 1}`
+        label_level.string = `lvl: ${petData.petLevel}`
 
         //set rar
         let colorInfo = getColorByRarity(config.rarity as Rarity);

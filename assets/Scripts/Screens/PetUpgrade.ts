@@ -21,6 +21,7 @@ export class PetUpgrade extends ViewConnector {
     UpgradeButton: cc.Node;
     petInfoNode: cc.Node;
     petconfig: PetType;
+    petData:PetData;
     petNode: cc.Node;
 
     static async prompt(petdata:PetData): Promise<any> {
@@ -60,6 +61,7 @@ export class PetUpgrade extends ViewConnector {
         });
 
         this.petconfig=getPetConfigById(petdata.petId);
+        this.petData = petdata;
 
         this.setPetInfoName(petdata);
         this.setPetLevel(petdata);
@@ -132,7 +134,7 @@ export class PetUpgrade extends ViewConnector {
 
         let lesscount = 0;
 
-        let cost = this.getCost(this.petconfig);
+        let cost = this.getCost(this.petconfig, this.petData.petLevel);
         if (cost.coin) {
             CoinNode.active = true;
             CoinNode.getChildByName("label").getComponent(cc.Label).string = "Coin:\n" + User.instance.coin + "/" + cost.coin;
@@ -179,8 +181,8 @@ export class PetUpgrade extends ViewConnector {
 
     upgradePet(data: PetData) {
         data.petLevel++;
-
-        let cost=this.getCost(this.petconfig);
+        this.petData = data;
+        let cost=this.getCost(this.petconfig, data.petLevel);
 
         console.log("cost",cost);
         if(cost.coin){
@@ -205,14 +207,22 @@ export class PetUpgrade extends ViewConnector {
         this.setPetStrength(data)
     }
 
-    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
+    getCost(petType: PetType, level:number):{coin:number, food?:number, magic_stone?:number}{
+        let food = 0;
+        let coin = 0;
+        let magic_stone = 1;
+
+        
         switch (petType.rarity) {
             case Rarity.common:
-                return {coin:200,food:20, magic_stone:1};
+                coin = 1000 * level;
+                return {coin:coin,food:Math.pow(2, level+1)};
             case Rarity.uncommon:
-                return {coin:200, food:20};
+                coin = 1500 * level;
+                return {coin:coin, food:Math.pow(2, level+2)};
             case Rarity.rare:
-                return {coin:200, food:20, magic_stone:1};
+                coin = 2000 * level;
+                return {coin:coin, food:Math.pow(2, level+3), magic_stone:1};
         }
         return {coin:200};
     }

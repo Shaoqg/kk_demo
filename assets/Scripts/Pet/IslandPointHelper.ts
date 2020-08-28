@@ -1,11 +1,17 @@
+let path = {
+    castle:"Canvas/world/island/islandUI/islandNode",
+    nature:"Canvas/world/island/islandUI/farmNode",
+    fire:"Canvas/world/island/islandUI/fireNode",
+    food:"Canvas/world/island/islandUI/foodNode",
+    water:"Canvas/world/island/islandUI/waterNode",
+}
 
 export class IslandPointHelper {
     static getIslandBounds(relativeIslandNode?: cc.Node) : {left: cc.Vec2, top: cc.Vec2, right: cc.Vec2, bottom: cc.Vec2} {
-        let island = cc.find("Canvas/world/island/islandUI/farmNode");
+        let island = cc.find(path.castle);
         let loadedIsland = relativeIslandNode || island as cc.Node ;
         
         let center = loadedIsland.position;
-        center.x+=1300;
         let islandNode = loadedIsland.getChildByName("island");
 
         let islandImageNode = islandNode.getChildByName("bg").children[0].children[0];
@@ -71,7 +77,7 @@ export class IslandPointHelper {
     }
 
     static getRandomPointOnIslandInWorldSpaceForPet(petNode: cc.Node) : cc.Vec2 {
-        let loadedIsland = cc.find("Canvas/world/island/islandUI/farmNode")
+        let loadedIsland = cc.find(path.castle);
         
         let point = this.getRandomPointOnIsland(loadedIsland);
         
