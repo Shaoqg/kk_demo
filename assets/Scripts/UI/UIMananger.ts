@@ -15,6 +15,7 @@ import { StateManager } from "../Gameplay/State/StateManager";
 import { Adventure } from "../Screens/Adventure";
 import { AdventureArea } from "../Screens/AdventureArea";
 import ScreenSize from "../Tools/ScreenSize";
+import TaskScreen from "./TaskScreen";
 
 
 const {ccclass, property} = cc._decorator;
@@ -60,10 +61,15 @@ export default class UIManager extends cc.Component {
             this.onclicLevelup();
         })
 
-        this.btn_adventure = cc.find("ButtomHud/btn_adventure", this.node)
-        this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickAdventure();
+        this.btn_dailay = cc.find("ButtomHud/btn_dailay", this.node)
+        this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this.onclick_dailay();
         })
+
+        // this.btn_adventure = cc.find("ButtomHud/btn_adventure", this.node)
+        // this.btn_adventure.on(cc.Node.EventType.TOUCH_END, ()=>{
+        //     this.onclickAdventure();
+        // })
 
         this.btn_barn = cc.find("ButtomHud/btn_barn", this.node)
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
@@ -75,7 +81,7 @@ export default class UIManager extends cc.Component {
             this.onclickShop();
         })
 
-        this.btn_battle = cc.find("BattleHud/btn_battle", this.node)
+        this.btn_battle = cc.find("ButtomHud/btn_battle", this.node)
         this.btn_battle.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickAdventure();
         })
@@ -89,8 +95,8 @@ export default class UIManager extends cc.Component {
         StoreScreen.prompt();
     }
 
-    onclick_dailay(){
-
+    onclick_dailay() {
+        TaskScreen.prompt()
     }
 
     onclick_battle() {
