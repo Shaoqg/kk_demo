@@ -1,4 +1,4 @@
-import { PetObject } from "./PetObject";
+import { PetObject } from "../PetObject";
 
 export type onFinishedCallback = (any)=>void;
 
@@ -15,6 +15,9 @@ export type BehaviorParams = {
     animationSpeed?: number,
     startTime?: number,
     forever?: boolean,
+
+    //opponent
+    targetPet?: PetObject
 }
 
 export class Behavior {

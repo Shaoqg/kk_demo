@@ -1,8 +1,17 @@
-import { Behavior } from "./Behavior";
-import { Idle } from "./Idle";
+import { Behavior } from "./Behviors/Behavior";
+import { Idle } from "./Behviors/Idle";
 import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
+import { Attack } from "./Behviors/Attack";
+import { BeAttack } from "./Behviors/BeAttck";
 
+
+export enum PetType {
+    None = "None",
+    Garden = "Garden",
+    Battle = "Battle",
+    Battle2 = "Battle2",
+}
 
 const {ccclass, property} = cc._decorator;
 
@@ -26,13 +35,17 @@ export class PetObject extends cc.Component {
 
     private _root: cc.Node = null;
 
+    petType = PetType.None;
+
     async start () {
         this._root = cc.find("root", this.node)
         this._sprite = this._root.getChildByName("image").getComponent<cc.Sprite>(cc.Sprite);
         this.resetScale();
     }
 
-    init(petData:PetData, originNode?:cc.Node, isBattle = false) {
+    init(petData:PetData, originNode?:cc.Node, petType = PetType.Garden) {
+        this.petType = petType;
+
         this._root = this._root || cc.find("root", this.node)
         this.petData = petData;
 
@@ -55,6 +68,11 @@ export class PetObject extends cc.Component {
         let sprite = petImage.getComponent(cc.Sprite);
         sprite.trim = false;
         GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
+            if (petType == PetType.Battle2) {
+                let sprite_front = petImage.getChildByName("image_front").getComponent(cc.Mask);
+                sprite_front.spriteFrame = sf;
+            }
+
             sprite.spriteFrame =  sf;
         })
 
@@ -94,6 +112,8 @@ export class PetObject extends cc.Component {
                 this._currentBehavior.end();
             }
             this.node.zIndex = Math.floor((667 - this.node.y)/5);
+
+            
         }
     }
 
@@ -138,6 +158,39 @@ export class PetObject extends cc.Component {
     updateWalkAnim(dt, scale = 1) {
         if (!cc.isValid(this._spriteAction) || this._spriteAction.isDone()) {
             this.playWalkAnim(scale);
+        }
+    }
+
+    getWorldPostion() {
+        return this.node.position;
+    }
+
+    changeState(state){
+        switch (state) {
+            case 'Attack':
+                
+                break;
+        
+            default:
+                break;
+        }
+    }
+
+    attack(targePet: PetObject) {
+        if (this._currentBehavior.getType() != "Attack") {
+            let behavior = new Attack();
+            behavior.init(this, "petMainWander", {targetPet: targePet});
+            behavior.start();
+        }
+    }
+
+    beAttack(targePet:PetObject) {
+        this.faceInterest(targePet.node.position);
+
+        if (this._currentBehavior.getType() != "BeAttack") {
+            let behavior = new BeAttack();
+            behavior.init(this, "petMainWander", {});
+            behavior.start();
         }
     }
 

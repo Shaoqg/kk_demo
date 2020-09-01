@@ -48,7 +48,7 @@ export function getPetConfigById(id:string){
 }
 
 export function getRandomConfigs(num:number) {
-  let configs:PetType[] = [];
+  let configs:PetConfigType[] = [];
   while (num--) {
     let index = Math.floor(Math.random()*PetConfig.length);
     configs.push(PetConfig[index]) 
@@ -126,7 +126,7 @@ export function getStrengthBonus() {
     return null;
 }
 
-export function getPetIntroByElements(pet:PetType){
+export function getPetIntroByElements(pet:PetConfigType){
     switch (pet.elements) {
         case ElementType.nature:
                 return pet.rarity == Rarity.common ? "Can get little food bonus": "Can get more food bonus";
@@ -143,7 +143,7 @@ export function getPetIntroByElements(pet:PetType){
     return "";
 }
 
-export function getPetBouns(pet: PetType) {
+export function getPetBouns(pet: PetConfigType) {
   switch (pet.elements) {
     case ElementType.nature:
       return { BounsName: "Food", BounsNum: 10 };
@@ -242,7 +242,7 @@ export enum ElementType{
     "snack" = "snack"
 }
 
-export type PetType = {
+export type PetConfigType = {
     "petId": string,
     "art_asset": string,
     "rarity": Rarity| string,
@@ -728,7 +728,7 @@ export let RotaryReward:RotaryType[]= [
   },
 ]
 
-export let PetConfig:PetType[] = [
+export let PetConfig:PetConfigType[] = [
     {
       "petId": "king_parrot",
       "art_asset": "king_parrot",

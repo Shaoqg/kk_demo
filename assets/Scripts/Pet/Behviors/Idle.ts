@@ -1,4 +1,4 @@
-import { PetObject } from "./PetObject";
+import { PetObject } from "../PetObject";
 import { Behavior } from "./Behavior";
 
 export class Idle extends Behavior {

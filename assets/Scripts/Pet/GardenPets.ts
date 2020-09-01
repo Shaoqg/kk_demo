@@ -1,10 +1,10 @@
 import { PetData, getPetConfigById } from "../Config";
-import { Wander } from "./Wander";
+import { Wander } from "./Behviors/Wander";
 import { KKLoader } from "../Util/KKLoader";
 import { PetObject } from "./PetObject";
 import User from "../Gameplay/User";
 import { PetUpgrade } from "../Screens/PetUpgrade";
-import { PerformAnimation } from "./PerformAnimation";
+import { PerformAnimation } from "./Behviors/PerformAnimation";
 
 export class GardenPets {
     static PetPath = "Canvas/world/island/islandUI/islandNode/island/mapblocks/pet";

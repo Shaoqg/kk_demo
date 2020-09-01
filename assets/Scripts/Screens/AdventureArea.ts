@@ -9,6 +9,7 @@ import { AdventureAreas, getPetConfigById } from "../Config";
 import { BattleArea } from "./BattleArea";
 import { BattleInDefende } from "./BattleInDefende";
 import { KKLoader } from "../Util/KKLoader";
+import { StateManager } from "../Gameplay/State/StateManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -78,8 +79,11 @@ export class AdventureArea extends ViewConnector {
                 await BattleInDefende.prompt(User.instance.areaCapture["unknow"]);
                 this.PlacePetsInBattle();
             } else {
-                await Adventure.prompt("area_unknown");
+                let isChoose = await Adventure.prompt("area_unknown");
                 this.PlacePetsInBattle();
+                if (isChoose) {
+                    this.close(undefined);
+                }
             }
         });
 

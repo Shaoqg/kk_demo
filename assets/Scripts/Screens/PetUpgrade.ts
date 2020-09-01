@@ -1,7 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
-import { PetData, getPetConfigById, PetType, Rarity, getStrengthByPetData } from "../Config";
+import { PetData, getPetConfigById, PetConfigType, Rarity, getStrengthByPetData } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
@@ -20,7 +20,7 @@ export class PetUpgrade extends ViewConnector {
     petsNowUsing: PetData[];
     UpgradeButton: cc.Node;
     petInfoNode: cc.Node;
-    petconfig: PetType;
+    petconfig: PetConfigType;
     petData:PetData;
     petNode: cc.Node;
 
@@ -207,7 +207,7 @@ export class PetUpgrade extends ViewConnector {
         this.setPetStrength(data)
     }
 
-    getCost(petType: PetType, level:number):{coin:number, food?:number, magic_stone?:number}{
+    getCost(petType: PetConfigType, level:number):{coin:number, food?:number, magic_stone?:number}{
         let food = 0;
         let coin = 0;
         let magic_stone = 1;

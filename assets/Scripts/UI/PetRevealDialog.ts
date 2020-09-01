@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
 import User from "../Gameplay/User";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, Rarity, PetType, getPetIntroByElements, PetData, getStrengthByPetData } from "../Config";
+import { getPetConfigById, Rarity, PetConfigType, getPetIntroByElements, PetData, getStrengthByPetData } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 
@@ -56,7 +56,7 @@ export default class PetRevealDialog extends ViewConnector {
     static _instance: PetRevealDialog = null;
 
     UpgradeButton: cc.Node;
-    petconfig:PetType;
+    petconfig:PetConfigType;
 
     static async prompt(closeCallBack: Function = null, info: any = null, showShare: boolean = false): Promise<void> {
         let parentNode = cc.find("Canvas/DialogRoot");
@@ -71,16 +71,11 @@ export default class PetRevealDialog extends ViewConnector {
 
     //debug
 
-
-
-
     init(data: PetData) {
         if (this.petSprite)
             return;
         let that = this;
 
-     
-        
         this.petInfoNode = cc.find("petInfo/content/stats", this.node);
 
         this.petLevelBar = this.node.getChildByName("petLevelBar");
@@ -122,7 +117,7 @@ export default class PetRevealDialog extends ViewConnector {
         this.petNode.getComponent(cc.Sprite).spriteFrame = await KKLoader.loadSprite("Pets/" + this.petconfig.art_asset);
     }
 
-    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
+    getCost(petType: PetConfigType):{coin:number, food?:number, magic_stone?:number}{
         switch (petType.rarity) {
             case Rarity.common:
                 return {coin:200,food:20, magic_stone:1};
@@ -183,7 +178,6 @@ export default class PetRevealDialog extends ViewConnector {
 
     setShowPetInfo(closeCallBack, petData: PetData) {
         this.petData = petData;
-
 
         this.petconfig=getPetConfigById(petData.petId);
         this.init(petData);

@@ -5,7 +5,7 @@ import { SelectPet } from "../Screens/SelectPet";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { Wander } from "../Pet/Wander";
 import { KKLoader } from "../Util/KKLoader";
-import { PetType, PetData, getPetConfigById } from "../Config";
+import { PetConfigType, PetData, getPetConfigById } from "../Config";
 import { PetObject } from "../Pet/PetObject";
 import WorldManager from "../Gameplay/WorldManager";
 import { GardenPets } from "../Pet/GardenPets";

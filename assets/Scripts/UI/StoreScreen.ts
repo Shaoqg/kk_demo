@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import User from "../Gameplay/User";
 import { ConfigSet } from "../Util/ConfigSet";
-import { PetConfig, PetType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
+import { PetConfig, PetConfigType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { GardenPets } from "../Pet/GardenPets";
 
@@ -169,8 +169,8 @@ export default class StoreScreen extends ViewConnector {
     }
 
     currentSelectNode:cc.Node = null;
-    currentSelectPet:PetType = null;
-    onclickPet(petType:PetType, node:cc.Node){
+    currentSelectPet:PetConfigType = null;
+    onclickPet(petType:PetConfigType, node:cc.Node){
         if (this.currentSelectNode) {
             if (this.currentSelectNode.name == petType.petId) {
                 return;
@@ -234,7 +234,7 @@ export default class StoreScreen extends ViewConnector {
         ]
 
         let newPets = id[level] || id[3];
-        let newPetConfig:PetType[] = [];
+        let newPetConfig:PetConfigType[] = [];
         while(newPets.length > 0) {
             let i = Math.floor(Math.random()* selectPet.length);
             if (selectPet[i].rarity == newPets[0]) {
@@ -246,7 +246,7 @@ export default class StoreScreen extends ViewConnector {
         return newPetConfig;
     }
 
-    updatePetInfo(pet:PetType) {
+    updatePetInfo(pet:PetConfigType) {
         if (!pet) {
             
         }
@@ -352,7 +352,7 @@ export default class StoreScreen extends ViewConnector {
             }
     }
 
-    getCost(petType: PetType):{coin:number, food?:number, magic_stone?:number}{
+    getCost(petType: PetConfigType):{coin:number, food?:number, magic_stone?:number}{
         switch (petType.rarity) {
             case Rarity.common:
                 return {coin:200,food:10, magic_stone:0};

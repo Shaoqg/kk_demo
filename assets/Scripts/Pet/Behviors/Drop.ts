@@ -1,22 +1,21 @@
-import { PetObject } from "./PetObject";
+import { PetObject } from "../PetObject";
 import { Behavior } from "./Behavior";
 
-export class Land extends Behavior {
+export class Drop extends Behavior {
 
     protected _actorAnimation: cc.Animation;
 
     getType() : string {
-        return "Land";
+        return "Drop";
     }
 
     init(pet:PetObject, source:string) {
         super.init(pet, source, null);
         this._actorAnimation = this._actor.node.getComponent<cc.Animation>(cc.Animation);
-
-        this._actorAnimation.play("pet_jump");
+        this._actorAnimation.play("pet_drop");
         this._actorAnimation.on("finished", ()=>{
             this._isActive = false;
-        }, this._actorAnimation);
+        })
     }
 
     clean() {
@@ -26,7 +25,7 @@ export class Land extends Behavior {
 
     _stand() {
         if(this._actorAnimation) {
-            this._actorAnimation.stop("pet_jump");
+            this._actorAnimation.stop("pet_drop");
         }
     }
 }

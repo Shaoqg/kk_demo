@@ -1,4 +1,4 @@
-import { PetType, PetData } from "../Config";
+import { PetConfigType, PetData } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 
@@ -134,7 +134,7 @@ export default class User {
         return this.petList;
     }
 
-    public addPet(pet: PetType) {
+    public addPet(pet: PetConfigType) {
         if (pet) {
             let idAdd = true;
             this.petList.forEach((petData) => {

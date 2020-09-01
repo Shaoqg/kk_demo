@@ -1,6 +1,6 @@
 import { MoveToPosition } from "./MoveToPosition";
-import { PetObject } from "./PetObject";
-import { IslandPointHelper } from "./IslandPointHelper";
+import { PetObject } from "../PetObject";
+import { IslandPointHelper } from "../IslandPointHelper";
 
 export class Wander extends MoveToPosition {
 

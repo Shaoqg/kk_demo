@@ -4,10 +4,11 @@ import { AdventureReward } from "./AdventureReward";
 import User from "../Gameplay/User";
 import { petBouns } from "../UI/PetRevealDialog";
 import { KKLoader } from "../Util/KKLoader";
-import { getPetConfigById, PetType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType, AdventureAreas,  } from "../Config";
+import { getPetConfigById, PetConfigType, getPetBouns, bounss, capacitys, speeds, AdventureTime, AdventureLogLines, AdventureBasicwood, AdventureBasicstone, AdventureBasiccoins, AdventureShipMaxFood, PetData, Resource, RewardType, AdventureAreas,  } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { SelectNumber } from "./SelectNumber";
 import { BattleArea } from "./BattleArea";
+import { StateManager } from "../Gameplay/State/StateManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -41,7 +42,7 @@ export class Adventure extends ViewConnector {
     petsNowUsing: PetData[];
     unknowArea: boolean = false;
 
-    static async prompt(areaName?:string): Promise<any> {
+    static async prompt(areaName?:string): Promise<boolean> {
         let parentNode = cc.find("Canvas/DialogRoot");
         let vc = Adventure._instance = await this.loadView<Adventure>(parentNode, Adventure);
 
@@ -51,7 +52,7 @@ export class Adventure extends ViewConnector {
             vc.onCloseCallback = resolve;
         }
 
-        return new Promise<any>(executor);
+        return new Promise<boolean>(executor);
     }
 
     static close() {
@@ -167,8 +168,9 @@ export class Adventure extends ViewConnector {
                     if (!this.boatReady) {
                         return;
                     }
-                    await BattleArea.prompt(this.seatPet)
-                    this.close(undefined);
+                    // await BattleArea.prompt(this.seatPet)
+                    StateManager.instance.changeState("BattleAreaState", this.seatPet);
+                    this.close(true);
                 });
             } else {
                 go.on(cc.Node.EventType.TOUCH_END, () => {
@@ -465,7 +467,7 @@ export class Adventure extends ViewConnector {
         });
     }
 
-    async setToReady( petData: PetData,petconfig:PetType,petNode?: cc.Node) {
+    async setToReady( petData: PetData,petconfig:PetConfigType,petNode?: cc.Node) {
         if (this.petReady >= this.seatNum) {
             return;
         }

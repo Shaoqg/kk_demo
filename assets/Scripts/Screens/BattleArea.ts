@@ -5,16 +5,14 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetType, PetConfig, ElementType, getRestraint } from "../Config";
+import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetConfigType, PetConfig, ElementType, getRestraint } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { delay, VoidCallPromise, CallPromise } from "../kk/DataUtils";
 import { BattleReward } from "./BattleReward";
-import { PetObject } from "../Pet/PetObject";
-import { Wander } from "../Pet/Wander";
+import { PetObject, PetType } from "../Pet/PetObject";
+import { Wander } from "../Pet/Behviors/Wander";
 import VSModel from "../UI/VSModel";
-import { MoveToPosition } from "../Pet/MoveToPosition";
-import GlobalResources, { SpriteType } from "../Util/GlobalResource";
-import { Land } from "../Pet/Land";
+import { Land } from "../Pet/Behviors/Land";
 import ShipObject from "../Tools/ShipObject";
 const { ccclass, property } = cc._decorator;
 
@@ -255,7 +253,7 @@ export class BattleArea extends ViewConnector {
         petNode.parent.addChild(preppedPetNode);
 
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
-        petObject.init(petData, petNode, true);
+        petObject.init(petData, petNode, PetType.Battle);
 
         let path = isOpponent ? "vs/opponent/pet" : "vs/self/pet";
         let targeNode = cc.find(path + (idx + 1), islandNode).convertToWorldSpaceAR(cc.v2(0, 0));

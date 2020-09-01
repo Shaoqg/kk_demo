@@ -1,7 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
-import { PetData, getPetConfigById, PetType } from "../Config";
+import { PetData, getPetConfigById, PetConfigType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 const { ccclass, property } = cc._decorator;
 
@@ -103,7 +103,7 @@ export class SelectPet extends ViewConnector {
 
     }
 
-    setType(petNode: cc.Node, petconfig: PetType) {
+    setType(petNode: cc.Node, petconfig: PetConfigType) {
 
         let natureNode = cc.find("Types/type_land", petNode);
         let fireNode = cc.find("Types/type_fire", petNode);
