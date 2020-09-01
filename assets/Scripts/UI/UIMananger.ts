@@ -23,6 +23,11 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class UIManager extends cc.Component {
 
+    static get instance(){
+        return UIManager._instance;
+    }
+
+    private static  _instance:UIManager;
 
     btn_barn:cc.Node = null;
     btn_dailay:cc.Node = null;
@@ -32,8 +37,16 @@ export default class UIManager extends cc.Component {
     btn_adventure: cc.Node;
     battleIsOpen: boolean=false;
     islandPos: number;
+    
+    coin_label: cc.Node;
+    star_label: cc.Node;
+    woodNode: cc.Node;
+    stoneNode: cc.Node;
+    foodNode: cc.Node;
+    magicStoneNode: cc.Node;
 
     onLoad() {
+        UIManager._instance = this;
         this.initBtn();
         this.initChangeArrow();
         this.adjustGameInterface();
@@ -41,27 +54,27 @@ export default class UIManager extends cc.Component {
 
     initBtn(){
         let node = cc.find("top_left", this.node);
-        // this.btn_barn = cc.find("btn_barn", node);
-        // this.btn_dailay = cc.find("btn_dailay", node);
-        // this.btn_shop = cc.find("btn_shop",node);
-        // this.btn_battle = cc.find("btn_battle", node);
 
-        // this.btn_barn.on(cc.Node.EventType.TOUCH_END,this.onclick_barn.bind(this));
-        // this.btn_dailay.on(cc.Node.EventType.TOUCH_END, this.onclick_dailay.bind(this));
-        // this.btn_shop.on(cc.Node.EventType.TOUCH_END, this.onclick_shop.bind(this));
-        // this.btn_battle.on(cc.Node.EventType.TOUCH_END, this.onclick_battle.bind(this));
+        let root_top_right = cc.find("wood", this.node)
+        this.woodNode = cc.find("wood", root_top_right)
+        this.stoneNode = cc.find("stone", root_top_right)
+        this.foodNode = cc.find("food", root_top_right)
+        this.magicStoneNode = cc.find("magic", root_top_right)
 
-        let btn_build = cc.find("ButtomHud/btn_build", this.node);
+        this.coin_label=cc.find("top_left/root/coins/button_background/desc",this.node);
+        this.star_label=cc.find("top_left/root/heart/button_background/desc",this.node);
+
+        let btn_build = cc.find("ButtomHud/root/btn_build", this.node);
         btn_build.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickCastle();
         })
 
-        this.btn_levelup = cc.find("ButtomHud/btn_levelup", this.node);
+        this.btn_levelup = cc.find("ButtomHud/root/btn_levelup", this.node);
         this.btn_levelup.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclicLevelup();
         })
 
-        this.btn_dailay = cc.find("ButtomHud/btn_dailay", this.node)
+        this.btn_dailay = cc.find("ButtomHud/root/btn_dailay", this.node)
         this.btn_dailay.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclick_dailay();
         })
@@ -71,20 +84,45 @@ export default class UIManager extends cc.Component {
         //     this.onclickAdventure();
         // })
 
-        this.btn_barn = cc.find("ButtomHud/btn_barn", this.node)
+        this.btn_barn = cc.find("ButtomHud/root/btn_barn", this.node)
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickPet();
         })
 
-        this.btn_shop = cc.find("ButtomHud/btn_shop", this.node)
+        this.btn_shop = cc.find("ButtomHud/root/btn_shop", this.node)
         this.btn_shop.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickShop();
         })
 
-        this.btn_battle = cc.find("ButtomHud/btn_battle", this.node)
+        this.btn_battle = cc.find("ButtomHud/root/btn_battle", this.node)
         this.btn_battle.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickAdventure();
         })
+
+        EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
+        EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
+
+    }
+
+    showUI(bool = true) {
+        let root_ButtomHud = cc.find("ButtomHud/root", this.node)
+        let root_top_right = cc.find("top_right/root", this.node)
+        let root_top_left = cc.find("top_left/root", this.node)
+
+        root_ButtomHud.stopAllActions();
+        root_top_right.stopAllActions();
+        root_top_left.stopAllActions();
+        if (bool) {
+            root_ButtomHud.runAction(cc.moveTo(0.2, cc.v2(0,0)));
+            root_top_right.runAction(cc.moveTo(0.2, cc.Vec2.ZERO));
+            root_top_left.runAction(cc.moveTo(0.2, cc.Vec2.ZERO));
+
+        } else {
+            root_ButtomHud.runAction(cc.moveTo(0.2, cc.v2(0,-390)));
+            root_top_right.runAction(cc.moveTo(0.2, cc.v2(175,0)));
+            root_top_left.runAction(cc.moveTo(0.2, cc.v2(0,180)));
+        }
+        
     }
 
     onclick_barn(){
@@ -156,8 +194,8 @@ export default class UIManager extends cc.Component {
     }
 
     initChangeArrow() {
-        let arrow_left = cc.find("ButtomHud/arrow_left", this.node);
-        let arrow_right = cc.find("ButtomHud/arrow_right", this.node);
+        let arrow_left = cc.find("ButtomHud/root/arrow_left", this.node);
+        let arrow_right = cc.find("ButtomHud/root/arrow_right", this.node);
         let islandUI = cc.find("Canvas/world/island/islandUI");
         
         this.islandPos = 0
@@ -175,6 +213,46 @@ export default class UIManager extends cc.Component {
                 this.islandPos++;
             }
         })
+    }
+
+    starIncrease() {
+        User.instance.star++;
+        this.updateStar()
+        User.instance.saveUse();
+    }
+
+    updateAllResource(){
+        this.updateCoinLabel();
+        this.updateWoodLabel();
+        this.updateStoneLabel();
+        this.updateFoodLabel()
+        this.updateMagicLabel()
+        this.updateStar()
+        User.instance.saveUse();
+    }
+    
+    updateStar(){
+        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+    }
+
+    updateCoinLabel(){
+        this.coin_label.getComponent(cc.Label).string=User._instance.coin.toString();
+    }
+
+    updateWoodLabel(){
+        this.woodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.wood.toString();
+    }
+
+    updateStoneLabel(){
+        this.stoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.stone.toString();
+    }
+
+    updateFoodLabel(){
+        this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.food.toString();
+    }
+
+    updateMagicLabel(){
+        this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.magic_stone.toString();
     }
 
     adjustGameInterface() {

@@ -34,7 +34,6 @@ export default class WorldManager extends cc.Component {
     btn_tree2: cc.Node;
     btn_tree3: cc.Node;
     btn_rotary: any;
-    rotateAnimNode: cc.Node;
     islandPos: number;
     btn_shop: cc.Node;
     battleIsOpen: boolean=false;
@@ -42,18 +41,14 @@ export default class WorldManager extends cc.Component {
     updateTime: number = 0;
     shipDock: cc.Node;
 
-
-
     onLoad() {
-        StateManager.instance.changeState("IslandState");
     }
 
     start(){
-
+        StateManager.instance.changeState("IslandState");
         this.init();
         this.initCastle();
         this.initTrees();
-        this.updateAllResource();
         GardenPets.setIslandPets();
         this.setship();
 
@@ -62,13 +57,10 @@ export default class WorldManager extends cc.Component {
 
         this.adjustGameInterface();
 
-        this.checkCaptureReward();
+        // this.checkCaptureReward();
 
-        EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
-        EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
-        EventEmitter.subscribeTo(EventType.CHECK_AREA_COMPELETE, this.checkAreaIsCompelete.bind(this));
         EventEmitter.subscribeTo(EventType.GO_CAPTURE, this.checkCaptureReward.bind(this));
         
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
@@ -91,17 +83,6 @@ export default class WorldManager extends cc.Component {
             this.onclickTree();
         })
 
-
-
-        this.woodNode = cc.find("DialogRoot/top_right/wood", this.node)
-        this.stoneNode = cc.find("DialogRoot/top_right/stone", this.node)
-        this.foodNode = cc.find("DialogRoot/top_right/food", this.node)
-        this.magicStoneNode = cc.find("DialogRoot/top_right/magic", this.node)
-
-        this.coin_label=cc.find("DialogRoot/top_left/animationNode/coins/button_background/desc",this.node);
-        this.star_label=cc.find("DialogRoot/top_left/animationNode/heart/button_background/desc",this.node);
-
-        this.rotateAnimNode=cc.find("DialogRoot/top_left/btn_rotary/rotate",this.node);
 
         this.shipDock = cc.find("world/shipDock",this.node);
 
@@ -163,60 +144,6 @@ export default class WorldManager extends cc.Component {
 
     onclickTree(){
         TreeUpgrade.prompt();
-    }
-
-    checkAreaIsCompelete() {
-        let count = 0
-        AdventureAreas.forEach((area) => {
-            let areaprogress = User.instance.exploreTime[area.areaName] / area.areaCompletetime;
-            if (areaprogress >= 1) {
-                this.rotateAnimNode.active = true;
-                count++;
-            }
-        });
-        if (count == 0) {
-            this.rotateAnimNode.active = false;
-        }
-    }
-
-    starIncrease() {
-        User.instance.star++;
-        this.updateStar()
-        User.instance.saveUse();
-    }
-
-    updateAllResource(){
-        this.updateCoinLabel();
-        this.updateWoodLabel();
-        this.updateStoneLabel();
-        this.updateFoodLabel()
-        this.updateMagicLabel()
-        this.updateStar()
-        User.instance.saveUse();
-    }
-
-    updateCoinLabel(){
-        this.coin_label.getComponent(cc.Label).string=User._instance.coin.toString();
-    }
-
-    updateWoodLabel(){
-        this.woodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.wood.toString();
-    }
-
-    updateStoneLabel(){
-        this.stoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.stone.toString();
-    }
-
-    updateFoodLabel(){
-        this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.food.toString();
-    }
-
-    updateMagicLabel(){
-        this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.magic_stone.toString();
-    }
-
-    updateStar(){
-        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
     }
 
     adjustGameInterface() {
