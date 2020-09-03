@@ -38,6 +38,10 @@ export function setElementType(element: ElementType[] | ElementType | string, no
   });
 }
 
+export function getBattleOpponentConfig() {
+    return [getRandomConfigs(1),getRandomConfigs(2),getRandomConfigs(2),getRandomConfigs(2)];
+}
+
 export function getPetConfigById(id:string){
     for (let i = 0; i < PetConfig.length; i++) {
         if (PetConfig[i].petId == id) {
@@ -71,6 +75,12 @@ export function getTaskConfigById(id, taskType) {
     }
   }
   return null;
+}
+
+export function getHealth(petData:PetData) {
+  let strength = getStrengthByPetData(petData);
+
+  return strength * 20;
 }
 
 

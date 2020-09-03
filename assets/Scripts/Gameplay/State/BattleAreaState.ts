@@ -11,7 +11,7 @@ export default class BattleAreaState extends State {
 
     private static _self = StateManager.instance.registerState("BattleAreaState", new BattleAreaState());
 
-    battleManage:BattleArea2Manager = null;
+    battleManager:BattleArea2Manager = null;
 
     async startState(petsData:PetData[]) {
         //TODO hide UI show battleUI
@@ -23,9 +23,13 @@ export default class BattleAreaState extends State {
         BattleArea2Screen.prompt(petsData, onloadedBattle);
         let petNodeParent = await onloadedBattle;
         //creatData
-        this.battleManage = new BattleArea2Manager(petsData, petNodeParent);
+        this.battleManager = new BattleArea2Manager(petsData, petNodeParent);
 
         return super.startState();
+    }
+
+    updateState(dt){
+        this.battleManager &&  this.battleManager.update(dt);
     }
 
     endState() {

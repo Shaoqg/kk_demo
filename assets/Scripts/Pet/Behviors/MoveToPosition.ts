@@ -60,7 +60,7 @@ export class MoveToPosition extends Behavior {
                 this._position = undefined;
                 this._isActive = false;
             } else {
-                this._actor.faceInterest(this._position);
+                this._actor.faceInterest(this._position.x);
                 this._actor.updateWalkAnim(dt, this._speed / this._baseSpeed);
                // this._actor.node.zIndex = -1 * (this._actor.node.y); //TODO: more robust z sort
                 let movement = direction.mul(this._speed*dt);

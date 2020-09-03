@@ -1,4 +1,5 @@
 import { PetObject } from "../PetObject";
+import { PetObjectBattle } from "../PetObjectBattle";
 
 export type onFinishedCallback = (any)=>void;
 
@@ -17,7 +18,7 @@ export type BehaviorParams = {
     forever?: boolean,
 
     //opponent
-    targetPet?: PetObject
+    targetPet?: PetObject |PetObjectBattle
 }
 
 export class Behavior {

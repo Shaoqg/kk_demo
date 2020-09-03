@@ -203,6 +203,8 @@ export default class WorldManager extends cc.Component {
     }
 
     update(dt) {
+        StateManager.instance.update(dt);
+
         if (!this.isCap) {
             return;
         }

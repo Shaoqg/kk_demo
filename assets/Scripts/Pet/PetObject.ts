@@ -1,9 +1,7 @@
 import { Behavior } from "./Behviors/Behavior";
 import { Idle } from "./Behviors/Idle";
-import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity } from "../Config";
+import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity} from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
-import { Attack } from "./Behviors/Attack";
-import { BeAttack } from "./Behviors/BeAttck";
 
 
 export enum PetType {
@@ -21,10 +19,10 @@ export class PetObject extends cc.Component {
     // LIFE-CYCLE CALLBACKS:
 
     // onLoad () {}
-    private _currentBehavior: Behavior;
-    private _spriteAction: cc.Action = null;  // sprite动画
-    private _sprite: cc.Sprite = null;      // Sprite
-    private _spriteScale: number = 1;
+    protected _currentBehavior: Behavior;
+    protected _spriteAction: cc.Action = null;  // sprite动画
+    protected _sprite: cc.Sprite = null;      // Sprite
+    protected _spriteScale: number = 1;
     _turnTarget: number = 1;        // 旋转的方向
     _turnAnimAction: cc.Action = null; // 旋转action
     walkIntensity: number = 1;
@@ -33,9 +31,7 @@ export class PetObject extends cc.Component {
 
     petData:PetData = null;
 
-    private _root: cc.Node = null;
-
-    petType = PetType.None;
+    protected _root: cc.Node = null;
 
     async start () {
         this._root = cc.find("root", this.node)
@@ -43,8 +39,7 @@ export class PetObject extends cc.Component {
         this.resetScale();
     }
 
-    init(petData:PetData, originNode?:cc.Node, petType = PetType.Garden) {
-        this.petType = petType;
+    init(petData:PetData, originNode?:cc.Node) {
 
         this._root = this._root || cc.find("root", this.node)
         this.petData = petData;
@@ -68,10 +63,6 @@ export class PetObject extends cc.Component {
         let sprite = petImage.getComponent(cc.Sprite);
         sprite.trim = false;
         GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
-            if (petType == PetType.Battle2) {
-                let sprite_front = petImage.getChildByName("image_front").getComponent(cc.Mask);
-                sprite_front.spriteFrame = sf;
-            }
 
             sprite.spriteFrame =  sf;
         })
@@ -165,35 +156,6 @@ export class PetObject extends cc.Component {
         return this.node.position;
     }
 
-    changeState(state){
-        switch (state) {
-            case 'Attack':
-                
-                break;
-        
-            default:
-                break;
-        }
-    }
-
-    attack(targePet: PetObject) {
-        if (this._currentBehavior.getType() != "Attack") {
-            let behavior = new Attack();
-            behavior.init(this, "petMainWander", {targetPet: targePet});
-            behavior.start();
-        }
-    }
-
-    beAttack(targePet:PetObject) {
-        this.faceInterest(targePet.node.position);
-
-        if (this._currentBehavior.getType() != "BeAttack") {
-            let behavior = new BeAttack();
-            behavior.init(this, "petMainWander", {});
-            behavior.start();
-        }
-    }
-
     playWalkAnim(scale = 1, hopHeight: number = 10) {
         let baseStepDuration = 0.1;
         let finalStepDuration = baseStepDuration * 1/this.walkIntensity;
@@ -212,8 +174,8 @@ export class PetObject extends cc.Component {
         this._spriteAction = this._sprite.node.runAction(mov);
     }
 
-    faceInterest(pos: cc.Vec2): boolean {
-        let faceRight = pos.x > this.node.position.x;
+    faceInterest(posX:number): boolean {
+        let faceRight = posX > this.node.position.x;
         this.setFlip(faceRight ? 1 : -1);
         return faceRight;
     }

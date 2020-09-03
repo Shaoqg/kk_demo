@@ -1,11 +1,12 @@
 import { PetObject } from "../PetObject";
 import { Behavior, BehaviorParams } from "./Behavior";
+import { PetObjectBattle } from "../PetObjectBattle";
 
 export class BeAttack extends Behavior {
 
     protected _actorAnimation: cc.Animation;
 
-    _attackTarget: PetObject = null;
+    _attackTarget: PetObjectBattle = null;
 
     getType() : string {
         return "BeAttack";
@@ -15,7 +16,7 @@ export class BeAttack extends Behavior {
         super.init(pet, source, null);
         this._actorAnimation = this._actor.node.getComponent<cc.Animation>(cc.Animation);
 
-        this._attackTarget = options.targetPet;
+        this._attackTarget = options.targetPet as PetObjectBattle;
 
         this._actorAnimation.play("pet_injured");
         this._actorAnimation.on("finished", ()=>{
