@@ -5,6 +5,7 @@ import BattleArea2Manager from "../BattleArea2Manager";
 import { BattleArea2Screen } from "../../Screens/BattleArea2Screen";
 import { VoidCallPromise, CallPromise } from "../../kk/DataUtils";
 import { StateManager } from "./StateManager";
+import BattleUI from "../../UI/BattleUI";
 
 
 export default class BattleAreaState extends State {
@@ -22,6 +23,9 @@ export default class BattleAreaState extends State {
         let onloadedBattle = new CallPromise<cc.Node>();
         BattleArea2Screen.prompt(petsData, onloadedBattle);
         let petNodeParent = await onloadedBattle;
+
+        BattleUI.instance.showUI(true);
+
         //creatData
         this.battleManager = new BattleArea2Manager(petsData, petNodeParent);
 
@@ -34,7 +38,7 @@ export default class BattleAreaState extends State {
 
     endState() {
         BattleArea2Screen._instance.close(null);
-
+        BattleUI.instance.showUI(false);
         super.endState();
     }
 

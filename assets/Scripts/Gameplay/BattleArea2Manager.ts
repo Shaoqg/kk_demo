@@ -10,6 +10,7 @@ import { StateManager } from "./State/StateManager";
 import { PetObjectBattle } from "../Pet/PetObjectBattle";
 import { Land } from "../Pet/Behviors/Land";
 import { PetObjectBattle_Enemy } from "../Pet/PetObjectBattle_Enemy";
+import BattleUI from "../UI/BattleUI";
 
 
 export default class BattleArea2Manager {
@@ -22,12 +23,16 @@ export default class BattleArea2Manager {
     selfPets: PetObjectBattle[] = [];
     opponent: PetObjectBattle[] = [];
 
+    CurrentBattleOppnonentTotal = 0;
+    battleIndex = -1;
     battleList: PetConfigType[][] = [];
 
     battlePromise: CallPromise<boolean> = null;
 
     pause = true;
     pauseTime = 1;
+
+    attackTime = 0.3;
 
     constructor(pets: PetData[], petNodes: cc.Node) {
         this.petNodes = petNodes;
@@ -41,6 +46,7 @@ export default class BattleArea2Manager {
         await this.creatPetPool();
 
         this.creatSelfPet(pets);
+        BattleUI.instance.setOnclickCB(this.selfPetDatas, this.triggerSkill.bind(this));
 
         this.battleList = getBattleOpponentConfig();
         this.creatOpponentPet(this.battleList.pop());
@@ -64,20 +70,26 @@ export default class BattleArea2Manager {
     }
 
     update(dt) {
+        BattleUI.instance.update(dt);
         if (this.pause || this.pauseTime >= 0) {
             this.pauseTime -= dt;
         } else if (this.selfPets.length <= 0) {//palyer dead
             this.battlePromise.resolve(false);
         } else if (this.opponent.length > 0) {
-            //TODO attack  opponnetPet 
-            for (let i = 0; i < this.opponent.length; i++) {
-                this.opponent[i].attack(this.selfPets);
-            }
+            this.attackTime -= dt;
+            if (this.attackTime <= 0) {
+                this.attackTime += 0.3;
+                //TODO attack  opponnetPet 
+                for (let i = 0; i < this.opponent.length; i++) {
+                    this.opponent[i].attack(this.selfPets);
+                }
 
-            for (let i = 0; i < this.selfPets.length; i++) {
-                this.selfPets[i].attack(this.opponent)
+                for (let i = 0; i < this.selfPets.length; i++) {
+                    this.selfPets[i].attack(this.opponent);
+                }
             }
         } else if (this.battleList.length > 0) {
+            this.updateBattleProgress();
             this.creatOpponentPet(this.battleList.pop());
             this.pauseTime = 1;
 
@@ -99,8 +111,9 @@ export default class BattleArea2Manager {
             petObject.onDeadCallback = () => {
                 let index = this.selfPets.findIndex(pet => pet.node.name == petObject.node.name);
                 this.selfPets.splice(index, 1);
-                petObject.onRemove();
-                this.setPetNode(petObject.node);
+                petObject.onRemove().then(() => {
+                    this.setPetNode(petObject.node);
+                })
             }
             // this.petInfo[idx].petObject = petObject;
         })
@@ -108,6 +121,8 @@ export default class BattleArea2Manager {
 
     creatOpponentPet(petconfigs: PetConfigType[]) {
         let petDatas: PetData[] = [];
+        this.CurrentBattleOppnonentTotal = petconfigs.length;
+        this.battleIndex++;
 
         let pos = this.getPos(true);
         petconfigs.forEach((config, idx) => {
@@ -122,13 +137,21 @@ export default class BattleArea2Manager {
             petObject.onDeadCallback = () => {
                 let index = this.opponent.findIndex(pet => pet.node.name == petObject.node.name);
                 this.opponent.splice(index, 1);
-                petObject.onRemove();
-                this.setPetNode(petObject.node);
+                petObject.onRemove().then(() => {
+                    this.setPetNode(petObject.node);
+                })
+                this.updateBattleProgress();
             }
 
         });
         // this.opponentPetDatas = petDatas;
         return petDatas;
+    }
+
+    updateBattleProgress() {
+        let progress = 1 - this.opponent.length / this.CurrentBattleOppnonentTotal;
+
+        BattleUI.instance.updateProgress(this.battleIndex, progress);
     }
 
     _petCount = 0;
@@ -174,7 +197,7 @@ export default class BattleArea2Manager {
             preppedPetNode.position = targePos.add(cc.v2(10 * idx, 20 * idx));
 
             let wanderBehavior = new Wander();
-            wanderBehavior.init(petObject, "landPet", { position: targePos, wanderRadius: 50, useAnchor: true});
+            wanderBehavior.init(petObject, "landPet", { position: preppedPetNode.position, wanderRadius: 100, useAnchor: true, target: targePos.add(cc.v2(Math.random() * 20, Math.random() * 20)) });
             wanderBehavior.start();
         } else {
             preppedPetNode.position = targePos;
@@ -204,5 +227,16 @@ export default class BattleArea2Manager {
         return center;
     }
 
-
+    async triggerSkill(petData: PetData) {
+        let petObject = this.selfPets.find((pets) => { return pets.petData.petId == petData.petId })
+        // KKLoader.loadRes("FX/skill_add", cc.);
+        let pf = await KKLoader.loadPrefab("Prefab/skill_add");
+        let node = cc.instantiate(pf);
+        node.setParent(petObject.node.getParent());
+        node.zIndex = 999;
+        node.position = petObject.node.position;
+        petObject.addHealth(100);
+        await delay(1);
+        node.destroy();
+    }
 }

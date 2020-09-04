@@ -6,6 +6,8 @@ import { Attack } from "./Behviors/Attack";
 import { BeAttack } from "./Behviors/BeAttck";
 import { PetObject } from "./PetObject";
 import { MoveToTarget } from "./Behviors/MoveToTarget";
+import { delay } from "../kk/DataUtils";
+import { Dead } from "./Behviors/Dead";
 
 
 export enum PetType {
@@ -50,6 +52,7 @@ export class PetObjectBattle extends PetObject{
 
         //setHealth
         let infoNode = cc.find("info", this.node);
+        infoNode.opacity = 255;
         this._attack = getStrengthByPetData(petData);
         this._totalHP = this._currentHP = getHealth(petData);
 
@@ -133,7 +136,7 @@ export class PetObjectBattle extends PetObject{
                     index = i;
                 }
             });
-
+            await delay(Math.random()*0.15);
             let behavior = new MoveToTarget();
             behavior.init(this, "petMainWander", {targetPet: targePets[index]});
             let isMoveTo = await behavior.start();
@@ -145,18 +148,23 @@ export class PetObjectBattle extends PetObject{
         }
     }
 
+    _beAttackAction:cc.Action = null;
     beAttack(targePet:PetObjectBattle) {
         let attack = targePet.getAttack();
-        this.faceInterest(targePet.node.x);
 
         if (this._currentBehavior.getType() == "Attack") {
             let beHitNode= cc.find("image/image_front", this._root);
             beHitNode.active = true;
-            beHitNode.runAction(cc.sequence(
-                cc.delayTime(0.15),
-                cc.callFunc(()=> beHitNode.active = false)
+            if (this._beAttackAction) {
+                beHitNode.stopAction(this._beAttackAction);
+            }
+            this._beAttackAction = beHitNode.runAction(cc.sequence(
+                cc.delayTime(0.1),
+                cc.callFunc(()=> {beHitNode.active = false, this._beAttackAction = null})
             ))
         }else if (this._currentBehavior.getType() != "BeAttack") {
+            this.faceInterest(targePet.node.x);
+
             let behavior = new BeAttack();
             behavior.init(this, "petMainWander", {targetPet: targePet});
             behavior.start();
@@ -174,6 +182,13 @@ export class PetObjectBattle extends PetObject{
         return isDead;
     }
 
+    addHealth(num:number){
+        this._currentHP+=num;
+        this._currentHP = this._currentHP> this._totalHP?this._totalHP :this._currentHP;
+
+        this.updateHealth();
+    }
+
     updateHealth() {
         let hpBar = this._currentHP/this._totalHP;
 
@@ -184,12 +199,22 @@ export class PetObjectBattle extends PetObject{
         return this._currentHP <= 0;
     }
 
-    onDead() {
+    _deadthPromis = null;
+    async onDead() {
+        let behavior = new Dead();
+        behavior.init(this, "petMainWander");
+        this._deadthPromis = behavior.start();
+
         this.onDeadCallback && this.onDeadCallback();
         this.onDeadCallback = null;
+
+        await this._deadthPromis;
+        this._root.getChildByName("image").opacity = 255;
     }
 
-    onRemove() {
+    async onRemove() {
+        await this._deadthPromis;
+
         if (this._currentBehavior) {
             this._currentBehavior.end();
         }

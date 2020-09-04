@@ -1,18 +1,10 @@
 import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
 import ResourcePointScreen from "../Screens/ResourcePointScreen";
-import { SelectPet } from "../Screens/SelectPet";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { Wander } from "../Pet/Wander";
-import { KKLoader } from "../Util/KKLoader";
-import { PetConfigType, PetData, getPetConfigById } from "../Config";
-import { PetObject } from "../Pet/PetObject";
-import WorldManager from "../Gameplay/WorldManager";
-import { GardenPets } from "../Pet/GardenPets";
 import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
-import { Adventure } from "../Screens/Adventure";
 import { AdventureArea } from "../Screens/AdventureArea";
 import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
@@ -55,7 +47,7 @@ export default class UIManager extends cc.Component {
     initBtn(){
         let node = cc.find("top_left", this.node);
 
-        let root_top_right = cc.find("wood", this.node)
+        let root_top_right = cc.find("top_right/root", this.node)
         this.woodNode = cc.find("wood", root_top_right)
         this.stoneNode = cc.find("stone", root_top_right)
         this.foodNode = cc.find("food", root_top_right)
@@ -101,6 +93,7 @@ export default class UIManager extends cc.Component {
 
         EventEmitter.subscribeTo(EventType.UPDATE_RESOURCE, this.updateAllResource.bind(this));
         EventEmitter.subscribeTo(EventType.STAR_INCREASE, this.starIncrease.bind(this));
+
 
     }
 

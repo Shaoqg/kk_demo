@@ -1,6 +1,7 @@
 import { PetConfigType, PetData } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 export default class User {
 
@@ -304,6 +305,8 @@ export default class User {
             this.petNumber = this.petList.length
         }
         this.isLoaded = true;
+
+        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
     }
 
     public resetUse(){

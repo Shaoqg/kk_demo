@@ -80,7 +80,7 @@ export function getTaskConfigById(id, taskType) {
 export function getHealth(petData:PetData) {
   let strength = getStrengthByPetData(petData);
 
-  return strength * 20;
+  return strength * 10;
 }
 
 
