@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "06c68d46-1389-4c9c-af7a-69b8675f8b60",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "building_volcano3": {
+      "ver": "1.0.4",
+      "uuid": "06da482a-fbd5-4d12-8092-1ec2c49c1d13",
+      "rawTextureUuid": "06c68d46-1389-4c9c-af7a-69b8675f8b60",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 364,
+      "height": 539,
+      "rawWidth": 364,
+      "rawHeight": 539,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

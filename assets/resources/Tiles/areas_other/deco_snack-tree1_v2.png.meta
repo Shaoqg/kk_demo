@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "67fb974c-27b4-43b1-993a-90a1da4fd752",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "deco_snack-tree1_v2": {
+      "ver": "1.0.4",
+      "uuid": "3b2af6e3-68ee-442a-93fd-e26f9b3c25f0",
+      "rawTextureUuid": "67fb974c-27b4-43b1-993a-90a1da4fd752",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 79,
+      "height": 134,
+      "rawWidth": 79,
+      "rawHeight": 134,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

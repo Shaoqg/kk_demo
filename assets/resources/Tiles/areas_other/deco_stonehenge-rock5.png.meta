@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "db79dd8d-f85b-43d1-9a20-20d3a153416b",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "deco_stonehenge-rock5": {
+      "ver": "1.0.4",
+      "uuid": "d44e7d63-fa72-4812-8576-da8475a95c24",
+      "rawTextureUuid": "db79dd8d-f85b-43d1-9a20-20d3a153416b",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 96,
+      "height": 153,
+      "rawWidth": 96,
+      "rawHeight": 153,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

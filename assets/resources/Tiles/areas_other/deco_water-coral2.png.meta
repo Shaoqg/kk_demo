@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "d96e19a2-b3a5-4439-bd7c-79bf3f3c36b9",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "deco_water-coral2": {
+      "ver": "1.0.4",
+      "uuid": "fcc9db92-b326-44cf-bc0a-e9bcf1aa6eb5",
+      "rawTextureUuid": "d96e19a2-b3a5-4439-bd7c-79bf3f3c36b9",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 1.5,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 113,
+      "height": 123,
+      "rawWidth": 113,
+      "rawHeight": 126,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

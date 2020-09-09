@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "0e111c6d-72e6-4709-b111-12e8a30e14ce",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "deco_snack-bush3": {
+      "ver": "1.0.4",
+      "uuid": "516ccf56-0e88-46bb-af41-fa47191450fc",
+      "rawTextureUuid": "0e111c6d-72e6-4709-b111-12e8a30e14ce",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 165,
+      "height": 156,
+      "rawWidth": 165,
+      "rawHeight": 156,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

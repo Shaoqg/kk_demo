@@ -1,0 +1,34 @@
+{
+  "ver": "2.3.3",
+  "uuid": "ca1f4b82-3692-4d20-9929-675513f9c704",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "genMipmaps": false,
+  "packable": true,
+  "platformSettings": {},
+  "subMetas": {
+    "deco_water-floaty1": {
+      "ver": "1.0.4",
+      "uuid": "6b57a6e1-2eb6-4a61-b2aa-860ad0ba8ae9",
+      "rawTextureUuid": "ca1f4b82-3692-4d20-9929-675513f9c704",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 0,
+      "trimY": 0,
+      "width": 123,
+      "height": 89,
+      "rawWidth": 123,
+      "rawHeight": 89,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
