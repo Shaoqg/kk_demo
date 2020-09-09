@@ -1,4 +1,4 @@
-import { PetConfigType, PetData } from "../Config";
+import { PetConfigType, PetData, ElementType ,BuildInfo} from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
@@ -93,6 +93,7 @@ export default class User {
     public level_ship = 1;
     public level_castle = 1;
     public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
+    public buildInfo:{[id:string]:BuildInfo} ={};
     public coin = 200000;
     public wood = 200;
     public stone = 200;
@@ -206,9 +207,7 @@ export default class User {
         })
     }
 
-
-
-    public getReward(type: Resource, amount: number) {
+    public addResource(type: Resource, amount: number) {
         switch (type) {
             case Resource.coin:
                 this.coin += amount;
@@ -226,6 +225,25 @@ export default class User {
                 this.magic_stone += amount;
                 break;
         }
+        this.saveUse();
+    }
+
+    public getBuildInfo(type: ElementType) {
+        if (!this.buildInfo[type]) {
+            this.buildInfo[type] = {
+                build: 1,
+                wonder: 1,
+                view:[]
+            }
+        }
+
+        return this.buildInfo[type];
+    }
+
+    public UpgradeBuilInfo(type: ElementType, name:any ){
+        this.buildInfo[type][name] += 1;
+
+        this.saveUse();
     }
 
     public saveUse() {
@@ -264,6 +282,7 @@ export default class User {
             areaCapture:this.areaCapture,
             areaCaptureStartTime:this.areaCaptureStartTime,
             areaCaptureTimeTakenReward:this.areaCaptureTimeTakenReward,
+            buildInfo: this.buildInfo
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -302,7 +321,8 @@ export default class User {
             this.areaExploring = data["areaExploring"];
             this.areaCaptureStartTime = data["areaCaptureStartTime"];
             this.areaCaptureTimeTakenReward = data["areaCaptureTimeTakenReward"];
-            this.petNumber = this.petList.length
+            this.buildInfo = data["buildInfo"] || {};
+            this.petNumber = this.petList.length;
         }
         this.isLoaded = true;
 

@@ -8,6 +8,8 @@ import { StateManager } from "../Gameplay/State/StateManager";
 import { AdventureArea } from "../Screens/AdventureArea";
 import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
+import { BuildModel } from "../Screens/BuildModel";
+import IslandManager from "../Gameplay/IslandManager";
 
 
 const {ccclass, property} = cc._decorator;
@@ -135,8 +137,10 @@ export default class UIManager extends cc.Component {
     }
 
     onclickCastle() {
-        this.onOpenBattle(true);
-        StateManager.instance.changeState("CastleState");
+        // this.onOpenBattle(true);
+        // StateManager.instance.changeState("CastleState");
+
+        BuildModel.prompt();
     }
     
     onclickShop(){
@@ -189,22 +193,17 @@ export default class UIManager extends cc.Component {
     initChangeArrow() {
         let arrow_left = cc.find("ButtomHud/root/arrow_left", this.node);
         let arrow_right = cc.find("ButtomHud/root/arrow_right", this.node);
-        let islandUI = cc.find("Canvas/world/island/islandUI");
         
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {
             this.onOpenBattle(true);
-            if (this.islandPos > -2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(1300, 0)))
-                this.islandPos--;
-            }
+            
+            IslandManager.instance.moveToIsland(-1);
         })
         arrow_right.on(cc.Node.EventType.TOUCH_END, () => {
             this.onOpenBattle(true);
-            if (this.islandPos < 2) {
-                islandUI.runAction(cc.moveBy(1, cc.v2(-1300, 0)))
-                this.islandPos++;
-            }
+
+            IslandManager.instance.moveToIsland(1);
         })
     }
 

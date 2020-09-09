@@ -1,9 +1,9 @@
 let path = {
-    castle:"Canvas/world/island/islandUI/islandNode",
-    nature:"Canvas/world/island/islandUI/farmNode",
-    fire:"Canvas/world/island/islandUI/fireNode",
-    food:"Canvas/world/island/islandUI/foodNode",
-    water:"Canvas/world/island/islandUI/waterNode",
+    castle:"Canvas/world/island/islandNode",
+    nature:"Canvas/world/island/natureNode",
+    fire:"Canvas/world/island/fireNode",
+    food:"Canvas/world/island/snackNode",
+    water:"Canvas/world/island/waterNode",
 }
 
 export class IslandPointHelper {

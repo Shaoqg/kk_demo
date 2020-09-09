@@ -65,9 +65,9 @@ export class BattleArea extends ViewConnector {
         this.adjustGameInterface();
 
         this.shipDock = cc.find("shipDock", this.node);
-        this.petArea = cc.find("island/islandUI/islandNode/island", this.node);
-        this.touchArea = cc.find("island/islandUI/islandNode/touchArea", this.node);
-        this.island = cc.find("island/islandUI/islandNode/island", this.node);
+        this.petArea = cc.find("island/islandNode/island", this.node);
+        this.touchArea = cc.find("island/islandNode/touchArea", this.node);
+        this.island = cc.find("island/islandNode/island", this.node);
 
         this.touchArea.on(cc.Node.EventType.TOUCH_START,this.touchStart.bind(this));
         this.touchArea.on(cc.Node.EventType.TOUCH_MOVE,this.touchMove.bind(this));
@@ -253,7 +253,7 @@ export class BattleArea extends ViewConnector {
         petNode.parent.addChild(preppedPetNode);
 
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
-        petObject.init(petData, petNode, PetType.Battle);
+        petObject.init(petData, petNode);
 
         let path = isOpponent ? "vs/opponent/pet" : "vs/self/pet";
         let targeNode = cc.find(path + (idx + 1), islandNode).convertToWorldSpaceAR(cc.v2(0, 0));

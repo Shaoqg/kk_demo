@@ -239,6 +239,8 @@ export class PetData {
   UsingBy?: string = "";
 }
 
+export type BuildInfo = {build:number,wonder:number, view:string[]};
+
 export enum Rarity {
     "common" = "common",
     "uncommon" = "uncommon",
@@ -418,6 +420,75 @@ export let AcheievementConfig: TaskType[] = [
     },
   },
 ]
+
+export function getUpgradeInfo(toLevel:number,type: ElementType, name:"wonder"|"build") {
+
+  let config = {
+    [ElementType.fire]:Resource.stone,
+    [ElementType.nature]:Resource.wood,
+    [ElementType.snack]:Resource.food,
+    [ElementType.water]:Resource.stone,
+  }
+
+  if (name == "wonder") {
+
+    return [
+      {id: Resource.coin, number:toLevel *200},
+      {id: config[type], number:toLevel *50},
+    ]
+  } else if (name =="build") {
+
+    return [
+      {id: Resource.coin, number:toLevel *200},
+      {id: config[type], number:toLevel *50},
+    ]
+  }
+}
+
+export let BuildConfig = {
+  "fire":{
+      build:{
+        id:"volcanic",
+        introId:"Can produce stone, but it is a bit dangerous.",
+      },
+      wonder:{
+        id: "Meteorite",
+        introId:"Very attractive to fire pets.",
+      }
+  },
+  "nature":{
+    build:{
+      id:"tree_house",
+      introId:"Can produce wood, pets like to live in tree houses.",
+    },
+    wonder:{
+      id: "stone_forest",
+      introId:"--",
+    }
+  },
+  "snack":{
+    build:{
+      id:"candy_house",
+      introId:"Can produce stone, but it is a bit dangerous.",
+    },
+    wonder:{
+      id: "marshmallow_tree",
+      introId:"--",
+    }
+  },
+  "water":{
+    build:{
+      id:"water_park",
+      introId:"Can produce stone, but it is a bit dangerous.",
+    },
+    wonder:{
+      id: "ancient_ruins",
+      introId:"--",
+    }
+  },
+
+
+}
 
 export type GameConfigType = { ID: string, Name: string, Art: string, Icon: string, Enabled: boolean,};
 

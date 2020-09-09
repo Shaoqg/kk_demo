@@ -7,7 +7,7 @@ import { PetUpgrade } from "../Screens/PetUpgrade";
 import { PerformAnimation } from "./Behviors/PerformAnimation";
 
 export class GardenPets {
-    static PetPath = "Canvas/world/island/islandUI/islandNode/island/mapblocks/pet";
+    static PetPath = "Canvas/world/island/islandNode/island/mapblocks/pet";
 
     static async addpet(petdata: PetData, island?:cc.Node) {
         island = island || cc.find(GardenPets.PetPath);

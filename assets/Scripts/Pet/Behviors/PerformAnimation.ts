@@ -1,5 +1,5 @@
 import { Behavior, onFinishedCallback, BehaviorParams } from "./Behavior";
-import { PetObject } from "./PetObject";
+import { PetObject } from "../PetObject";
 
 export class PerformAnimation extends Behavior {
 

@@ -21,21 +21,16 @@ export function setAction(pathToNode:string, func, parent?:cc.Node): cc.Node{
     return node;
 }
 
-export function setLabels(parentNode:cc.Node,pathToValue:{[nodePath:string]:string}){
+export function setSpriteSize(sprite:cc.Sprite, sf:cc.SpriteFrame, limit_height_width:number = 100) {
+    sprite.spriteFrame = sf;
 
-    for(let [path,value] of Object.entries(pathToValue)){
-        let labelNode = cc.find(path, parentNode);
-        if(!labelNode){
-            console.warn('Node not found: '+ path, value);
-            return;
-        }
-        let label = labelNode.getComponent(cc.Label);
-        if(!label){
-            console.warn('Label not found on: '+ path, value);
-            return;
-        }
-        label.string = value;
-    }
+    let rect = sf.getRect();
+    let scale = limit_height_width / (rect.height > rect.width ? rect.height : rect.width);
+    
+    sprite.node.width = Math.floor(rect.width * scale);
+    sprite.node.height = Math.floor(rect.height * scale);
+    
+    return {scale: scale, width:sprite.node.width, height: sprite.node.height}
 }
 
 export function findParent(node:cc.Node, name:string){

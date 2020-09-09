@@ -70,28 +70,14 @@ export default class WorldManager extends cc.Component {
 
         let worldNode = cc.find("world", this.node);
 
-        this.btn_tree1 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build1", worldNode);
-        this.btn_tree1.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickTree();
-        })
-        this.btn_tree2 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build2", worldNode);
-        this.btn_tree2.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickTree();
-        })
-        this.btn_tree3 = cc.find("island/islandUI/farmNode/island/mapblocks/btn_build3", worldNode);
-        this.btn_tree3.on(cc.Node.EventType.TOUCH_END, ()=>{
-            this.onclickTree();
-        })
-
-
-        this.shipDock = cc.find("world/shipDock",this.node);
+        this.shipDock = cc.find("world/island/islandNode/shipDock",this.node);
 
     }
 
     initCastle() {
         let level = User.instance.level_castle;
 
-        let castleNodes = cc.find("world/island/islandUI/islandNode/island/mapblocks/build", this.node);
+        let castleNodes = cc.find("world/island/islandNode/island/mapblocks/build", this.node);
         castleNodes.children.forEach((node, i)=>{
             node.active = (i == level-1);
             if (level-1 > castleNodes.children.length - 1) {
@@ -101,20 +87,6 @@ export default class WorldManager extends cc.Component {
     }
 
     initTrees() {
-        let treeLevels = User.instance.level_Trees;
-        Trees.forEach((treeConfig) => {
-            let treelevel = treeLevels[treeConfig.treeId];
-            let treeNode = cc.find("world/island/islandUI/farmNode/island/mapblocks/" + treeConfig.treeId, this.node);
-            treeNode.children.forEach((tree) => {
-                if (treelevel == 0) {
-                    tree.active = false;
-                } else if (tree.name == "level" + (treelevel - 1)) {
-                    tree.active = true;
-                } else {
-                    tree.active = false;
-                }
-            })
-        })
 
     }
 

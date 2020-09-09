@@ -187,7 +187,7 @@ export default class TaskScreen extends ViewConnector {
         }
 
         button.on(cc.Node.EventType.TOUCH_END, (()=>{
-            User.instance.getReward(task.reward.rewardType,task.reward.rewardNum);
+            User.instance.addResource(task.reward.rewardType,task.reward.rewardNum);
             EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
             this.close(undefined);
         }));
