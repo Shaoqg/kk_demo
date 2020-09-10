@@ -276,6 +276,14 @@ export type RotaryType = {
   weight: number,
 }
 
+export enum IsLandType {
+  "nature" = "nature" ,
+  "fire" = "fire",
+  "water" = "water",
+  "snack" = "snack",
+  "castle" = "castle"
+}
+
 
 let RestraintConfig = {
   [ElementType.water]:ElementType.fire,

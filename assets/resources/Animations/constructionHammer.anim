@@ -1,0 +1,52 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "constructionHammer",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.23333333333333334,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": "2",
+  "curveData": {
+    "props": {
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            0,
+            0
+          ]
+        },
+        {
+          "frame": 0.11666666666666667,
+          "value": [
+            26,
+            22
+          ]
+        },
+        {
+          "frame": 0.23333333333333334,
+          "value": [
+            0,
+            0
+          ]
+        }
+      ],
+      "angle": [
+        {
+          "frame": 0,
+          "value": 0
+        },
+        {
+          "frame": 0.11666666666666667,
+          "value": -39
+        },
+        {
+          "frame": 0.23333333333333334,
+          "value": 0
+        }
+      ]
+    }
+  },
+  "events": []
+}

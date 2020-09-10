@@ -1,0 +1,61 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "buildingDust",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.4166666666666667,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "comps": {
+      "cc.Sprite": {
+        "spriteFrame": [
+          {
+            "frame": 0,
+            "value": {
+              "__uuid__": "0bc4babe-f9b8-4301-88e0-5f0251a01607"
+            }
+          },
+          {
+            "frame": 0.06666666666666667,
+            "value": {
+              "__uuid__": "7c6dd0d2-d5f0-4097-80b9-5db0697529e7"
+            }
+          },
+          {
+            "frame": 0.13333333333333333,
+            "value": {
+              "__uuid__": "2f58e2c1-fb5a-4207-8ffa-6e208f506635"
+            }
+          },
+          {
+            "frame": 0.2,
+            "value": {
+              "__uuid__": "94b491b9-007d-48d8-a858-9b3500437d80"
+            }
+          },
+          {
+            "frame": 0.26666666666666666,
+            "value": {
+              "__uuid__": "95dfa73e-fb2f-4128-a9dd-4b62707a60e9"
+            }
+          },
+          {
+            "frame": 0.3333333333333333,
+            "value": {
+              "__uuid__": "499509e5-30c3-4117-8d51-f6ac4a5bd20a"
+            }
+          },
+          {
+            "frame": 0.4,
+            "value": {
+              "__uuid__": "d3665fd9-ab45-4bf7-8277-b57de6117c6c"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "events": []
+}

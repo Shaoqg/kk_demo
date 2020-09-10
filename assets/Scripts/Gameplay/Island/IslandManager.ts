@@ -1,6 +1,8 @@
-import { ElementType } from "../Config";
-import User from "./User";
-import { delay } from "../kk/DataUtils";
+import { ElementType, IsLandType } from "../../Config";
+import User from "../User";
+import { delay } from "../../kk/DataUtils";
+import IslandVisualsHelper from "./IslandVisualsHelper";
+
 
 export default class IslandManager {
 
@@ -9,7 +11,6 @@ export default class IslandManager {
         if (!IslandManager._instance) {
             IslandManager._instance = new IslandManager();
         }
-
         return this._instance;
     }
 
@@ -47,36 +48,38 @@ export default class IslandManager {
     }
 
     async upgradeIslandeBuild(type: ElementType, name: "wonder" | "build", playAnimatio = false) {
-        //TODO play animation
+        let node = this.getNodeByType(type);
+        let nodes: cc.Node[] = cc.find("island/mapblocks/" + name, node).children;
+
         if (playAnimatio) {
             this.moveToIsland(0, type);
-            await delay(0.8);
+            await delay(0.6);
+            // play animation
+            let  islandBuildNode = cc.find("island/mapblocks/" + name, node);
+            islandBuildNode &&(await IslandVisualsHelper.runUpgradeAnim(islandBuildNode)) ;
         }
-
-        let node = this.getNodeByType(type);
+        
         let buildInfo = User.instance.getBuildInfo(type);
-        let nodes: cc.Node[] = null;
-        if (name == "wonder") {
-            nodes = cc.find("island/mapblocks/wonder", node).children;
-            nodes.forEach((node, index) => {
-                if (type == ElementType.nature) {
-                    node.active = index <= buildInfo.wonder - 1;
-                } else {
-                    node.active = index == buildInfo.wonder - 1;
-                }
-            });
+        nodes.forEach((node, index) => {
+            if (type == ElementType.nature && name == "wonder") {
+                node.active = index <= buildInfo.wonder - 1;
+            } else {
+                node.active = index == buildInfo[name] - 1;
+            }
+        });
 
-        } else if (name == "build") {
-            nodes = cc.find("island/mapblocks/build", node).children;
-            nodes.forEach((node, index) => {
-                node.active = index == buildInfo.build - 1;
-            });
+        if (buildInfo[name] > nodes.length) {
+            nodes[nodes.length -1].active = true;
         }
 
     }
 
+    getCurrentIsland() {
+        return this.islands[this.currentIslandIndex];
+    }
+
     private currentIslandIndex = 2;
-    private islands = [ElementType.fire, ElementType.nature, "castle", ElementType.snack, ElementType.water]
+    private islands = [IsLandType.fire, IsLandType.nature, IsLandType.castle, IsLandType.snack, IsLandType.water]
     moveToIsland(dir: -1 | 1 | 0, name?: string) {
 
         let islandParent = cc.find("Canvas/world/island");

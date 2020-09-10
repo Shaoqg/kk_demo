@@ -9,7 +9,7 @@ import { AdventureArea } from "../Screens/AdventureArea";
 import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
 import { BuildModel } from "../Screens/BuildModel";
-import IslandManager from "../Gameplay/IslandManager";
+import IslandManager from "../Gameplay/Island/IslandManager";
 
 
 const {ccclass, property} = cc._decorator;
@@ -140,7 +140,7 @@ export default class UIManager extends cc.Component {
         // this.onOpenBattle(true);
         // StateManager.instance.changeState("CastleState");
 
-        BuildModel.prompt();
+        BuildModel.prompt(IslandManager.instance.getCurrentIsland());
     }
     
     onclickShop(){
@@ -248,11 +248,9 @@ export default class UIManager extends cc.Component {
     }
 
     adjustGameInterface() {
-        let scale = ScreenSize.getScale(1, 0.8);
-        this.node.scale = scale;
+        // let scale = ScreenSize.getScale(1, 0.8);
+        // this.node.scale = scale;
     }
-    
-
    
 
 }
