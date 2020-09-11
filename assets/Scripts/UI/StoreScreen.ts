@@ -4,7 +4,7 @@ import User from "../Gameplay/User";
 import { ConfigSet } from "../Util/ConfigSet";
 import { PetConfig, PetConfigType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
-import { GardenPets } from "../Pet/GardenPets";
+import { PetFactory } from "../Pet/PetFactory";
 
 
 const { ccclass, property } = cc._decorator;
@@ -345,7 +345,7 @@ export default class StoreScreen extends ViewConnector {
                     }else{
                         this.onclickPet(null, null);
                     }
-                    GardenPets.setIslandPets(true);
+                    PetFactory.setIslandPets(true);
 
                     EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
                 }

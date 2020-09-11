@@ -1,7 +1,8 @@
 import { Behavior } from "./Behviors/Behavior";
 import { Idle } from "./Behviors/Idle";
-import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity} from "../Config";
+import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity, IsLandType} from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
+import { setSpriteSize } from "../Tools/UIUtils";
 
 
 export enum PetType {
@@ -30,6 +31,7 @@ export class PetObject extends cc.Component {
     _anchor: cc.Vec2;
 
     petData:PetData = null;
+    islandType: IsLandType = null;
 
     protected _root: cc.Node = null;
 
@@ -39,7 +41,7 @@ export class PetObject extends cc.Component {
         this.resetScale();
     }
 
-    init(petData:PetData, originNode?:cc.Node) {
+    init(petData:PetData, height = 100) {
 
         this._root = this._root || cc.find("root", this.node)
         this.petData = petData;
@@ -49,28 +51,24 @@ export class PetObject extends cc.Component {
         let rarityScaleConfig = {[Rarity.common]:1, [Rarity.uncommon]:1.1, [Rarity.rare]:1.2, };
         let scale = rarityScaleConfig[config.rarity];
 
-        this.node.width = originNode.width * scale;
-        this.node.height = originNode.height * scale;
+        this.node.width = height * scale;
+        this.node.height = height * scale;
 
         //set name
         this.node.name = petData.petId;
 
         //set image
         let petImage: cc.Node = this._root.getChildByName("image");
-        petImage.width = originNode.width * scale;
-        petImage.height = originNode.height * scale;
-
         let sprite = petImage.getComponent(cc.Sprite);
-        sprite.trim = false;
         GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
-
             sprite.spriteFrame =  sf;
+            setSpriteSize(sprite, sf, height);
         })
 
 
         let infoNode = cc.find("info", this.node);
         infoNode.opacity = 180;
-        infoNode.setPosition(infoNode.x, originNode.height + 20);
+        infoNode.setPosition(infoNode.x, height + 20);
 
         //set info
         let typesNode = cc.find("info/typeLayout", this.node);

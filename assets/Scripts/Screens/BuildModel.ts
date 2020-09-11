@@ -2,6 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import { ElementType, IsLandType } from "../Config";
 import BuildManager from "../Gameplay/Build/BuildMananger";
+import CastleManager from "../Gameplay/Build/CastaleManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -10,16 +11,16 @@ export class BuildModel extends ViewConnector {
 
     static prefabPath = 'Prefab/BuildModel';
 
-    static _instance: BuildModel = null;
+    static instance: BuildModel = null;
 
     root: cc.Node = null;
 
     static async prompt(type: IsLandType): Promise<any> {
-        if (!!BuildModel._instance) {
+        if (!!BuildModel.instance) {
             return;
         }
         let parentNode = cc.find("Canvas/DialogRoot");
-        let vc = BuildModel._instance = await this.loadView<BuildModel>(parentNode, BuildModel);
+        let vc = BuildModel.instance = await this.loadView<BuildModel>(parentNode, BuildModel);
 
         vc.applyData(type);
 
@@ -32,8 +33,8 @@ export class BuildModel extends ViewConnector {
 
     close(any) {
         super.close(any);
-        if (BuildModel._instance) {
-            BuildModel._instance = null;
+        if (BuildModel.instance) {
+            BuildModel.instance = null;
         }
     }
 
@@ -47,6 +48,7 @@ export class BuildModel extends ViewConnector {
         let underlay = cc.find("underlay", this.node);
         underlay.on(cc.Node.EventType.TOUCH_END, () => {
             this.close(null);
+            this._closeAll();
         })
     }
 
@@ -117,20 +119,25 @@ export class BuildModel extends ViewConnector {
         }
     }
 
-    initBuild(type: string) {
+    initBuild(type: IsLandType) {
         // BuildManager.
         let node = cc.find("build", this.root);
-        BuildManager.instance.initBuild(node, this.close.bind(this), type as ElementType);
+        BuildManager.instance.initBuild(node, type);
     }
 
     initCastle() {
         let node = cc.find("castle", this.root);
-
+        CastleManager.instance.initBuild(node);
     }
 
     initShip() {
         let node = cc.find("ship", this.root);
 
+    }
+
+    _closeAll() {
+        BuildManager.instance.close();
+        CastleManager.instance.close();
     }
 
     adjustGameInterface() {

@@ -1,13 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
-import { SelectPet } from "./SelectPet";
 import User from "../Gameplay/User";
-import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { PetData, getPetConfigById, getUserLevelAndLevelExpByCurrentExp, Resource, getRewardPetByLevel } from "../Config";
+import { PetData, getPetConfigById} from "../Config";
 import { KKLoader } from "../Util/KKLoader";
-import { PetObject } from "../Pet/PetObject";
-import { GardenPets } from "../Pet/GardenPets";
-import { delay } from "../kk/DataUtils";
-import { AdventureReward } from "./AdventureReward";
 import ScreenSize from "../Tools/ScreenSize";
 
 

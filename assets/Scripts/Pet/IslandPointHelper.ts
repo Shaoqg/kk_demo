@@ -1,88 +1,74 @@
-let path = {
-    castle:"Canvas/world/island/islandNode",
-    nature:"Canvas/world/island/natureNode",
-    fire:"Canvas/world/island/fireNode",
-    food:"Canvas/world/island/snackNode",
-    water:"Canvas/world/island/waterNode",
-}
+import { IsLandType } from "../Config";
+import IslandManager from "../Gameplay/Island/IslandManager";
+
 
 export class IslandPointHelper {
-    static getIslandBounds(relativeIslandNode?: cc.Node) : {left: cc.Vec2, top: cc.Vec2, right: cc.Vec2, bottom: cc.Vec2} {
-        let island = cc.find(path.castle);
-        let loadedIsland = relativeIslandNode || island as cc.Node ;
+    static getIslandBounds(islandType: IsLandType) : {left: number, top: number, right: number, bottom: number} {
+        let loadedIsland = IslandManager.instance.getNodeByType(islandType);
         
-        let center = loadedIsland.position;
-        let islandNode = loadedIsland.getChildByName("island");
+        let petArea = cc.find("island/mapblocks/petArea", loadedIsland);
+        let center = petArea.position;
 
-        let islandImageNode = islandNode.getChildByName("bg").children[0].children[0];
-        let islandImageSize = islandImageNode.getComponent<cc.Sprite>(cc.Sprite).spriteFrame.getOriginalSize();
-        
-        let left = cc.v2(center.x - islandImageNode.width/2 + 160, center.y); // move right because ripples and offscreen
-        
-        let top = cc.v2(center.x, center.y + islandImageNode.height/2 - 100);
-        let right = cc.v2(center.x + islandImageNode.width/2 - 160, center.y); // move left because ripples and offscreen
-        let bottom = cc.v2(center.x, center.y - islandImageNode.height/2 + 100); // move up because of wave ripples are part of the image
+        //TODO getScale?
+        let left = center.x - petArea.width/2;  
+        let top = center.y + petArea.height/2;
+        let right = center.x + petArea.width/2;  
+        let bottom = center.y - petArea.height/2;  
 
         return {left, top, right, bottom};
     }
 
-    static getRandomPointOnIsland(relativeIslandNode?: cc.Node) {
-        let islandBounds = this.getIslandBounds(relativeIslandNode);
+    static getRandomPointOnIsland(islandType: IsLandType) {
+        let islandBounds = this.getIslandBounds(islandType);
         
-        let islandWidth = islandBounds.right.x - islandBounds.left.x;
+        let islandWidth = islandBounds.right - islandBounds.left;
+        let random1 = Math.random();
+        let randomX = (random1 * islandWidth) + islandBounds.left;
 
-        let random = Math.random();
-        let randomX = (random * islandWidth) + islandBounds.left.x;
-
-        let randomY = this.calculateYfromX(randomX);
+        let islandHeight = islandBounds.top - islandBounds.bottom;
+        let random2 = Math.random();
+        let randomY = (random2 * islandHeight) + islandBounds.bottom;
         return cc.v2(randomX, randomY);
     }
 
     
-    static calculateYfromX(x: number) : number {
-        let yBounds = this.calculateYBoundsFromX(x);
-        let yDistance = yBounds.top - yBounds.bottom;
+    // static calculateYfromX(x: number) : number {
+    //     let yBounds = this.calculateYBoundsFromX(x);
+    //     let yDistance = yBounds.top - yBounds.bottom;
 
-        return (Math.random() * yDistance) + yBounds.bottom +100;
-    }
+    //     return (Math.random() * yDistance) + yBounds.bottom +100;
+    // }
 
-    static calculateYfromXInCornoer(x: number) : number {
-        let yBounds = this.calculateYBoundsFromX(x);
-        let yDistance = (yBounds.top - yBounds.bottom)/2;
-        return yBounds.top+ 100 - (Math.random() * yDistance);
-    }
+    // static calculateYfromXInCornoer(x: number) : number {
+    //     let yBounds = this.calculateYBoundsFromX(x);
+    //     let yDistance = (yBounds.top - yBounds.bottom)/2;
+    //     return yBounds.top+ 100 - (Math.random() * yDistance);
+    // }
 
-    static calculateYBoundsFromX(x: number) : {top: number, bottom: number} {
-        let islandBounds = this.getIslandBounds();
-        let getSlope = (p1: cc.Vec2, p2: cc.Vec2) => {
-            return (p2.y - p1.y) / (p2.x - p1.x);
-        }
+    // static calculateYBoundsFromX(x: number) : {top: number, bottom: number} {
+    //     let islandBounds = this.getIslandBounds();
+    //     let getSlope = (p1: cc.Vec2, p2: cc.Vec2) => {
+    //         return (p2.y - p1.y) / (p2.x - p1.x);
+    //     }
 
-        let rxOnLeft: boolean = x < 0;
-        let upperSlope: number;
-        let lowerSlope: number;
+    //     let rxOnLeft: boolean = x < 0;
+    //     let upperSlope: number;
+    //     let lowerSlope: number;
 
-        if(rxOnLeft) {
-            upperSlope = getSlope(islandBounds.left, islandBounds.top);
-            lowerSlope = getSlope(islandBounds.left, islandBounds.bottom);
-        } else {
-            upperSlope = getSlope(islandBounds.top, islandBounds.right);
-            lowerSlope = getSlope(islandBounds.bottom, islandBounds.right);
-        }
+    //     if(rxOnLeft) {
+    //         upperSlope = getSlope(islandBounds.left, islandBounds.top);
+    //         lowerSlope = getSlope(islandBounds.left, islandBounds.bottom);
+    //     } else {
+    //         upperSlope = getSlope(islandBounds.top, islandBounds.right);
+    //         lowerSlope = getSlope(islandBounds.bottom, islandBounds.right);
+    //     }
 
-        let yTop = islandBounds.top.y + (x * upperSlope);
-        let yBottom = islandBounds.bottom.y + (x * lowerSlope);
+    //     let yTop = islandBounds.top.y + (x * upperSlope);
+    //     let yBottom = islandBounds.bottom.y + (x * lowerSlope);
 
-        return {top:yTop, bottom:yBottom};
-    }
+    //     return {top:yTop, bottom:yBottom};
+    // }
 
-    static getRandomPointOnIslandInWorldSpaceForPet(petNode: cc.Node) : cc.Vec2 {
-        let loadedIsland = cc.find(path.castle);
-        
-        let point = this.getRandomPointOnIsland(loadedIsland);
-        
-        return loadedIsland.convertToWorldSpaceAR(point);
-    }
     
     // takes world point
     // returns world point

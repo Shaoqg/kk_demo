@@ -240,6 +240,7 @@ export class PetData {
 }
 
 export type BuildInfo = {build:number,wonder:number, view:string[]};
+export type CastleInfo = {castle:number, ship:number};
 
 export enum Rarity {
     "common" = "common",
@@ -284,6 +285,33 @@ export enum IsLandType {
   "castle" = "castle"
 }
 
+export enum IsLandItemType {
+  "wonder" = "wonder",
+  "build" = "build",
+  "castle" = "castle",
+  "ship" = "ship",
+  "view" = "view",
+  "activity" = "activity"
+}
+
+export function elementTypeToIslandType(type:ElementType){
+  let IslandTypeConfig = {
+    [ElementType.water]:IsLandType.water,
+    [ElementType.fire]:IsLandType.fire,
+    [ElementType.snack]:IsLandType.snack,
+    [ElementType.nature]:IsLandType.nature,
+  }
+  
+  return IslandTypeConfig[type];
+}
+
+export let IslandItemConfig = {
+  [IsLandType.water]:[IsLandItemType.build, IsLandItemType.wonder],
+  [IsLandType.fire]:[IsLandItemType.build, IsLandItemType.wonder],
+  [IsLandType.snack]:[IsLandItemType.build, IsLandItemType.wonder],
+  [IsLandType.nature]:[IsLandItemType.build, IsLandItemType.wonder],
+  [IsLandType.castle]:[IsLandItemType.castle, IsLandItemType.ship],
+}
 
 let RestraintConfig = {
   [ElementType.water]:ElementType.fire,
@@ -429,27 +457,44 @@ export let AcheievementConfig: TaskType[] = [
   },
 ]
 
-export function getUpgradeInfo(toLevel:number,type: ElementType, name:"wonder"|"build") {
+export function getUpgradeInfo(toLevel:number,type: IsLandType, name:IsLandItemType) {
 
-  let config = {
-    [ElementType.fire]:Resource.stone,
-    [ElementType.nature]:Resource.wood,
-    [ElementType.snack]:Resource.food,
-    [ElementType.water]:Resource.stone,
+  let config:{[id:string]:Resource} = {
+    [IsLandType.fire]:Resource.stone,
+    [IsLandType.nature]:Resource.wood,
+    [IsLandType.snack]:Resource.food,
+    [IsLandType.water]:Resource.stone,
+    [IsLandType.castle]:Resource.stone,
   }
 
-  if (name == "wonder") {
-
-    return [
-      {id: Resource.coin, number:toLevel *200},
-      {id: config[type], number:toLevel *50},
-    ]
-  } else if (name =="build") {
-
-    return [
-      {id: Resource.coin, number:toLevel *200},
-      {id: config[type], number:toLevel *50},
-    ]
+  switch (type) {
+    case IsLandType.castle:
+      if (name == IsLandItemType.castle) {
+        return [
+          {id: Resource.coin, number:toLevel *200},
+          {id: Resource.wood, number:toLevel *50},
+          {id: Resource.stone, number:toLevel *50},
+        ]
+      }  else{
+        return [
+          {id: Resource.coin, number:toLevel *200},
+          {id: Resource.wood, number:toLevel *50},
+        ]
+      }
+      break;
+    default:
+      if (name == IsLandItemType.wonder) {
+        return [
+          {id: Resource.coin, number:toLevel *200},
+          {id: config[type], number:toLevel *50},
+        ]
+      } else if (name == IsLandItemType.build) {
+        return [
+          {id: Resource.coin, number:toLevel *200},
+          {id: config[type], number:toLevel *50},
+        ]
+      }
+      break;
   }
 }
 
@@ -492,8 +537,19 @@ export let BuildConfig = {
     wonder:{
       id: "ancient_ruins",
       introId:"--",
-    }
+    },
   },
+  "castle":{
+    castle:{
+      id:"water_park",
+      introId:"Can produce stone, but it is a bit dangerous.",
+    },
+    ship:{
+      id: "ancient_ruins",
+      introId:"--",
+    },
+  }
+
 
 
 }

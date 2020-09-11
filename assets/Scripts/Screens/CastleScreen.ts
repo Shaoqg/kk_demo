@@ -79,7 +79,7 @@ export class CastleScreen extends ViewConnector {
 
     can_levelup = false;
     updateList(){
-        let config = this.getLevelUpInfo(this.Level)
+        let config = this.getCastleLevelUpInfo(this.Level)
 
         //TODO show list info
         let showOk = (node:cc.Node, str:string,isOk) => {
@@ -137,7 +137,7 @@ export class CastleScreen extends ViewConnector {
             return;
         }
 
-        let config = this.getLevelUpInfo(this.Level)
+        let config = this.getCastleLevelUpInfo(this.Level)
         for (const key in config) {
             switch (key) {
                 case "coin":
@@ -173,26 +173,28 @@ export class CastleScreen extends ViewConnector {
         return levelupConfig[level - 1];
     }
 
-    getLevelUpInfo(level) {
+    getCastleLevelUpInfo(level) {
+
+        return {
+            coin:100,
+            wood:5,
+            stone:5,
+            prestige:0
+        }
+
         let levelupConfig= [
             {
                 coin:100,
                 wood:5,
-                pet:1,
-                ship:1,
             },
             {
                 coin:200,
                 wood:50,
-                ship:2,
-                pet:5,
                 stone:5,
             },
             {
                 coin:200,
                 wood:500,
-                ship:2,
-                pet:5,
                 stone:5,
             },
         ]

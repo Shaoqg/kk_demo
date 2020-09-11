@@ -21,7 +21,7 @@ export class Wander extends MoveToPosition {
         this._anchor = options.position || cc.v2(0,0);
         this._actor = pet;
         this._useAnchor = options.useAnchor || false;
-        this._position = options.target || this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
+        this._position = options.target || IslandPointHelper.getRandomPointOnIsland(this._actor.islandType);
         //super.init(pet, source, { position: this._position });
 
         this._baseTimeoutDurationMs = 5000;
@@ -44,7 +44,7 @@ export class Wander extends MoveToPosition {
                 if (this._useAnchor) {
                     this._position = cc.v2(this._anchor.x + (Math.random() * this._wanderRadius), this._anchor.y + (Math.random() * this._wanderRadius));
                 } else {
-                    this._position = this._actor.node.getParent().convertToNodeSpaceAR(IslandPointHelper.getRandomPointOnIslandInWorldSpaceForPet(this._actor.node));
+                    this._position = IslandPointHelper.getRandomPointOnIsland(this._actor.islandType);
                 }
                 if(this._actorAnimation) {
                     let player = this._actorAnimation.play("walk");

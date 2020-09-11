@@ -253,7 +253,7 @@ export class BattleArea extends ViewConnector {
         petNode.parent.addChild(preppedPetNode);
 
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
-        petObject.init(petData, petNode);
+        petObject.init(petData, petNode.height);
 
         let path = isOpponent ? "vs/opponent/pet" : "vs/self/pet";
         let targeNode = cc.find(path + (idx + 1), islandNode).convertToWorldSpaceAR(cc.v2(0, 0));

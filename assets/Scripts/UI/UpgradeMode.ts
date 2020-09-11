@@ -1,6 +1,6 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from "../Tools/ScreenSize";
-import { ElementType, BuildConfig, getUpgradeInfo, Resource } from "../Config";
+import { ElementType, BuildConfig, getUpgradeInfo, Resource, IsLandType, IsLandItemType } from "../Config";
 import { setSpriteSize } from "../Tools/UIUtils";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import User from "../Gameplay/User";
@@ -14,7 +14,7 @@ export default class UpgradeModel extends ViewConnector {
 
     static prefabPath = 'Prefab/UpgradeModel';
 
-    static async prompt(sf: cc.SpriteFrame, type: ElementType, name: "wonder" | "build", toLevel:number): Promise<boolean> {
+    static async prompt(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel:number): Promise<boolean> {
         let parentNode = cc.find("Canvas/DialogRoot");
 
         let vc = await this.loadView<UpgradeModel>(parentNode, UpgradeModel);
@@ -31,13 +31,13 @@ export default class UpgradeModel extends ViewConnector {
 
     info:{
         sf:cc.SpriteFrame,
-        type:ElementType,
-        name:"wonder" | "build",
+        type:IsLandType,
+        name:IsLandItemType,
         toLevel:number,
         UpgradeConfigInfo:any
     } = null
 
-    async applyData(sf: cc.SpriteFrame, type: ElementType, name: "wonder" | "build", toLevel:number) {
+    async applyData(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel:number) {
         this.adjustGameInterface();
 
         let bg = cc.find("underlay", this.node);
@@ -72,21 +72,36 @@ export default class UpgradeModel extends ViewConnector {
 
         //show upgrade info
         let costs = cc.find("upgradeinfo/costs", root);
-        let label_coin = cc.find("coin/label", costs).getComponent(cc.Label);
-        let label_res = cc.find("res/label", costs).getComponent(cc.Label);
-        let sprite_res = cc.find("res/image", costs).getComponent(cc.Sprite);
+        // let label_coin = cc.find("coin/label", costs).getComponent(cc.Label);
+        // let label_res = cc.find("res/label", costs).getComponent(cc.Label);
+        // let sprite_res = cc.find("res/image", costs).getComponent(cc.Sprite);
 
-        label_coin.string = this.info.UpgradeConfigInfo[0].number.toString();
-        label_res.string = this.info.UpgradeConfigInfo[1].number.toString();
+        this.info.UpgradeConfigInfo.forEach((info, i) => {
+            let node = costs.children[i];
+            node.active = true;
+
+            let label = cc.find("label", node).getComponent(cc.Label);
+            label.string = info.number.toString();
+            label.node.color = info.number <= this.getUpgradeNumber(info.id)?
+            cc.color(53,36,29):cc.color(213,53,39);
+
+            let sprite_res = cc.find("image", node).getComponent(cc.Sprite);
+            GlobalResources.getSpriteFrame(SpriteType.UI, info.id).then((sf) => {
+                setSpriteSize(sprite_res, sf, 40);
+            })
+        });
+
+        // label_coin.string = this.info.UpgradeConfigInfo[0].number.toString();
+        // label_res.string = this.info.UpgradeConfigInfo[1].number.toString();
         
-        label_res.node.color = this.info.UpgradeConfigInfo[1].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[1].id)?
-        cc.color(53,36,29):cc.color(213,53,39);
-        label_coin.node.color = this.info.UpgradeConfigInfo[0].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[0].id)?
-        cc.color(53,36,29):cc.color(213,53,39);
+        // label_res.node.color = this.info.UpgradeConfigInfo[1].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[1].id)?
+        // cc.color(53,36,29):cc.color(213,53,39);
+        // label_coin.node.color = this.info.UpgradeConfigInfo[0].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[0].id)?
+        // cc.color(53,36,29):cc.color(213,53,39);
 
-        GlobalResources.getSpriteFrame(SpriteType.UI, this.info.UpgradeConfigInfo[1].id).then((sf) => {
-            setSpriteSize(sprite_res, sf, 40);
-        })
+        // GlobalResources.getSpriteFrame(SpriteType.UI, this.info.UpgradeConfigInfo[1].id).then((sf) => {
+        //     setSpriteSize(sprite_res, sf, 40);
+        // })
 
     }
 

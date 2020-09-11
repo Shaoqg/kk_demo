@@ -5,7 +5,7 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { AdventureArea } from "../Screens/AdventureArea";
 import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
-import { GardenPets } from "../Pet/GardenPets";
+import { PetFactory } from "../Pet/PetFactory";
 import ScreenSize from "../Tools/ScreenSize";
 import { DebugScreen } from "../Screens/DebugScreen";
 import { KKLoader } from "../Util/KKLoader";
@@ -47,10 +47,7 @@ export default class WorldManager extends cc.Component {
     start(){
         StateManager.instance.changeState("IslandState");
         this.init();
-        this.initCastle();
-        this.initTrees();
-        GardenPets.setIslandPets();
-        this.setship();
+        PetFactory.setIslandPets();
 
         //debug
         this.setDebugEvents()
@@ -59,8 +56,6 @@ export default class WorldManager extends cc.Component {
 
         // this.checkCaptureReward();
 
-        EventEmitter.subscribeTo(EventType.LEVEL_UP_CASTLE, this.onLevelUp.bind(this));
-        EventEmitter.subscribeTo(EventType.LEVEL_UP_TREE, this.onTreeLevelUp.bind(this));
         EventEmitter.subscribeTo(EventType.GO_CAPTURE, this.checkCaptureReward.bind(this));
         
         EventEmitter.emitEvent(EventType.CHECK_AREA_COMPELETE);
@@ -74,49 +69,6 @@ export default class WorldManager extends cc.Component {
 
     }
 
-    initCastle() {
-        let level = User.instance.level_castle;
-
-        let castleNodes = cc.find("world/island/islandNode/island/mapblocks/build", this.node);
-        castleNodes.children.forEach((node, i)=>{
-            node.active = (i == level-1);
-            if (level-1 > castleNodes.children.length - 1) {
-                node.active = true;
-            }
-        })
-    }
-
-    initTrees() {
-
-    }
-
-    onclickShip() {
-        this.switchShipState(true);
-        setTimeout(()=>{
-            this.switchShipState(false);
-        }, 2000)
-    }
-
-    switchShipState(openSelect = true){
-        // this.selectButton_ship.active = openSelect;
-        // this.btn_ship.active= !openSelect;
-    }
-
-    onLevelUp(){
-        this.initCastle();
-        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
-
-    }
-
-    onTreeLevelUp(){
-        this.initTrees();
-        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
-
-    }
-
-    onclickTree(){
-        TreeUpgrade.prompt();
-    }
 
     adjustGameInterface() {
         // let scale = ScreenSize.getScale(1, 0.8);
@@ -166,12 +118,6 @@ export default class WorldManager extends cc.Component {
         console.log(time,this.isCap);
 
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
-    }
-
-    async setship() {
-        let shipPrefeb = await KKLoader.loadPrefab("Prefab/ShipObject");
-        let shipNode = cc.instantiate(shipPrefeb);
-        this.shipDock.addChild(shipNode)
     }
 
     update(dt) {

@@ -99,7 +99,7 @@ export class DebugScreen extends ViewConnector {
         //     UserPet.nowUsing=true;
         //     UserPet.UsingBy="onIsland"
         //     User.instance.saveUse()
-        //     GardenPets.addpet(petdata);
+        //     PetFactory.addpet(petdata);
         // }
     }
     battlereward(){

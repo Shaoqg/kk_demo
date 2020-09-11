@@ -8,6 +8,7 @@ import { PetObject } from "./PetObject";
 import { MoveToTarget } from "./Behviors/MoveToTarget";
 import { delay } from "../kk/DataUtils";
 import { Dead } from "./Behviors/Dead";
+import { setSpriteSize } from "../Tools/UIUtils";
 
 
 export enum PetType {
@@ -34,20 +35,21 @@ export class PetObjectBattle extends PetObject{
         return super.start();
     }
 
-    init(petData:PetData, originNode?:cc.Node, isSelf = false) {
+    init(petData:PetData, height = 100, isSelf = false) {
 
-        super.init(petData, originNode);
+        super.init(petData, height);
 
         let config = getPetConfigById(petData.petId);
         let petImage: cc.Node = this._root.getChildByName("image");
         let sprite_front = petImage.getChildByName("image_front").getComponent(cc.Mask);
-        sprite_front.node.width = petImage.width;
-        sprite_front.node.height  =  petImage.height;
+        sprite_front.node.width = height;
+        sprite_front.node.height  =  height;
         sprite_front.node.stopAllActions();
         sprite_front.node.active = false;
 
         GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
             sprite_front.spriteFrame = sf;
+            setSpriteSize(sprite_front.node, sf, height);
         });
 
         //setHealth

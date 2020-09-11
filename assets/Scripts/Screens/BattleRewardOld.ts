@@ -5,7 +5,7 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { PetData, getPetConfigById, getUserLevelAndLevelExpByCurrentExp, Resource, getRewardPetByLevel } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { PetObject } from "../Pet/PetObject";
-import { GardenPets } from "../Pet/GardenPets";
+import { PetFactory } from "../Pet/PetFactory";
 import { delay } from "../kk/DataUtils";
 import { AdventureReward } from "./AdventureReward";
 
@@ -71,7 +71,7 @@ export class BattleRewardOld extends ViewConnector {
         await delay(1);
         this.needUpdate = true;
 
-        GardenPets.petjumping(pet);
+        PetFactory.petjumping(pet);
 
         underlay.on(cc.Node.EventType.TOUCH_END, async () => {
             this.close(undefined);
@@ -124,7 +124,7 @@ export class BattleRewardOld extends ViewConnector {
         parent.addChild(preppedPetNode);
 
         let petObject = preppedPetNode.getComponent(PetObject) || preppedPetNode.addComponent(PetObject);
-        petObject.init(petdata, petNode);
+        petObject.init(petdata, petNode.height);
 
 
         return petObject

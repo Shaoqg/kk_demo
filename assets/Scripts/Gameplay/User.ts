@@ -1,4 +1,4 @@
-import { PetConfigType, PetData, ElementType ,BuildInfo} from "../Config";
+import { PetConfigType, PetData, ElementType ,BuildInfo, CastleInfo, IsLandType, IsLandItemType} from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
@@ -93,7 +93,7 @@ export default class User {
     public level_ship = 1;
     public level_castle = 1;
     public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
-    public buildInfo:{[id:string]:BuildInfo} ={};
+    public buildInfo:{[id:string]:BuildInfo| CastleInfo} ={};
     public coin = 200000;
     public wood = 200;
     public stone = 200;
@@ -228,19 +228,29 @@ export default class User {
         this.saveUse();
     }
 
-    public getBuildInfo(type: ElementType) {
+    public getBuildInfo(type: IsLandType){
         if (!this.buildInfo[type]) {
-            this.buildInfo[type] = {
-                build: 1,
-                wonder: 1,
-                view:[]
+            switch (type) {
+                case IsLandType.castle:
+                    this.buildInfo[type] = {
+                        castle: 1,
+                        ship: 1,
+                    }
+                    break;
+                default:
+                    this.buildInfo[type] = {
+                        build: 1,
+                        wonder: 1,
+                        view:[]
+                    }
+                    break;
             }
         }
 
         return this.buildInfo[type];
     }
 
-    public UpgradeBuilInfo(type: ElementType, name:any ){
+    public UpgradeBuilInfo(type: IsLandType, name:IsLandItemType ) {
         this.buildInfo[type][name] += 1;
 
         this.saveUse();

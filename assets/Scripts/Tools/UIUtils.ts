@@ -21,16 +21,22 @@ export function setAction(pathToNode:string, func, parent?:cc.Node): cc.Node{
     return node;
 }
 
-export function setSpriteSize(sprite:cc.Sprite, sf:cc.SpriteFrame, limit_height_width:number = 100) {
-    sprite.spriteFrame = sf;
+export function setSpriteSize(sprite:cc.Sprite | cc.Node, sf:cc.SpriteFrame, limit_height_width:number = 100) {
+    let node:cc.Node = null;
+    if (sprite instanceof cc.Node) {
+        node = sprite;
+    }else {
+        node = sprite.node;
+        sprite.spriteFrame = sf;
+    }
 
     let rect = sf.getRect();
     let scale = limit_height_width / (rect.height > rect.width ? rect.height : rect.width);
     
-    sprite.node.width = Math.floor(rect.width * scale);
-    sprite.node.height = Math.floor(rect.height * scale);
+    node.width = Math.floor(rect.width * scale);
+    node.height = Math.floor(rect.height * scale);
     
-    return {scale: scale, width:sprite.node.width, height: sprite.node.height}
+    return {scale: scale, width: node.width, height: node.height}
 }
 
 export function findParent(node:cc.Node, name:string){

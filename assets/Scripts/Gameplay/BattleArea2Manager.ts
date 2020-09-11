@@ -191,7 +191,7 @@ export default class BattleArea2Manager {
 
         let petObject: PetObjectBattle = preppedPetNode.getComponent(!isOpponent ? PetObjectBattle : PetObjectBattle_Enemy)
             || preppedPetNode.addComponent(!isOpponent ? PetObjectBattle : PetObjectBattle_Enemy);
-        petObject.init(petData, petNode, !isOpponent);
+        petObject.init(petData, petNode.height, !isOpponent);
 
         if (isOpponent) {
             preppedPetNode.position = targePos.add(cc.v2(10 * idx, 20 * idx));
