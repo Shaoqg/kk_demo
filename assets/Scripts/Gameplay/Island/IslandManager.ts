@@ -60,7 +60,7 @@ export default class IslandManager {
             return;
         }
 
-        let nodes: cc.Node[] = island.children;
+        let nodes: cc.Node[] = island.children.filter((node)=>node.name.includes("level"));
 
         if (playAnimatio) {
             this.moveToIsland(0, type);

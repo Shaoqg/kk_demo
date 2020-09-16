@@ -1,4 +1,4 @@
-import { PetConfigType, PetData, ElementType ,BuildInfo, CastleInfo, IsLandType, IsLandItemType} from "../Config";
+import { PetConfigType, PetData, ElementType, BuildInfo, CastleInfo, IsLandType, IsLandItemType } from "../Config";
 import { TaskData } from "../UI/TaskScreen";
 import { Resource } from "../Config";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
@@ -93,38 +93,40 @@ export default class User {
     public level_ship = 1;
     public level_castle = 1;
     public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
-    public buildInfo:{[id:string]:BuildInfo| CastleInfo} ={};
+    public buildInfo: { [id: string]: BuildInfo | CastleInfo } = {};
     public coin = 200000;
     public wood = 200;
     public stone = 200;
     public food = 200;
-    public ship_capacity_level = 0;
-    public ship_speed_level = 0;
-    public ship_bouns_level = 0;
+    // public ship_capacity_level = 0;
+    // public ship_speed_level = 0;
+    // public ship_bouns_level = 0;
     public petNumber = this.petList.length;
     public magic_stone = 10;
     public _timeStamps: object = {};
     public AdventureTime = 0
     public AdventureFood = 1;
     public AdventureDestination = "";
-    public AdventurePets:PetData[]=[]
+    public AdventurePets: PetData[] = []
     public adventureCoinslist: number[] = []
     public adventureWoodlist: number[] = []
     public adventureStonelist: number[] = []
-    public exploreTime:object={"water":0,"fire":0,"food":0,"nature":0}
+    public exploreTime: object = { "water": 0, "fire": 0, "food": 0, "nature": 0 }
     public currentExp = 5;
     public currentLevel = 2;
-    public areaExploring={"water":false,"fire":false,"food":false,"nature":false,"unknow":false}
-    public areaCapture={"unknow":false}
-    public areaCaptureStartTime={"unknow":0}
-    public areaCaptureTimeTakenReward={"unknow":0}
-    public areaCaptureStopTime={"unknow":0}
+    public areaExploring = { "water": false, "fire": false, "food": false, "nature": false, "unknow": false }
+    public areaCapture = { "unknow": false }
+    public areaCaptureStartTime = { "unknow": 0 }
+    public areaCaptureTimeTakenReward = { "unknow": 0 }
+    public areaCaptureStopTime = { "unknow": 0 }
 
-    setTimeStamp(name: string, timeStamp: number){
-        this._timeStamps[name]=timeStamp;
+    private buildResource: { [resName: string]: { timestamp: number, number: number } } = {}
+
+    setTimeStamp(name: string, timeStamp: number) {
+        this._timeStamps[name] = timeStamp;
     }
 
-    getTimeStamp(name: string){
+    getTimeStamp(name: string) {
         return this._timeStamps[name];
     }
 
@@ -167,9 +169,9 @@ export default class User {
         return PetFind;
     }
 
-    getPetsNowUsing(usingBy:string="") {
+    getPetsNowUsing(usingBy: string = "") {
         let Pets: PetData[] = [];
-        if(usingBy==""){
+        if (usingBy == "") {
             this.petList.forEach((petData) => {
                 if (petData.nowUsing) {
                     if (petData.UsingBy != usingBy) {
@@ -177,7 +179,7 @@ export default class User {
                     }
                 }
             })
-        }else{
+        } else {
             this.petList.forEach((petData) => {
                 if (petData.nowUsing) {
                     if (petData.UsingBy == usingBy) {
@@ -189,7 +191,7 @@ export default class User {
         return Pets;
     }
 
-    removePetFromInAdventure(usingBy:string="") {
+    removePetFromInAdventure(usingBy: string = "") {
         let Pets = this.getPetsNowUsing(usingBy);
         console.log(Pets);
         this.petList.forEach((petData) => {
@@ -228,7 +230,39 @@ export default class User {
         this.saveUse();
     }
 
-    public getBuildInfo(type: IsLandType){
+    public getBuildRes(islandType: IsLandType) {
+        if (!this.buildResource[islandType]) {
+            return null;
+        }
+        return this.buildResource[islandType];
+    }
+
+    public updateBuildRes(islandType: IsLandType, addNumber) {
+        if (!this.buildResource[islandType]) {
+            this.buildResource[islandType] = {
+                number: 0,
+                timestamp: 0
+            }
+        }
+
+        this.buildResource[islandType].timestamp = Date.now();
+        this.buildResource[islandType].number += addNumber;
+        this.saveUse();
+        return this.buildResource[islandType];
+    }
+
+    public getBuildRevenue(islandType: IsLandType, resType:Resource) {
+        if (this.buildResource[islandType] && this.buildResource[islandType].number >= 1) {
+            let number =Math.floor(this.buildResource[islandType].number);
+            this.updateBuildRes(islandType, -number);
+            this.addResource(resType, number);
+            EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+            return true;
+        }
+        return false;
+    }
+
+    public getBuildInfo(type: IsLandType) {
         if (!this.buildInfo[type]) {
             switch (type) {
                 case IsLandType.castle:
@@ -241,7 +275,7 @@ export default class User {
                     this.buildInfo[type] = {
                         build: 1,
                         wonder: 1,
-                        view:[]
+                        view: []
                     }
                     break;
             }
@@ -250,33 +284,33 @@ export default class User {
         return this.buildInfo[type];
     }
 
-    public UpgradeBuilInfo(type: IsLandType, name:IsLandItemType ) {
+    public UpgradeBuilInfo(type: IsLandType, name: IsLandItemType) {
         this.buildInfo[type][name] += 1;
 
         this.saveUse();
     }
 
     public saveUse() {
-        this.ship_bouns_level;
-        this.ship_capacity_level;
-        this.ship_speed_level;
+        // this.ship_bouns_level;
+        // this.ship_capacity_level;
+        // this.ship_speed_level;
 
 
         let gameData = {
-            star:this.star,
-            level_castle:this.level_castle,
-            level_ship:this.level_ship,
+            star: this.star,
+            level_castle: this.level_castle,
+            level_ship: this.level_ship,
             level_Trees: this.level_Trees,
-            shipInfo:{
-                bouns:this.ship_bouns_level,
-                capacity: this.ship_capacity_level,
-                speed:this.ship_speed_level
-            },
-            magic_stone:this.magic_stone,
-            food:this.food,
-            stone:this.stone,
-            coin:this.coin,
-            wood:this.wood,
+            // shipInfo:{
+            //     bouns:this.ship_bouns_level,
+            //     capacity: this.ship_capacity_level,
+            //     speed:this.ship_speed_level
+            // },
+            magic_stone: this.magic_stone,
+            food: this.food,
+            stone: this.stone,
+            coin: this.coin,
+            wood: this.wood,
             petList: this.petList,
             _timeStamps: this._timeStamps,
             AdventureTime: this.AdventureTime,
@@ -286,13 +320,14 @@ export default class User {
             adventureCoinslist: this.adventureCoinslist,
             adventureWoodlist: this.adventureWoodlist,
             adventureStonelist: this.adventureStonelist,
-            exploreTime:this.exploreTime,
-            playerID:this._playerID,
-            areaExploring:this.areaExploring,
-            areaCapture:this.areaCapture,
-            areaCaptureStartTime:this.areaCaptureStartTime,
-            areaCaptureTimeTakenReward:this.areaCaptureTimeTakenReward,
-            buildInfo: this.buildInfo
+            exploreTime: this.exploreTime,
+            playerID: this._playerID,
+            areaExploring: this.areaExploring,
+            areaCapture: this.areaCapture,
+            areaCaptureStartTime: this.areaCaptureStartTime,
+            areaCaptureTimeTakenReward: this.areaCaptureTimeTakenReward,
+            buildInfo: this.buildInfo,
+            buildResource: this.buildResource
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -307,10 +342,10 @@ export default class User {
             this.level_castle = data["level_castle"];
             this.level_ship = data["level_ship"];
             this.level_Trees = data["level_Trees"];
-            
-            this.ship_bouns_level = data["shipInfo"]["bouns"]
-            this.ship_capacity_level = data["shipInfo"]["capacity"]
-            this.ship_speed_level = data["shipInfo"]["speed"]
+
+            // this.ship_bouns_level = data["shipInfo"]["bouns"]
+            // this.ship_capacity_level = data["shipInfo"]["capacity"]
+            // this.ship_speed_level = data["shipInfo"]["speed"]
             this.magic_stone = data["magic_stone"];
             this.food = data["food"];
             this.stone = data["stone"];
@@ -333,14 +368,15 @@ export default class User {
             this.areaCaptureTimeTakenReward = data["areaCaptureTimeTakenReward"];
             this.buildInfo = data["buildInfo"] || {};
             this.petNumber = this.petList.length;
+            this.buildResource = data["buildResource"] || {};
         }
         this.isLoaded = true;
 
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
     }
 
-    public resetUse(){
-        cc.sys.localStorage.setItem("KK_DEMO","");
+    public resetUse() {
+        cc.sys.localStorage.setItem("KK_DEMO", "");
         cc.director.pause(); // try to prevent more saves; PET-1128
         location.reload();
     }

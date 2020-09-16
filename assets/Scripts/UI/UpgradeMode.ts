@@ -14,7 +14,7 @@ export default class UpgradeModel extends ViewConnector {
 
     static prefabPath = 'Prefab/UpgradeModel';
 
-    static async prompt(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel:number): Promise<boolean> {
+    static async prompt(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel: number): Promise<boolean> {
         let parentNode = cc.find("Canvas/DialogRoot");
 
         let vc = await this.loadView<UpgradeModel>(parentNode, UpgradeModel);
@@ -29,19 +29,19 @@ export default class UpgradeModel extends ViewConnector {
         return new Promise<any>(executor);
     }
 
-    info:{
-        sf:cc.SpriteFrame,
-        type:IsLandType,
-        name:IsLandItemType,
-        toLevel:number,
-        UpgradeConfigInfo:any
+    info: {
+        sf: cc.SpriteFrame,
+        type: IsLandType,
+        name: IsLandItemType,
+        toLevel: number,
+        UpgradeConfigInfo: any
     } = null
 
-    async applyData(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel:number) {
+    async applyData(sf: cc.SpriteFrame, type: IsLandType, name: IsLandItemType, toLevel: number) {
         this.adjustGameInterface();
 
         let bg = cc.find("underlay", this.node);
-        bg.on(cc.Node.EventType.TOUCH_END, ()=>{
+        bg.on(cc.Node.EventType.TOUCH_END, () => {
             this.close(false);
         });
 
@@ -54,6 +54,7 @@ export default class UpgradeModel extends ViewConnector {
 
         }
         this.init();
+        this.initTipsInfo();
 
         let btn_upgrade = cc.find("content/upgradeinfo/btn_upgrade", this.node);
         btn_upgrade.on(cc.Node.EventType.TOUCH_END, this.onClick.bind(this));
@@ -82,8 +83,8 @@ export default class UpgradeModel extends ViewConnector {
 
             let label = cc.find("label", node).getComponent(cc.Label);
             label.string = info.number.toString();
-            label.node.color = info.number <= this.getUpgradeNumber(info.id)?
-            cc.color(53,36,29):cc.color(213,53,39);
+            label.node.color = info.number <= this.getUpgradeNumber(info.id) ?
+                cc.color(53, 36, 29) : cc.color(213, 53, 39);
 
             let sprite_res = cc.find("image", node).getComponent(cc.Sprite);
             GlobalResources.getSpriteFrame(SpriteType.UI, info.id).then((sf) => {
@@ -93,7 +94,7 @@ export default class UpgradeModel extends ViewConnector {
 
         // label_coin.string = this.info.UpgradeConfigInfo[0].number.toString();
         // label_res.string = this.info.UpgradeConfigInfo[1].number.toString();
-        
+
         // label_res.node.color = this.info.UpgradeConfigInfo[1].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[1].id)?
         // cc.color(53,36,29):cc.color(213,53,39);
         // label_coin.node.color = this.info.UpgradeConfigInfo[0].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[0].id)?
@@ -105,7 +106,7 @@ export default class UpgradeModel extends ViewConnector {
 
     }
 
-    getUpgradeNumber(type:string) {
+    getUpgradeNumber(type: string) {
         let resInfo = {
             [Resource.food]: User.instance.food,
             [Resource.stone]: User.instance.stone,
@@ -119,7 +120,7 @@ export default class UpgradeModel extends ViewConnector {
     onClick() {
 
         let configs = this.info.UpgradeConfigInfo;
-        if (configs[0].number <= User.instance.coin  && configs[1].number <= this.getUpgradeNumber(configs[1].id)) {
+        if (configs[0].number <= User.instance.coin && configs[1].number <= this.getUpgradeNumber(configs[1].id)) {
             //TODO upgrade
             User.instance.UpgradeBuilInfo(this.info.type, this.info.name);
             User.instance.addResource(Resource.coin, configs[0].number);
@@ -128,6 +129,91 @@ export default class UpgradeModel extends ViewConnector {
         } else {
             //no coin
         }
+    }
+
+    initTipsInfo() {
+
+        let config = BuildConfig[this.info.type][this.info.name];
+        if (!config["reward"]) {
+            return;
+        }
+        let tipsList = cc.find("content/tipsList", this.node);
+        let children = tipsList.children;
+        let index = 0;
+
+
+        for (const key in config["reward"]) {
+            let key_config = config["reward"][key];
+            let str1 = "";
+            let description = "";
+            let str2 = "";
+            let imageSrc = "";
+            switch (key) {
+                case "star":
+                    imageSrc = "star"
+                    description = "Increase reputation  ";
+                    str2 = ` +${key_config.baseNumber + key_config.levelNumber * this.info.toLevel}`;
+                    break;
+                case "number"://reward number
+                    imageSrc = this.getRewardRes();
+                    description = "Increase revenue  ";
+                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}/min`;
+                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}/min`;
+                    break;
+                case "storage"://
+                    imageSrc = this.getRewardRes();
+                    description = "Offline revenue cap  ";
+                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}`;
+                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}`;
+                    break;
+                default:
+                    break;
+            }
+            str1 && this.updateTipsNode(children[index++], description, str1, imageSrc, false);
+            str2 && this.updateTipsNode(children[index++], description, str2, imageSrc, true);
+        }
+    }
+
+    updateTipsNode(node: cc.Node, description: string, str: string, imageSrc: string, isUpgrade) {
+        node.active = true;
+
+        let label = cc.find("stringNode/label", node).getComponent(cc.Label);
+        label.string = str;
+
+        let label_description = cc.find("stringNode/label_description", node).getComponent(cc.Label);
+        label_description.string = description;
+
+        label_description.node.color = label.node.color = isUpgrade ? cc.color(94, 175, 127) : cc.color(53, 36, 29);
+
+        let icon_up = node.getChildByName("icon_up");
+        let icon_tips = node.getChildByName("icon_tips");
+        icon_up.active = isUpgrade;
+        icon_tips.active = !isUpgrade;
+
+        let image = cc.find("stringNode/image", node).getComponent(cc.Sprite);
+        if (imageSrc) {
+            image.node.active = true;
+            GlobalResources.getSpriteFrame(SpriteType.UI, imageSrc).then((sf) => {
+                image.spriteFrame = sf;
+                setSpriteSize(image, sf, 35);
+            })
+        }else {
+            image.node.active = false;
+        }
+    }
+
+    getRewardRes() {
+        this.info.type
+
+        let resInfo = {
+            [IsLandType.fire]: Resource.stone,
+            [IsLandType.nature]: Resource.wood,
+            [IsLandType.castle]: Resource.wood,
+            [IsLandType.snack]: Resource.food,
+            [IsLandType.water]: Resource.coin
+        }
+
+        return resInfo[this.info.type];
     }
 
     adjustGameInterface() {

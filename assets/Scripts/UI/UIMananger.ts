@@ -191,8 +191,8 @@ export default class UIManager extends cc.Component {
     }
 
     initChangeArrow() {
-        let arrow_left = cc.find("ButtomHud/root/arrow_left", this.node);
-        let arrow_right = cc.find("ButtomHud/root/arrow_right", this.node);
+        let arrow_left = cc.find("center_left/root/arrow_left", this.node);
+        let arrow_right = cc.find("center_right/root/arrow_right", this.node);
         
         this.islandPos = 0
         arrow_left.on(cc.Node.EventType.TOUCH_END, () => {

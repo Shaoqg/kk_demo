@@ -8,8 +8,7 @@ import { Trees, AdventureAreas } from "../Config";
 import { PetFactory } from "../Pet/PetFactory";
 import ScreenSize from "../Tools/ScreenSize";
 import { DebugScreen } from "../Screens/DebugScreen";
-import { KKLoader } from "../Util/KKLoader";
-import ShipObject from "../Tools/ShipObject";
+import ResourceManager from "./ResourcerManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -66,6 +65,8 @@ export default class WorldManager extends cc.Component {
         let worldNode = cc.find("world", this.node);
 
         this.shipDock = cc.find("world/island/islandNode/shipDock",this.node);
+
+        this.addComponent(ResourceManager);
 
     }
 

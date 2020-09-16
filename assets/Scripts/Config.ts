@@ -503,54 +503,173 @@ export let BuildConfig = {
       build:{
         id:"volcanic",
         introId:"Can produce stone, but it is a bit dangerous.",
+
+        reward:{
+          star:{
+            baseNumber:0,
+            levelNumber:0.5,
+          },
+          number:{
+            baseNumber:0,
+            levelNumber:2,
+          },
+          storage:{
+            baseNumber:0,
+            levelNumber:150
+          }
+        }
       },
       wonder:{
         id: "Meteorite",
         introId:"Very attractive to fire pets.",
+        reward:{
+          star:{
+            baseNumber:0,
+            levelNumber:1,
+          }
+        }
       }
   },
   "nature":{
     build:{
       id:"tree_house",
       introId:"Can produce wood, pets like to live in tree houses.",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:0.5,
+        },
+        number:{
+          baseNumber:0,
+          levelNumber:2,
+        },
+        storage:{
+          baseNumber:0,
+          levelNumber:150
+        }
+      }
     },
     wonder:{
       id: "stone_forest",
       introId:"--",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:1,
+        }
+      }
     }
   },
   "snack":{
     build:{
       id:"candy_house",
       introId:"Can produce stone, but it is a bit dangerous.",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:0.5,
+        },
+        number:{
+          baseNumber:0,
+          levelNumber:2,
+        },
+        storage:{
+          baseNumber:0,
+          levelNumber:150
+        }
+      }
     },
     wonder:{
       id: "marshmallow_tree",
       introId:"--",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:1,
+        }
+      }
     }
   },
   "water":{
     build:{
       id:"water_park",
       introId:"Can produce stone, but it is a bit dangerous.",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:0.5,
+        },
+        number:{
+          baseNumber:3,
+          levelNumber:3,
+        },
+        storage:{
+          baseNumber:0,
+          levelNumber:400
+        }
+      }
     },
     wonder:{
       id: "ancient_ruins",
       introId:"--",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:1,
+        }
+      }
     },
   },
   "castle":{
     castle:{
-      id:"water_park",
-      introId:"Can produce stone, but it is a bit dangerous.",
+      id:"castle",
+      introId:"--",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:2,
+        }
+      }
     },
     ship:{
-      id: "ancient_ruins",
+      id: "Ship",
       introId:"--",
+      reward:{
+        star:{
+          baseNumber:0,
+          levelNumber:0.5,
+        }
+      }
     },
   }
+}
 
+export function getResourceNumber(type:IsLandType, levle:number){
+  let config = {};
+  switch (type) {
+    case IsLandType.castle:
+      // config = BuildConfig[type]["ship"].reward["number"];
+      return 0;
+      break;
+    default:
+      config = BuildConfig[type]["build"].reward["number"];
+      break;
+  }
+  return config["baseNumber"] + config["levelNumber"] * (levle);
+}
 
+export function getOfflineRevenueMax(type:IsLandType, levle:number){
+  let config = {};
+  switch (type) {
+    case IsLandType.castle:
+      // config = BuildConfig[type]["ship"].reward["number"];
+      return 0;
+      break;
+    default:
+      config = BuildConfig[type]["build"].reward["storage"];
+      break;
+  }
+  return config["baseNumber"] + config["levelNumber"] * (levle);
 
 }
 

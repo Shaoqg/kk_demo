@@ -4,6 +4,7 @@ import { setSpriteSize } from "../../Tools/UIUtils";
 import UpgradeModel from "../../UI/UpgradeMode";
 import IslandManager from "../Island/IslandManager";
 import { BuildModel } from "../../Screens/BuildModel";
+import { EventEmitter, EventType } from "../../Tools/EventEmitter";
 
 export default class BuildManager {
 
@@ -134,7 +135,8 @@ export default class BuildManager {
     }
 
     onUpgradeIsland(name: IsLandItemType, type: IsLandType) {
-        
+        EventEmitter.emitEvent(EventType.LEVEL_UP_BUILD, null, name, type);
+
         IslandManager.instance.upgradeIslandeBuild(type, name, true);
         BuildModel.instance && BuildModel.instance.close(null);
         this.close();
