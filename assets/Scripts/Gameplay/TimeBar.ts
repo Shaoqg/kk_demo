@@ -19,6 +19,25 @@ export default class TimeBar {
         this.updateProgress(this.currentTime/this.totalTime);
 
         this.timeoverCB = timeoverCB;
+
+        this.node.on(cc.Node.EventType.TOUCH_START, ()=>{
+            this._onCliking = true;
+            this.node.runAction( 
+                cc.scaleTo(0.05, 1.02)
+            )
+        })
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, ()=>{
+            this._onCliking = false;
+            this.node.runAction( 
+                cc.scaleTo(0.05, 1)
+            )
+        })
+        this.node.on(cc.Node.EventType.TOUCH_END, ()=>{
+            this._onCliking = false;
+            this.node.runAction( 
+                cc.scaleTo(0.05, 1)
+            )
+        })
     }
 
     updateProgress(number: number) {
@@ -26,12 +45,13 @@ export default class TimeBar {
         this.progressBar.progress = number;
     }
 
+    _onCliking = false;
     _updateCD = 0.2;
     update(dt) {
-        this.currentTime += dt;
+        this.currentTime += this._onCliking ? 2*dt: dt;
         this._updateCD -= dt;
         if (this._updateCD <=0) {
-            this._updateCD += 0.2;
+            this._updateCD +=this._onCliking ? 0.1:0.2;
             this.updateProgress(this.currentTime/this.totalTime);
         }
         
@@ -43,8 +63,8 @@ export default class TimeBar {
 
     onclickNode() {
         this.node.runAction(cc.sequence(
-            cc.scaleTo(0.1, 1.1),
-            cc.scaleTo(0.1, 1)
+            cc.scaleTo(0.05, 1.02),
+            cc.scaleTo(0.05, 1)
         ))
     }
 

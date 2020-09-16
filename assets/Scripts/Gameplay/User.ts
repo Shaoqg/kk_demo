@@ -121,6 +121,7 @@ export default class User {
     public areaCaptureStopTime = { "unknow": 0 }
 
     private buildResource: { [resName: string]: { timestamp: number, number: number } } = {}
+    private resource: { [resName: string]: number } = {}
 
     setTimeStamp(name: string, timeStamp: number) {
         this._timeStamps[name] = timeStamp;
@@ -210,6 +211,10 @@ export default class User {
     }
 
     public addResource(type: Resource, amount: number) {
+        if (!this.resource[type]) {
+            this.resource[type] = 0;
+        }
+
         switch (type) {
             case Resource.coin:
                 this.coin += amount;
@@ -226,8 +231,26 @@ export default class User {
             case Resource.magicStone:
                 this.magic_stone += amount;
                 break;
+            case Resource.star:
+                if (amount <= 0) {
+                    console.error("error");
+                    return;
+                }
+                this.star += amount;
+                break;
+            default:
+                console.error("can not find Resource:", type);
+                return;
         }
+        this.resource[type] += amount;
         this.saveUse();
+    }
+
+    public getResource(type: Resource) {
+        if (!this.resource[type]) {
+            this.resource[type] = 0;
+        }
+        return  this.resource[type];
     }
 
     public getBuildRes(islandType: IsLandType) {
@@ -327,7 +350,8 @@ export default class User {
             areaCaptureStartTime: this.areaCaptureStartTime,
             areaCaptureTimeTakenReward: this.areaCaptureTimeTakenReward,
             buildInfo: this.buildInfo,
-            buildResource: this.buildResource
+            buildResource: this.buildResource,
+            resource :this.resource
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -369,6 +393,7 @@ export default class User {
             this.buildInfo = data["buildInfo"] || {};
             this.petNumber = this.petList.length;
             this.buildResource = data["buildResource"] || {};
+            this.resource = data["resource"] ||{}
         }
         this.isLoaded = true;
 

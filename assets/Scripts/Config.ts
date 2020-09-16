@@ -229,6 +229,7 @@ export enum Resource  {
   "stone" = "stone",
   "magicStone" = "magicStone",
   "pet" = "pet",
+  "star" = "star"
 }
 
 export class PetData {
@@ -471,27 +472,27 @@ export function getUpgradeInfo(toLevel:number,type: IsLandType, name:IsLandItemT
     case IsLandType.castle:
       if (name == IsLandItemType.castle) {
         return [
-          {id: Resource.coin, number:toLevel *200},
-          {id: Resource.wood, number:toLevel *50},
-          {id: Resource.stone, number:toLevel *50},
+          {id: Resource.coin, number:toLevel *400},
+          {id: Resource.wood, number:toLevel *120},
+          {id: Resource.stone, number:toLevel *120},
         ]
       }  else{
         return [
-          {id: Resource.coin, number:toLevel *200},
-          {id: Resource.wood, number:toLevel *50},
+          {id: Resource.coin, number:toLevel *350},
+          {id: Resource.wood, number:toLevel *90},
         ]
       }
       break;
     default:
       if (name == IsLandItemType.wonder) {
         return [
-          {id: Resource.coin, number:toLevel *200},
-          {id: config[type], number:toLevel *50},
+          {id: Resource.coin, number:toLevel *300},
+          {id: config[type], number:toLevel *80},
         ]
       } else if (name == IsLandItemType.build) {
         return [
-          {id: Resource.coin, number:toLevel *200},
-          {id: config[type], number:toLevel *50},
+          {id: Resource.coin, number:toLevel *350},
+          {id: config[type], number:toLevel *90},
         ]
       }
       break;
@@ -623,7 +624,7 @@ export let BuildConfig = {
   "castle":{
     castle:{
       id:"castle",
-      introId:"--",
+      introId:"Can recruit more pets",
       reward:{
         star:{
           baseNumber:0,
@@ -633,7 +634,7 @@ export let BuildConfig = {
     },
     ship:{
       id: "Ship",
-      introId:"--",
+      introId:"Get resources when you go out and explore",
       reward:{
         star:{
           baseNumber:0,

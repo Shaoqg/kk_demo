@@ -135,7 +135,7 @@ export default class BuildManager {
     }
 
     onUpgradeIsland(name: IsLandItemType, type: IsLandType) {
-        EventEmitter.emitEvent(EventType.LEVEL_UP_BUILD, null, name, type);
+        EventEmitter.emitEvent(EventType.LEVEL_UP_BUILD, null, type, name);
 
         IslandManager.instance.upgradeIslandeBuild(type, name, true);
         BuildModel.instance && BuildModel.instance.close(null);

@@ -5,6 +5,7 @@ import { setSpriteSize } from "../Tools/UIUtils";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import User from "../Gameplay/User";
 import UIManager from "./UIMananger";
+import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 const { ccclass, property } = cc._decorator;
 
@@ -50,7 +51,7 @@ export default class UpgradeModel extends ViewConnector {
             type: type,
             name: name,
             toLevel: toLevel,
-            UpgradeConfigInfo: getUpgradeInfo(10, type, name)
+            UpgradeConfigInfo: getUpgradeInfo(toLevel, type, name)
 
         }
         this.init();
@@ -123,8 +124,9 @@ export default class UpgradeModel extends ViewConnector {
         if (configs[0].number <= User.instance.coin && configs[1].number <= this.getUpgradeNumber(configs[1].id)) {
             //TODO upgrade
             User.instance.UpgradeBuilInfo(this.info.type, this.info.name);
-            User.instance.addResource(Resource.coin, configs[0].number);
-            User.instance.addResource(configs[1].id, configs[1].number);
+            User.instance.addResource(Resource.coin, -configs[0].number);
+            User.instance.addResource(configs[1].id, -configs[1].number);
+            EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
             this.close(true);
         } else {
             //no coin

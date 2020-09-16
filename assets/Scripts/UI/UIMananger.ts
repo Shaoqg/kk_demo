@@ -78,7 +78,7 @@ export default class UIManager extends cc.Component {
         //     this.onclickAdventure();
         // })
 
-        this.btn_barn = cc.find("ButtomHud/root/btn_barn", this.node)
+        this.btn_barn = cc.find("top_left/root/btn_barn", this.node)
         this.btn_barn.on(cc.Node.EventType.TOUCH_END, ()=>{
             this.onclickPet();
         })

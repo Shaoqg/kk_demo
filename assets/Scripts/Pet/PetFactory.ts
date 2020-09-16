@@ -64,13 +64,23 @@ export class PetFactory {
         User.instance.saveUse()
     }
 
+    static onIslandPet:{[islandType:string]: PetData[]}={};
     static setIslandPets(isRemove:boolean=false) {
         if(isRemove){
             this.removeAllPets();
         }
         let petsNowUsing = User.instance.getPetList();
         petsNowUsing.forEach((pet)=>{
-            this.addPet(pet, IslandManager.instance.getIslandTypeByPetId(pet.petId));
+            let type = IslandManager.instance.getIslandTypeByPetId(pet.petId);
+            if (!this.onIslandPet[type]) {
+                this.onIslandPet[type] = [];
+            }
+            let isAdd = this.onIslandPet[type].find((oldPet) => oldPet.petId == pet.petId);
+            
+            if(!isAdd) {
+                this.onIslandPet[type].push(pet);
+                this.addPet(pet, type);
+            }
         })
     }   
 }

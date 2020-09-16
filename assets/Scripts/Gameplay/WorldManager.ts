@@ -17,25 +17,6 @@ export default class WorldManager extends cc.Component {
 
 
 
-    btn_ship:cc.Node = null;
-    selectButton_ship:cc.Node = null;
-    btn_levelup:cc.Node = null;
-    btn_adventure:cc.Node = null;
-    btn_barn: cc.Node = null;
-    coin_label: cc.Node;
-    star_label: cc.Node;
-    woodNode: cc.Node;
-    stoneNode: cc.Node;
-    foodNode: cc.Node;
-    magicStoneNode: cc.Node;
-    btn_dailay: cc.Node;
-    btn_tree1: cc.Node;
-    btn_tree2: cc.Node;
-    btn_tree3: cc.Node;
-    btn_rotary: any;
-    islandPos: number;
-    btn_shop: cc.Node;
-    battleIsOpen: boolean=false;
     isCap: boolean = false;
     updateTime: number = 0;
     shipDock: cc.Node;

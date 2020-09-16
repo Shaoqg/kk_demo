@@ -87,10 +87,10 @@ export class Adventure extends ViewConnector {
         this.foodNumLabel = cc.find("foodNum/number", shipFood).getComponent(cc.Label);
         let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
-        this.seatNum=capacitys[User.instance.ship_capacity_level];
+        this.seatNum=capacitys[1];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
         shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level_ship;
-        shipSpeed.getComponent(cc.Label).string="Speed："+speeds[User.instance.ship_speed_level]+" knots:";
+        shipSpeed.getComponent(cc.Label).string="Speed："+speeds[1]+" knots:";
         
         if(!areaName){
             areaName=User.instance.AdventureDestination;
@@ -112,7 +112,7 @@ export class Adventure extends ViewConnector {
         this.initFoodBtn();
         
         this.boundsAll.forEach((bands) => {
-            bands.BounsNum += bounss[User.instance.ship_bouns_level];
+            bands.BounsNum += bounss[1];
         })
         
         this.AllLine = AdventureLogLines;
@@ -264,7 +264,7 @@ export class Adventure extends ViewConnector {
     async startCountDown() {
         this.goAdventure = true
         this.time = Date.now() / 1000;
-        this.counttime = AdventureTime * this.food / speeds[User.instance.ship_speed_level];
+        this.counttime = AdventureTime * this.food / speeds[1];
         this.timeremain = this.counttime * 60 ;
         User.instance.setTimeStamp("Adventure",this.time);
         User.instance.AdventureTime=this.counttime;
