@@ -12,7 +12,7 @@ export default class Line extends cc.Component {
     lineNode: cc.Node = null;
 
     onEnable() {
-        let width = ScreenSize.width;
+        let width = 7000;
         let node = this.lineNode || this.node;
         node.stopAllActions();
         let speed = this.lineSpeed;
