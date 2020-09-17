@@ -257,21 +257,30 @@ export default class ResourceManager extends cc.Component {
         sprite.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.UI, resType);
         setSpriteSize(sprite, sprite.spriteFrame, 50);
 
+         let height = 100;
+
         sprite.node.runAction(cc.sequence(
-            cc.moveTo(0.3, cc.v2(0,100)).easing(cc.easeOut(1)),
-            cc.moveTo(0.7,cc.Vec2.ZERO).easing(cc.easeBounceOut())
+            cc.moveTo(0.3, cc.v2(0,height)).easing(cc.easeOut(3)),
+            cc.moveTo(0.4, cc.v2(0,0)).easing(cc.easeIn(2)),
+            cc.moveTo(0.1, cc.v2(0,height *0.1)).easing(cc.easeOut(1.5)),
+            cc.moveTo(0.05, cc.v2(0,0)).easing(cc.easeIn(1.5)),
+            cc.moveTo(0.05, cc.v2(0,height *0.05)).easing(cc.easeOut(1.5)),
+            cc.moveTo(0.05, cc.v2(0,0)).easing(cc.easeIn(1.5)),
+            // cc.moveTo(0.7,cc.Vec2.ZERO).easing(cc.easeBounceOut())
         ))
 
         let showLabel = ()=>{
             this.creatResAnimation(IsLandType.castle, resType,3, {parent:parent, position: node.position.add(cc.v2(0,100))});
         }
 
+        node.zIndex = 1000;
         node.runAction(cc.sequence(
             cc.spawn(
-                cc.fadeIn(0.1),
-                cc.moveTo(1, node.position.add(cc.v2(-100 - Math.random() * 220, 100 + Math.random() * 50))).easing(cc.easeOut(1)),
+                cc.fadeIn(0.05),
+                cc.moveTo(1, node.position.add(cc.v2(-100 - Math.random() * 220, 100 + Math.random() * 50))).easing(cc.easeOut(1.5)),
             ),
             cc.callFunc(() => {
+                node.zIndex = -node.y + 660;
                 node.runAction(cc.sequence(
                     cc.delayTime(10),
                     cc.callFunc(()=>{
@@ -281,6 +290,7 @@ export default class ResourceManager extends cc.Component {
                 ))
 
                 node.on(cc.Node.EventType.TOUCH_END, () => {
+                    
                     node.off(cc.Node.EventType.TOUCH_END);
                     node.stopAllActions();
                     this.pushResNode(node, "res");
