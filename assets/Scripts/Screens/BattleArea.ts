@@ -129,10 +129,10 @@ export class BattleArea extends ViewConnector {
                 UserPet.nowUsing = true;
                 UserPet.UsingBy = "Defence"
             })
-            User.instance.areaExploring["unknow"] = true
-            User.instance.areaCapture["unknow"] = true
-            User.instance.areaCaptureStartTime["unknow"] = Date.now();
-            User.instance.areaCaptureTimeTakenReward["unknow"] = Date.now();
+            User.instance.areaInfo.exploring["unknow"] = true
+            User.instance.areaInfo.capture["unknow"] = true
+            User.instance.areaInfo.captureStartTime["unknow"] = Date.now();
+            User.instance.areaInfo.captureTimeTakenReward["unknow"] = Date.now();
             User.instance.saveUse();
             EventEmitter.emitEvent(EventType.GO_CAPTURE);
         }

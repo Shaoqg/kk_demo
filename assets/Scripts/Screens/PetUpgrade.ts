@@ -1,7 +1,7 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import User from "../Gameplay/User";
-import { PetData, getPetConfigById, PetConfigType, Rarity, getStrengthByPetData } from "../Config";
+import { PetData, getPetConfigById, PetConfigType, Rarity, getStrengthByPetData, Resource } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
@@ -137,22 +137,22 @@ export class PetUpgrade extends ViewConnector {
         let cost = this.getCost(this.petconfig, this.petData.petLevel);
         if (cost.coin) {
             CoinNode.active = true;
-            CoinNode.getChildByName("label").getComponent(cc.Label).string = "Coin:\n" + User.instance.coin + "/" + cost.coin;
-            if (User.instance.coin < cost.coin) {
+            CoinNode.getChildByName("label").getComponent(cc.Label).string = "Coin:\n" + User.instance.getResource(Resource.coin) + "/" + cost.coin;
+            if (User.instance.getResource(Resource.coin) < cost.coin) {
                 lesscount++;
             }
         }
         if (cost.food) {
             FoodNode.active = true;
-            FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:\n" + User.instance.food + "/" + cost.food;
-            if (User.instance.food < cost.food) {
+            FoodNode.getChildByName("label").getComponent(cc.Label).string = "Food:\n" + User.instance.getResource(Resource.food) + "/" + cost.food;
+            if (User.instance.getResource(Resource.food) < cost.food) {
                 lesscount++;
             }
         }
         if (cost.magic_stone) {
             MagicNode.active = true;
-            MagicNode.getChildByName("label").getComponent(cc.Label).string = "Magic Stone:\n" + User.instance.magic_stone + "/" + cost.magic_stone;
-            if (User.instance.magic_stone < cost.magic_stone) {
+            MagicNode.getChildByName("label").getComponent(cc.Label).string = "Magic Stone:\n" + User.instance.getResource(Resource.magicStone) + "/" + cost.magic_stone;
+            if (User.instance.getResource(Resource.magicStone) < cost.magic_stone) {
                 lesscount++;
             }
         }
@@ -186,13 +186,13 @@ export class PetUpgrade extends ViewConnector {
 
         console.log("cost",cost);
         if(cost.coin){
-            User.instance.coin -= cost.coin;
+            User.instance.addResource(Resource.coin, -cost.coin);
         }
         if(cost.food){
-            User.instance.food -= cost.food;
+            User.instance.addResource(Resource.food, -cost.food);
         }
         if(cost.magic_stone){
-            User.instance.magic_stone -= cost.magic_stone;
+            User.instance.addResource(Resource.magicStone, -cost.magic_stone);
         }
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         EventEmitter.emitEvent(EventType.STAR_INCREASE);

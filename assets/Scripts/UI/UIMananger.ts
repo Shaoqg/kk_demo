@@ -2,7 +2,6 @@ import StoreScreen from "./StoreScreen";
 import User from "../Gameplay/User";
 import ResourcePointScreen from "../Screens/ResourcePointScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { ShipUpgrade } from "../Screens/ShipUpgrade";
 import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
 import { AdventureArea } from "../Screens/AdventureArea";
@@ -10,6 +9,7 @@ import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
 import { BuildModel } from "../Screens/BuildModel";
 import IslandManager from "../Gameplay/Island/IslandManager";
+import { Resource } from "../Config";
 
 
 const {ccclass, property} = cc._decorator;
@@ -150,7 +150,6 @@ export default class UIManager extends cc.Component {
 
     onclicLevelup(){
         this.onOpenBattle(true);
-        ShipUpgrade.prompt();
     }
 
     onclickPet() {
@@ -207,8 +206,8 @@ export default class UIManager extends cc.Component {
         })
     }
 
-    starIncrease() {
-        User.instance.star++;
+    starIncrease(num:number,pos:cc.Vec2 = null) {
+        User.instance.addResource(Resource.star, num);
         this.updateStar()
         User.instance.saveUse();
     }
@@ -224,27 +223,27 @@ export default class UIManager extends cc.Component {
     }
     
     updateStar(){
-        this.star_label.getComponent(cc.Label).string = User._instance.star.toString();
+        this.star_label.getComponent(cc.Label).string = User.instance.getResource(Resource.star).toString();
     }
 
     updateCoinLabel(){
-        this.coin_label.getComponent(cc.Label).string=User._instance.coin.toString();
+        this.coin_label.getComponent(cc.Label).string=User.instance.getResource(Resource.coin).toString();
     }
 
     updateWoodLabel(){
-        this.woodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.wood.toString();
+        this.woodNode.getChildByName("Num").getComponent(cc.Label).string=User.instance.getResource(Resource.wood).toString();
     }
 
     updateStoneLabel(){
-        this.stoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.stone.toString();
+        this.stoneNode.getChildByName("Num").getComponent(cc.Label).string=User.instance.getResource(Resource.stone).toString();
     }
 
     updateFoodLabel(){
-        this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.food.toString();
+        this.foodNode.getChildByName("Num").getComponent(cc.Label).string=User.instance.getResource(Resource.food).toString();
     }
 
     updateMagicLabel(){
-        this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User._instance.magic_stone.toString();
+        this.magicStoneNode.getChildByName("Num").getComponent(cc.Label).string=User.instance.getResource(Resource.magicStone).toString();
     }
 
     adjustGameInterface() {

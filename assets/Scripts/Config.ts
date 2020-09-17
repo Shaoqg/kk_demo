@@ -639,6 +639,14 @@ export let BuildConfig = {
         star:{
           baseNumber:0,
           levelNumber:0.5,
+        },
+        questLevel:{
+          baseNumber:0,
+          levelNumber:0.2,
+        },
+        quest:{
+          baseNumber:0,
+          levelNumber:0.2,
         }
       }
     },

@@ -1,6 +1,6 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import User from "../Gameplay/User";
-import { PetData, getPetConfigById} from "../Config";
+import { PetData, getPetConfigById } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import ScreenSize from "../Tools/ScreenSize";
 
@@ -54,14 +54,14 @@ export class BattleInDefende extends ViewConnector {
 
         this.setRewardInfo()
 
-        if (!success){
-             User.instance.areaExploring["unknow"]=false
-             User.instance.areaCapture["unknow"]=false
-             User.instance.areaCaptureStartTime["unknow"]=0
-             User.instance.areaCaptureTimeTakenReward["unknow"]=0
-             User.instance.areaCaptureStopTime["unknow"]=0
-             User.instance.removePetFromInAdventure("Defence");
-             User.instance.saveUse();
+        if (!success) {
+            User.instance.areaInfo.exploring["unknow"] = false
+            User.instance.areaInfo.capture["unknow"] = false
+            User.instance.areaInfo.captureStartTime["unknow"] = 0
+            User.instance.areaInfo.captureTimeTakenReward["unknow"] = 0
+            User.instance.areaInfo.stopTime["unknow"] = 0
+            User.instance.removePetFromInAdventure("Defence");
+            User.instance.saveUse();
         }
 
         let btn_return = cc.find("button_primary", this.root)
@@ -84,7 +84,7 @@ export class BattleInDefende extends ViewConnector {
     }
 
     setRewardInfo() {
-        this.spendtime = Math.floor((User.instance.areaCaptureTimeTakenReward["unknow"] - User.instance.areaCaptureStartTime["unknow"]) / 1000 / 60)
+        this.spendtime = Math.floor((User.instance.areaInfo.captureTimeTakenReward["unknow"] - User.instance.areaInfo.captureStartTime["unknow"]) / 1000 / 60)
         let tips = cc.find("tips", this.root).getComponent(cc.Label);
         tips.string = "We've been defending for " + this.spendtime + " minutes now"
 
@@ -100,7 +100,7 @@ export class BattleInDefende extends ViewConnector {
 
     setPets(Pets: PetData[]) {
         Pets.forEach(async (pet, idx) => {
-            let petImage = cc.find("defPets/pet"+(idx+1)+"/petImage", this.root).getComponent(cc.Sprite);
+            let petImage = cc.find("defPets/pet" + (idx + 1) + "/petImage", this.root).getComponent(cc.Sprite);
             let petconfig = getPetConfigById(pet.petId);
             petImage.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
         })

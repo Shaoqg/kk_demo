@@ -3,7 +3,6 @@ import { StateManager } from "./State/StateManager";
 import { Adventure } from "../Screens/Adventure";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { AdventureArea } from "../Screens/AdventureArea";
-import { TreeUpgrade } from "../Screens/TreeUpgrade";
 import { Trees, AdventureAreas } from "../Config";
 import { PetFactory } from "../Pet/PetFactory";
 import ScreenSize from "../Tools/ScreenSize";
@@ -77,29 +76,29 @@ export default class WorldManager extends cc.Component {
 
     checkCaptureReward() {
         let time = 0;
-        this.isCap=User.instance.areaCapture["unknow"];
+        this.isCap=User.instance.areaInfo.capture["unknow"];
         
-        if (User.instance.areaCaptureStopTime["unknow"] != 0) {
-            time = Math.floor((User.instance.areaCaptureStopTime["unknow"] - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
-            this.isCap=false
-            User.instance.wood += 5 * time
-            User.instance.stone += 15 * time
-            User.instance.food += 10 * time
-            User.instance.areaCaptureTimeTakenReward["unknow"] = User.instance.areaCaptureStopTime["unknow"];
-        }else{
-            this.isCap=User.instance.areaCapture["unknow"];
-            time = Math.floor((Date.now() - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
-            if(this.isCap&&time > 0){
-                User.instance.wood += 5 * time
-                User.instance.stone += 15 * time
-                User.instance.food += 10 * time
-                User.instance.areaCaptureTimeTakenReward["unknow"] = Date.now();
-                User.instance.saveUse();
-            }
-        }
-        console.log(time,this.isCap);
+        // if (User.instance.areaCaptureStopTime["unknow"] != 0) {
+        //     time = Math.floor((User.instance.areaCaptureStopTime["unknow"] - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
+        //     this.isCap=false
+        //     User.instance.wood += 5 * time
+        //     User.instance.stone += 15 * time
+        //     User.instance.food += 10 * time
+        //     User.instance.areaCaptureTimeTakenReward["unknow"] = User.instance.areaCaptureStopTime["unknow"];
+        // }else{
+        //     this.isCap=User.instance.areaCapture["unknow"];
+        //     time = Math.floor((Date.now() - User.instance.areaCaptureTimeTakenReward["unknow"]) / 1000 / 60);
+        //     if(this.isCap&&time > 0){
+        //         User.instance.wood += 5 * time
+        //         User.instance.stone += 15 * time
+        //         User.instance.food += 10 * time
+        //         User.instance.areaCaptureTimeTakenReward["unknow"] = Date.now();
+        //         User.instance.saveUse();
+        //     }
+        // }
+        // console.log(time,this.isCap);
 
-        EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
+        // EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
     }
 
     update(dt) {

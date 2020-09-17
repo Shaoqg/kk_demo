@@ -5,7 +5,7 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 
 export default class User {
 
-    static _instance: User = null;
+    private static _instance: User = null;
     static get instance() {
         if (!this._instance) {
             this._instance = new User();
@@ -89,36 +89,30 @@ export default class User {
     ]
 
     private _playerID = `Player:${Math.random()}`;
-    public star = 1;
-    public level_ship = 1;
-    public level_castle = 1;
-    public level_Trees: object = { "tree1": 0, "tree2": 0, "tree3": 0 };
     public buildInfo: { [id: string]: BuildInfo | CastleInfo } = {};
-    public coin = 200000;
-    public wood = 200;
-    public stone = 200;
-    public food = 200;
-    // public ship_capacity_level = 0;
-    // public ship_speed_level = 0;
-    // public ship_bouns_level = 0;
-    public petNumber = this.petList.length;
-    public magic_stone = 10;
+
     public _timeStamps: object = {};
-    public AdventureTime = 0
-    public AdventureFood = 1;
-    public AdventureDestination = "";
-    public AdventurePets: PetData[] = []
-    public adventureCoinslist: number[] = []
-    public adventureWoodlist: number[] = []
-    public adventureStonelist: number[] = []
+
+    public AdventureInfo: {
+        time: number,
+        food: number,
+        destination: string,
+        pets: PetData[],
+        coinslist: number[],
+        woodlist: number[],
+        stonelist: number[],
+    } = null
+
     public exploreTime: object = { "water": 0, "fire": 0, "food": 0, "nature": 0 }
     public currentExp = 5;
-    public currentLevel = 2;
-    public areaExploring = { "water": false, "fire": false, "food": false, "nature": false, "unknow": false }
-    public areaCapture = { "unknow": false }
-    public areaCaptureStartTime = { "unknow": 0 }
-    public areaCaptureTimeTakenReward = { "unknow": 0 }
-    public areaCaptureStopTime = { "unknow": 0 }
+
+    public areaInfo: {
+        exploring: { "water": boolean, "fire": boolean, "food": boolean, "nature": boolean, "unknow": boolean },
+        capture: { "unknow": boolean },
+        captureStartTime: { "unknow": number },
+        captureTimeTakenReward: { "unknow": number },
+        stopTime: { "unknow": number },
+    } = null;
 
     private buildResource: { [resName: string]: { timestamp: number, number: number } } = {}
     private resource: { [resName: string]: number } = {}
@@ -153,7 +147,6 @@ export default class User {
                     petName: pet.petId,
                     petLevel: 1
                 })
-                this.petNumber++;
             }
             return idAdd;
         }
@@ -217,26 +210,20 @@ export default class User {
 
         switch (type) {
             case Resource.coin:
-                this.coin += amount;
                 break;
             case Resource.wood:
-                this.wood += amount;
                 break;
             case Resource.stone:
-                this.stone += amount;
                 break;
             case Resource.food:
-                this.food += amount;
                 break;
             case Resource.magicStone:
-                this.magic_stone += amount;
                 break;
             case Resource.star:
                 if (amount <= 0) {
                     console.error("error");
                     return;
                 }
-                this.star += amount;
                 break;
             default:
                 console.error("can not find Resource:", type);
@@ -250,12 +237,15 @@ export default class User {
         if (!this.resource[type]) {
             this.resource[type] = 0;
         }
-        return  this.resource[type];
+        return this.resource[type];
     }
 
     public getBuildRes(islandType: IsLandType) {
         if (!this.buildResource[islandType]) {
-            return null;
+            this.buildResource[islandType] = {
+                number: 0,
+                timestamp: 0
+            }
         }
         return this.buildResource[islandType];
     }
@@ -274,9 +264,9 @@ export default class User {
         return this.buildResource[islandType];
     }
 
-    public getBuildRevenue(islandType: IsLandType, resType:Resource) {
+    public getBuildRevenue(islandType: IsLandType, resType: Resource) {
         if (this.buildResource[islandType] && this.buildResource[islandType].number >= 1) {
-            let number =Math.floor(this.buildResource[islandType].number);
+            let number = Math.floor(this.buildResource[islandType].number);
             this.updateBuildRes(islandType, -number);
             this.addResource(resType, number);
             EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
@@ -314,44 +304,17 @@ export default class User {
     }
 
     public saveUse() {
-        // this.ship_bouns_level;
-        // this.ship_capacity_level;
-        // this.ship_speed_level;
-
 
         let gameData = {
-            star: this.star,
-            level_castle: this.level_castle,
-            level_ship: this.level_ship,
-            level_Trees: this.level_Trees,
-            // shipInfo:{
-            //     bouns:this.ship_bouns_level,
-            //     capacity: this.ship_capacity_level,
-            //     speed:this.ship_speed_level
-            // },
-            magic_stone: this.magic_stone,
-            food: this.food,
-            stone: this.stone,
-            coin: this.coin,
-            wood: this.wood,
             petList: this.petList,
             _timeStamps: this._timeStamps,
-            AdventureTime: this.AdventureTime,
-            AdventurePets: this.AdventurePets,
-            AdventureFood: this.AdventureFood,
-            AdventureDestination: this.AdventureDestination,
-            adventureCoinslist: this.adventureCoinslist,
-            adventureWoodlist: this.adventureWoodlist,
-            adventureStonelist: this.adventureStonelist,
+            AdventureInfo: this.AdventureInfo,
             exploreTime: this.exploreTime,
             playerID: this._playerID,
-            areaExploring: this.areaExploring,
-            areaCapture: this.areaCapture,
-            areaCaptureStartTime: this.areaCaptureStartTime,
-            areaCaptureTimeTakenReward: this.areaCaptureTimeTakenReward,
+            areaInfo: this.areaInfo,
             buildInfo: this.buildInfo,
             buildResource: this.buildResource,
-            resource :this.resource
+            resource: this.resource
         }
         cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
         console.log("SAVE USER")
@@ -362,43 +325,81 @@ export default class User {
 
         if (dataStr) {
             let data = JSON.parse(dataStr);
-            this.star = data["star"];
-            this.level_castle = data["level_castle"];
-            this.level_ship = data["level_ship"];
-            this.level_Trees = data["level_Trees"];
 
-            // this.ship_bouns_level = data["shipInfo"]["bouns"]
-            // this.ship_capacity_level = data["shipInfo"]["capacity"]
-            // this.ship_speed_level = data["shipInfo"]["speed"]
-            this.magic_stone = data["magic_stone"];
-            this.food = data["food"];
-            this.stone = data["stone"];
-            this.coin = data["coin"];
-            this.wood = data["wood"];
-            this.petList = data["petList"];
-            this._timeStamps = data["_timeStamps"];
-            this.AdventureTime = data["AdventureTime"];
-            this.AdventurePets = data["AdventurePets"];
-            this.AdventureFood = data["AdventureFood"];
-            this.AdventureDestination = data["AdventureDestination"];
-            this.adventureCoinslist = data["adventureCoinslist"];
-            this.adventureWoodlist = data["adventureWoodlist"];
-            this.adventureStonelist = data["adventureStonelist"];
-            this.exploreTime = data["exploreTime"];
-            this._playerID = data["playerID"];
-            this.areaCapture = data["areaCapture"];
-            this.areaExploring = data["areaExploring"];
-            this.areaCaptureStartTime = data["areaCaptureStartTime"];
-            this.areaCaptureTimeTakenReward = data["areaCaptureTimeTakenReward"];
-            this.buildInfo = data["buildInfo"] || {};
-            this.petNumber = this.petList.length;
-            this.buildResource = data["buildResource"] || {};
-            this.resource = data["resource"] ||{}
+            this._playerID = data["playerID"] || this.resetData("playerID");
+            this.petList = data["petList"] || this.resetData("petList");
+            this._timeStamps = data["_timeStamps"] || this.resetData("_timeStamps");
+            this.AdventureInfo = data["AdventureInfo"] || this.resetData("AdventureInfo");
+            this.exploreTime = data["exploreTime"] || this.resetData("exploreTime");
+            this.areaInfo = data["areaInfo"] || this.resetData("areaInfo");
+            this.buildInfo = data["buildInfo"] || this.resetData("buildInfo");
+            this.buildResource = data["buildResource"] || this.resetData("buildResource");
+            this.resource = data["resource"] || this.resetData("resource");
+        } else {
+            this._playerID =  this.resetData("playerID");
+            this.petList =  this.resetData("petList");
+            this._timeStamps =   this.resetData("_timeStamps");
+            this.AdventureInfo =   this.resetData("AdventureInfo");
+            this.exploreTime =  this.resetData("exploreTime");
+            this.areaInfo = this.resetData("areaInfo");
+            this.buildInfo = this.resetData("buildInfo");
+            this.buildResource =  this.resetData("buildResource");
+            this.resource =  this.resetData("resource");
+
         }
         this.isLoaded = true;
 
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
     }
+
+    resetData(name):any {
+        switch (name) {
+            case "playerID":
+                return `Player:${Math.random()}`;
+            case "petList":
+                return [{ petId: "froom", petLevel: 1, petName: "Froge" }]
+            case "_timeStamps":
+                return {};
+            case "AdventureInfo":
+                return {
+                    time: 0,
+                    food: 0,
+                    destination: "",
+                    pets: [],
+                    coinslist: [],
+                    woodlist: [],
+                    stonelist: [],
+                };
+            case "exploreTime":
+                return { "water": 0, "fire": 0, "food": 0, "nature": 0 };
+            case "areaInfo":
+                return {
+                    exploring: { "water": false, "fire": false, "food": false, "nature": false, "unknow": false },
+                    capture: { "unknow": false },
+                    captureStartTime: { "unknow": 0 },
+                    captureTimeTakenReward: { "unknow": 0 },
+                    stopTime: { "unknow": 0 },
+                };
+            case "buildInfo":
+                return {};
+            case "buildResource":
+                return {};
+            case "resource":
+                return {
+                    [Resource.star]: 1,
+                    [Resource.coin]: 10000,
+                    [Resource.stone]: 300,
+                    [Resource.wood]: 300,
+                    [Resource.food]: 300,
+                    [Resource.magicStone]: 1,
+                };
+            default:
+                console.error("no data");
+                break;
+        }
+
+    }
+
 
     public resetUse() {
         cc.sys.localStorage.setItem("KK_DEMO", "");

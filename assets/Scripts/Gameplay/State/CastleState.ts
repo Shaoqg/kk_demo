@@ -10,7 +10,7 @@ export default class CastleState extends State {
     private static _self = StateManager.instance.registerState("CastleState", new CastleState());
 
     async startState(){
-        CastleScreen.prompt();
+        // CastleScreen.prompt();
         return super.startState();
     }
 

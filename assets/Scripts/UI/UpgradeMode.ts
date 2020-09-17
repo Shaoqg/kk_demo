@@ -35,6 +35,7 @@ export default class UpgradeModel extends ViewConnector {
         type: IsLandType,
         name: IsLandItemType,
         toLevel: number,
+        starReward: number,
         UpgradeConfigInfo: any
     } = null
 
@@ -51,6 +52,7 @@ export default class UpgradeModel extends ViewConnector {
             type: type,
             name: name,
             toLevel: toLevel,
+            starReward:0,
             UpgradeConfigInfo: getUpgradeInfo(toLevel, type, name)
 
         }
@@ -84,7 +86,7 @@ export default class UpgradeModel extends ViewConnector {
 
             let label = cc.find("label", node).getComponent(cc.Label);
             label.string = info.number.toString();
-            label.node.color = info.number <= this.getUpgradeNumber(info.id) ?
+            label.node.color = info.number <= User.instance.getResource(info.id) ?
                 cc.color(53, 36, 29) : cc.color(213, 53, 39);
 
             let sprite_res = cc.find("image", node).getComponent(cc.Sprite);
@@ -96,9 +98,9 @@ export default class UpgradeModel extends ViewConnector {
         // label_coin.string = this.info.UpgradeConfigInfo[0].number.toString();
         // label_res.string = this.info.UpgradeConfigInfo[1].number.toString();
 
-        // label_res.node.color = this.info.UpgradeConfigInfo[1].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[1].id)?
+        // label_res.node.color = this.info.UpgradeConfigInfo[1].number <= User.instance.getResource(this.info.UpgradeConfigInfo[1].id)?
         // cc.color(53,36,29):cc.color(213,53,39);
-        // label_coin.node.color = this.info.UpgradeConfigInfo[0].number <= this.getUpgradeNumber(this.info.UpgradeConfigInfo[0].id)?
+        // label_coin.node.color = this.info.UpgradeConfigInfo[0].number <= User.instance.getResource(this.info.UpgradeConfigInfo[0].id)?
         // cc.color(53,36,29):cc.color(213,53,39);
 
         // GlobalResources.getSpriteFrame(SpriteType.UI, this.info.UpgradeConfigInfo[1].id).then((sf) => {
@@ -107,23 +109,13 @@ export default class UpgradeModel extends ViewConnector {
 
     }
 
-    getUpgradeNumber(type: string) {
-        let resInfo = {
-            [Resource.food]: User.instance.food,
-            [Resource.stone]: User.instance.stone,
-            [Resource.wood]: User.instance.wood,
-            [Resource.coin]: User.instance.coin
-        }
-
-        return resInfo[type] | 0;
-    }
-
     onClick() {
 
         let configs = this.info.UpgradeConfigInfo;
-        if (configs[0].number <= User.instance.coin && configs[1].number <= this.getUpgradeNumber(configs[1].id)) {
-            //TODO upgrade
+        if (configs[0].number <= User.instance.getResource(Resource.coin) && configs[1].number <= User.instance.getResource(configs[1].id)) {
+            // upgrade
             User.instance.UpgradeBuilInfo(this.info.type, this.info.name);
+            this.info.starReward >0 && User.instance.addResource(Resource.star, this.info.starReward);
             User.instance.addResource(Resource.coin, -configs[0].number);
             User.instance.addResource(configs[1].id, -configs[1].number);
             EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
@@ -154,7 +146,8 @@ export default class UpgradeModel extends ViewConnector {
                 case "star":
                     imageSrc = "star"
                     description = "Increase reputation  ";
-                    str2 = ` +${key_config.baseNumber + key_config.levelNumber * this.info.toLevel}`;
+                    this.info.starReward = key_config.baseNumber + key_config.levelNumber * this.info.toLevel;
+                    str2 = ` +${this.info.starReward}`;
                     break;
                 case "number"://reward number
                     imageSrc = this.getRewardRes();
@@ -167,6 +160,17 @@ export default class UpgradeModel extends ViewConnector {
                     description = "Offline revenue cap  ";
                     str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}`;
                     str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}`;
+                    break;
+                case "quest"://
+                    imageSrc = this.getRewardRes();
+                    description = "Quest reward ";
+                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}`;
+                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}`;
+                    break;
+                case "questLevel"://
+                    imageSrc = "";
+                    description = "Increase resource rewards ";
+                    str1 = ` `;
                     break;
                 default:
                     break;
@@ -210,7 +214,7 @@ export default class UpgradeModel extends ViewConnector {
         let resInfo = {
             [IsLandType.fire]: Resource.stone,
             [IsLandType.nature]: Resource.wood,
-            [IsLandType.castle]: Resource.wood,
+            [IsLandType.castle]: Resource.star,
             [IsLandType.snack]: Resource.food,
             [IsLandType.water]: Resource.coin
         }

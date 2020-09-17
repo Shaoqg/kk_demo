@@ -89,11 +89,11 @@ export class Adventure extends ViewConnector {
 
         this.seatNum=capacitys[1];
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
-        shipLevel.getComponent(cc.Label).string="Level:"+User.instance.level_ship;
-        shipSpeed.getComponent(cc.Label).string="Speed："+speeds[1]+" knots:";
+        shipLevel.getComponent(cc.Label).string="Level:"+1;
+        shipSpeed.getComponent(cc.Label).string="Speed："+1+" knots:";
         
         if(!areaName){
-            areaName=User.instance.AdventureDestination;
+            areaName=User.instance.AdventureInfo.destination;
         }
         destinationLabel.string = "destination: area " + areaName;
         if(areaName=="area_unknown"){
@@ -120,7 +120,7 @@ export class Adventure extends ViewConnector {
         let timestamp = User.instance.getTimeStamp("Adventure");
         if (timestamp > 0 && !this.unknowArea) {
             this.time = timestamp
-            this.counttime = User.instance.AdventureTime;
+            this.counttime = User.instance.AdventureInfo.time;
             let timeelapsed = (Date.now() / 1000 - this.time);
             this.timeremain = this.counttime * 60 - (Math.round(timeelapsed));
             this.updateTimeCountLabel();
@@ -194,9 +194,9 @@ export class Adventure extends ViewConnector {
                         UserPet.UsingBy = "Adventure"
                     })
 
-                    User.instance.food -= this.food;
-                    User.instance.AdventureFood = this.food;
-                    User.instance.AdventureDestination = areaName;
+                    User.instance.addResource(Resource.food, -this.food);
+                    User.instance.AdventureInfo.food = this.food;
+                    User.instance.AdventureInfo.destination = areaName;
                     let completeTime = 1;
                     AdventureAreas.forEach((area) => {
                         if (area.areaName == areaName) {
@@ -250,11 +250,11 @@ export class Adventure extends ViewConnector {
         this.foodNumLabel.string = this.food.toString();
 
         this.foodNumNode.on(cc.Node.EventType.TOUCH_END, async () => {
-            this.food = await SelectNumber.prompt("food",this.food,1,Math.min(User.instance.food,AdventureShipMaxFood))
+            this.food = await SelectNumber.prompt("food",this.food,1,Math.min(User.instance.getResource(Resource.food),AdventureShipMaxFood))
             this.foodNumLabel.string = this.food.toString();
         })
 
-        if (User.instance.food < this.food) {
+        if (User.instance.getResource(Resource.food) < this.food) {
             this.food = 0;
             this.foodNumLabel.string = this.food.toString();
             this.setButtomAndTimeBar("Lack of food", false, false)
@@ -267,7 +267,7 @@ export class Adventure extends ViewConnector {
         this.counttime = AdventureTime * this.food / speeds[1];
         this.timeremain = this.counttime * 60 ;
         User.instance.setTimeStamp("Adventure",this.time);
-        User.instance.AdventureTime=this.counttime;
+        User.instance.AdventureInfo.time =this.counttime;
         console.log("time",this.counttime * 60);
     }
 
@@ -312,7 +312,7 @@ export class Adventure extends ViewConnector {
                     let finalRandomCoins = this.randomList(randomCoins)
                     let finalCoin = finalRandomCoins.random2
                     finalCoin.push(reward.rewardNum - finalRandomCoins.count);
-                    User.instance.adventureCoinslist = finalCoin;
+                    User.instance.AdventureInfo.coinslist = finalCoin;
                     break;
                 case Resource.wood:
                     let randomWood: number[] = [];
@@ -322,7 +322,7 @@ export class Adventure extends ViewConnector {
                     let finalRandomWood = this.randomList(randomWood)
                     let finalWood = finalRandomWood.random2
                     finalWood.push(reward.rewardNum - finalRandomWood.count);
-                    User.instance.adventureWoodlist = finalWood;
+                    User.instance.AdventureInfo.woodlist = finalWood;
                     break;
                 case Resource.stone:
                     let randomStone: number[] = [];
@@ -332,7 +332,7 @@ export class Adventure extends ViewConnector {
                     let finalRandomStone = this.randomList(randomStone)
                     let finalStone = finalRandomStone.random2
                     finalStone.push(reward.rewardNum - finalRandomStone.count);
-                    User.instance.adventureStonelist = finalStone;
+                    User.instance.AdventureInfo.stonelist = finalStone;
                     break;
             }
         })
@@ -360,9 +360,9 @@ export class Adventure extends ViewConnector {
         return { random2, count }
     }
     getRandomResource(lines) {
-        let coins = User.instance.adventureCoinslist[lines];
-        let wood = User.instance.adventureWoodlist[lines];
-        let stone = User.instance.adventureStonelist[lines];
+        let coins = User.instance.AdventureInfo.coinslist[lines];
+        let wood = User.instance.AdventureInfo.woodlist[lines];
+        let stone = User.instance.AdventureInfo.stonelist[lines];
         return { coins, wood, stone };
     }
 
@@ -426,11 +426,11 @@ export class Adventure extends ViewConnector {
             await AdventureReward.prompt(reward);
             this.close(undefined)
             User.instance.setTimeStamp("Adventure",0);
-            User.instance.AdventureTime = 0;
+            User.instance.AdventureInfo.time = 0;
             User.instance.removePetFromInAdventure("Adventure");
-            User.instance.adventureStonelist = []
-            User.instance.adventureCoinslist = []
-            User.instance.adventureWoodlist = []
+            User.instance.AdventureInfo.stonelist = []
+            User.instance.AdventureInfo.coinslist = []
+            User.instance.AdventureInfo.woodlist = []
             User.instance.saveUse();
         });
     }
@@ -545,7 +545,7 @@ export class Adventure extends ViewConnector {
 
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/"+this.seatNum;
        
-        if ((this.petReady == this.seatNum) && !this.goAdventure && this.food <= User.instance.food && this.food!=0) {
+        if ((this.petReady == this.seatNum) && !this.goAdventure && this.food <= User.instance.getResource(Resource.food) && this.food!=0) {
             let go = cc.find("button_primary", this.root);
             let go_gry = cc.find("button_primary/button_gry", this.root);
             go.getComponent(cc.Button).interactable = true;
@@ -555,9 +555,9 @@ export class Adventure extends ViewConnector {
     }
 
     getResource(boundsAll) {
-        let wood = AdventureBasicwood * User.instance.AdventureFood;
-        let stone = AdventureBasicstone * User.instance.AdventureFood;
-        let coins = AdventureBasiccoins * User.instance.AdventureFood;
+        let wood = AdventureBasicwood * User.instance.AdventureInfo.food;
+        let stone = AdventureBasicstone * User.instance.AdventureInfo.food;
+        let coins = AdventureBasiccoins * User.instance.AdventureInfo.food;
 
 
         let boundsWood = 0;

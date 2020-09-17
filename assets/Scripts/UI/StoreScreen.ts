@@ -2,7 +2,7 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import User from "../Gameplay/User";
 import { ConfigSet } from "../Util/ConfigSet";
-import { PetConfig, PetConfigType, getPetIntroByElements, Rarity, getPetConfigById } from "../Config";
+import { PetConfig, PetConfigType, getPetIntroByElements, Rarity, getPetConfigById, IsLandType, CastleInfo, Resource } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { PetFactory } from "../Pet/PetFactory";
 
@@ -199,7 +199,7 @@ export default class StoreScreen extends ViewConnector {
     }
 
     getPet(){
-        let level = User.instance.level_castle;
+        let level = (User.instance.getBuildInfo(IsLandType.castle) as CastleInfo).castle;
         if (level >=3) {
             level = 3;
         }
@@ -291,16 +291,16 @@ export default class StoreScreen extends ViewConnector {
             costItem.getChildByName("ok").getComponent(cc.Button).interactable = !!ok;
         }
         let coinEnough:boolean = true,foodEnough:boolean = true,magic_stoneEnough:boolean = true
-        coinEnough = User.instance.coin >= costConfig.coin;
+        coinEnough = User.instance.getResource(Resource.coin) >= costConfig.coin;
         setCostItem("coin", "500", coinEnough);
         setCostItem("food", null);
         setCostItem("stone", null);
         if (costConfig.food) {
-            foodEnough =  User.instance.food >= costConfig.food;
+            foodEnough =  User.instance.getResource(Resource.food) >= costConfig.food;
             setCostItem("food", "food\n" + costConfig.food, foodEnough);
         }
         if (costConfig.magic_stone) {
-            magic_stoneEnough = User.instance.magic_stone >= costConfig.magic_stone;
+            magic_stoneEnough = User.instance.getResource(Resource.magicStone) >= costConfig.magic_stone;
             setCostItem("stone", "magic rock\n" + costConfig.magic_stone, magic_stoneEnough);
         }
 
@@ -316,16 +316,17 @@ export default class StoreScreen extends ViewConnector {
         }
 
         let costConfig = this.getCost(this.currentSelectPet);
-        if (User.instance.coin >= costConfig.coin &&
-            User.instance.food >= costConfig.food &&
-            User.instance.magic_stone >= costConfig.magic_stone
+        if (User.instance.getResource(Resource.coin) >= costConfig.coin &&
+            User.instance.getResource(Resource.food) >= costConfig.food &&
+            User.instance.getResource(Resource.magicStone) >= costConfig.magic_stone
             ) {
 
                 let isBuy = User.instance.addPet(this.currentSelectPet);
                 if (isBuy) {
-                    User.instance.coin -= costConfig.coin;
-                    User.instance.food -= costConfig.food;
-                    User.instance.magic_stone -= costConfig.magic_stone;
+                    
+                    User.instance.addResource(Resource.coin, -costConfig.coin);
+                    User.instance.addResource(Resource.food, -costConfig.food);
+                    User.instance.addResource(Resource.magicStone, -costConfig.magic_stone);
 
                     this.currentSelectNode.destroy();
                     this.currentSelectNode = this.currentSelectPet = null;

@@ -78,7 +78,7 @@ export class AdventureReward extends ViewConnector {
                     } else {
                         rewardCoinNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
                     }
-                    User.instance.coin += reward.rewardNum;
+                    User.instance.addResource(reward.rewardType, reward.rewardNum);
                     break;
                 case Resource.wood:
                     rewardWoodNode.active = true;
@@ -88,7 +88,7 @@ export class AdventureReward extends ViewConnector {
                     } else {
                         rewardWoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
                     }
-                    User.instance.wood += reward.rewardNum;
+                    User.instance.addResource(reward.rewardType, reward.rewardNum);
                     break;
                 case Resource.stone:
                     rewardStoneNode.active = true;
@@ -98,7 +98,7 @@ export class AdventureReward extends ViewConnector {
                     } else {
                         rewardStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
                     }
-                    User.instance.stone += reward.rewardNum;
+                    User.instance.addResource(reward.rewardType, reward.rewardNum);
                     break;
                 case Resource.food:
                     rewardFoodNode.active = true;
@@ -108,7 +108,7 @@ export class AdventureReward extends ViewConnector {
                     } else {
                         rewardFoodNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
                     }
-                    User.instance.food += reward.rewardNum;
+                    User.instance.addResource(reward.rewardType, reward.rewardNum);
                     break;
                 case Resource.magicStone:
                     rewardMagicStoneNode.active = true;
@@ -118,7 +118,7 @@ export class AdventureReward extends ViewConnector {
                     } else {
                         rewardMagicStoneNode.getChildByName("bounds").getComponent(cc.Label).string = "+" + reward.bounds + "%";
                     }
-                    User.instance.magic_stone += reward.rewardNum;
+                    User.instance.addResource(reward.rewardType, reward.rewardNum);
                     break;
                 case Resource.pet:
                     scroll.active = false;

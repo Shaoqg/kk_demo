@@ -75,8 +75,8 @@ export class AdventureArea extends ViewConnector {
         areaNode.on(cc.Node.EventType.TOUCH_END, async () => {
             // this.close(undefined);
             console.log("area_unknown");
-            if (User.instance.areaExploring["unknow"]) {
-                await BattleInDefende.prompt(User.instance.areaCapture["unknow"]);
+            if (User.instance.areaInfo.exploring["unknow"]) {
+                await BattleInDefende.prompt(User.instance.areaInfo.capture["unknow"]);
                 this.PlacePetsInBattle();
             } else {
                 let isChoose = await Adventure.prompt("area_unknown");
@@ -98,7 +98,7 @@ export class AdventureArea extends ViewConnector {
     }
 
     PlacePetsInBattle() {
-        if (User.instance.areaExploring["unknow"]) {
+        if (User.instance.areaInfo.exploring["unknow"]) {
             let pets = User.instance.getPetsNowUsing("Defence");
             pets.forEach(async (pet, idx) => {
                 let petNode = cc.find("scrollview/list/area_unknown/defencePets/pet" + (idx + 1), this.root);

@@ -42,10 +42,10 @@ export default class ResourceManager extends cc.Component {
                 let timeInterval = Math.floor((Date.now() - resInfo.timestamp) / 1000);
                 let totalRevenue = Math.floor(timeInterval / 60 * number_min * 0.5);
 
-                let offlineRevenueMax = getOfflineRevenueMax(islandType, config.res.rewLevel);
+                let offlineRevenueMax = config.res.resMax;
 
-                if (offlineRevenueMax >= totalRevenue) {
-                    totalRevenue = offlineRevenueMax;
+                if (revenue + totalRevenue>= offlineRevenueMax) {
+                    totalRevenue = offlineRevenueMax - revenue;
                 }
                 revenue += totalRevenue;
                 User.instance.updateBuildRes(islandType, totalRevenue);
@@ -71,7 +71,7 @@ export default class ResourceManager extends cc.Component {
 
         let timeBar = new TimeBar();
         timeBar.init(node, {
-            totalTime: type== IsLandType.castle?2:10
+            totalTime: type == IsLandType.castle ? 2 : 10
         }, () => {
             this.onTimeOver(type);
         });
@@ -93,14 +93,19 @@ export default class ResourceManager extends cc.Component {
 
         if (type == IsLandType.castle) {
             let types = [Resource.coin, Resource.food, Resource.stone, Resource.wood]
-            this.creatShipRes(types[Math.floor(Math.random()*types.length)]);
+            this.creatShipRes(types[Math.floor(Math.random() * types.length)]);
             return;
         }
 
 
         await this.creatResAnimation(type);
 
-        User.instance.updateBuildRes(type, rewardNumber);
+        if (this._resourceConfig[type]["res"]["resMax"] > User.instance.getBuildRes(type).number) {
+            let num = this._resourceConfig[type]["res"]["resMax"] - User.instance.getBuildRes(type).number;
+
+            User.instance.updateBuildRes(type, rewardNumber > num ? num : rewardNumber);
+        }
+
         this.updateResDialogInfo(type);
     }
 
@@ -204,8 +209,8 @@ export default class ResourceManager extends cc.Component {
         }
     }
 
-    async creatResAnimation(type: IsLandType, resType= null,num = 0, pInfo:{parent:cc.Node, position:cc.Vec2} = null) {
-        let parentInfo = pInfo?pInfo :this.getParentInfo(type);
+    async creatResAnimation(type: IsLandType, resType = null, num = 0, pInfo: { parent: cc.Node, position: cc.Vec2 } = null) {
+        let parentInfo = pInfo ? pInfo : this.getParentInfo(type);
         let parent: cc.Node = parentInfo.parent;
         let pos: cc.Vec2 = parentInfo.position;
 
@@ -215,15 +220,16 @@ export default class ResourceManager extends cc.Component {
         node.opacity = 0;
 
         let label = cc.find("label", node).getComponent(cc.Label);
-        label.string = num ==0? "":"+" +num;
+        label.string = num == 0 ? "" : "+" + num;
 
         let sprite = node.getChildByName("image").getComponent(cc.Sprite);
-        resType = resType? resType:this._resourceConfig[type].res.type;
+        resType = resType ? resType : this._resourceConfig[type].res.type;
         sprite.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.UI, resType);
         setSpriteSize(sprite, sprite.spriteFrame, 50);
 
         let endCB = new VoidCallPromise();
 
+        node.zIndex = 1200;
         node.runAction(cc.sequence(
             cc.spawn(
                 cc.moveBy(0.2, cc.v2(0, 50)),
@@ -257,20 +263,20 @@ export default class ResourceManager extends cc.Component {
         sprite.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.UI, resType);
         setSpriteSize(sprite, sprite.spriteFrame, 50);
 
-         let height = 100;
+        let height = 100;
 
         sprite.node.runAction(cc.sequence(
-            cc.moveTo(0.3, cc.v2(0,height)).easing(cc.easeOut(3)),
-            cc.moveTo(0.4, cc.v2(0,0)).easing(cc.easeIn(2)),
-            cc.moveTo(0.1, cc.v2(0,height *0.1)).easing(cc.easeOut(1.5)),
-            cc.moveTo(0.05, cc.v2(0,0)).easing(cc.easeIn(1.5)),
-            cc.moveTo(0.05, cc.v2(0,height *0.05)).easing(cc.easeOut(1.5)),
-            cc.moveTo(0.05, cc.v2(0,0)).easing(cc.easeIn(1.5)),
+            cc.moveTo(0.3, cc.v2(0, height)).easing(cc.easeOut(3)),
+            cc.moveTo(0.4, cc.v2(0, 0)).easing(cc.easeIn(2)),
+            cc.moveTo(0.1, cc.v2(0, height * 0.1)).easing(cc.easeOut(1.5)),
+            cc.moveTo(0.05, cc.v2(0, 0)).easing(cc.easeIn(1.5)),
+            cc.moveTo(0.05, cc.v2(0, height * 0.05)).easing(cc.easeOut(1.5)),
+            cc.moveTo(0.05, cc.v2(0, 0)).easing(cc.easeIn(1.5)),
             // cc.moveTo(0.7,cc.Vec2.ZERO).easing(cc.easeBounceOut())
         ))
 
-        let showLabel = ()=>{
-            this.creatResAnimation(IsLandType.castle, resType,3, {parent:parent, position: node.position.add(cc.v2(0,100))});
+        let showLabel = () => {
+            this.creatResAnimation(IsLandType.castle, resType, 3, { parent: parent, position: node.position.add(cc.v2(0, 100)) });
         }
 
         node.zIndex = 1000;
@@ -283,14 +289,14 @@ export default class ResourceManager extends cc.Component {
                 node.zIndex = -node.y + 660;
                 node.runAction(cc.sequence(
                     cc.delayTime(10),
-                    cc.callFunc(()=>{
+                    cc.callFunc(() => {
                         this.pushResNode(node, "res");
                         showLabel();
                     })
                 ))
 
                 node.on(cc.Node.EventType.TOUCH_END, () => {
-                    
+
                     node.off(cc.Node.EventType.TOUCH_END);
                     node.stopAllActions();
                     this.pushResNode(node, "res");
@@ -342,7 +348,7 @@ export default class ResourceManager extends cc.Component {
                 res: {
                     type: Resource.wood,
                     num: getResourceNumber(IsLandType.nature, (User.instance.getBuildInfo(IsLandType.nature) as BuildInfo).build),
-                    resMax: getOfflineRevenueMax(IsLandType.fire, (User.instance.getBuildInfo(IsLandType.fire) as BuildInfo).build),
+                    resMax: getOfflineRevenueMax(IsLandType.nature, (User.instance.getBuildInfo(IsLandType.nature) as BuildInfo).build),
                     resLevel: (User.instance.getBuildInfo(IsLandType.nature) as BuildInfo).build
                 },
                 pos: cc.v2(0, 0)
@@ -351,7 +357,7 @@ export default class ResourceManager extends cc.Component {
                 res: {
                     type: Resource.food,
                     num: getResourceNumber(IsLandType.snack, (User.instance.getBuildInfo(IsLandType.snack) as BuildInfo).build),
-                    resMax: getOfflineRevenueMax(IsLandType.fire, (User.instance.getBuildInfo(IsLandType.fire) as BuildInfo).build),
+                    resMax: getOfflineRevenueMax(IsLandType.snack, (User.instance.getBuildInfo(IsLandType.snack) as BuildInfo).build),
                     resLevel: (User.instance.getBuildInfo(IsLandType.snack) as BuildInfo).build
                 }
             },
@@ -359,7 +365,7 @@ export default class ResourceManager extends cc.Component {
                 res: {
                     type: Resource.coin,
                     num: getResourceNumber(IsLandType.water, (User.instance.getBuildInfo(IsLandType.water) as BuildInfo).build),
-                    resMax: getOfflineRevenueMax(IsLandType.fire, (User.instance.getBuildInfo(IsLandType.fire) as BuildInfo).build),
+                    resMax: getOfflineRevenueMax(IsLandType.water, (User.instance.getBuildInfo(IsLandType.water) as BuildInfo).build),
                     resLevel: (User.instance.getBuildInfo(IsLandType.water) as BuildInfo).build
                 }
             }

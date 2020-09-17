@@ -190,27 +190,26 @@ export class RotaryScreen extends ViewConnector {
             case Resource.coin:
                 let rewardCoins = this.finsishItem.reward.rewardNum;
                 console.log("get coins " + rewardCoins);
-                User.instance.coin += rewardCoins;
+                User.instance.addResource(Resource.coin, rewardCoins)
                 break;
             case Resource.wood:
                 let rewardWood = this.finsishItem.reward.rewardNum;
                 console.log("get wood " + rewardWood);
-                User.instance.wood += rewardWood;
+                User.instance.addResource(Resource.wood, rewardWood)
                 break;
             case Resource.stone:
                 let rewardStone = this.finsishItem.reward.rewardNum;
                 console.log("get stone " + rewardStone);
-                User.instance.star += rewardStone;
                 break;
             case Resource.food:
                 let rewardFood = this.finsishItem.reward.rewardNum;
                 console.log("get food " + rewardFood);
-                User.instance.food += rewardFood;
+                User.instance.addResource(Resource.food, rewardFood)
                 break;
             case Resource.magicStone:
                 let rewardMagicStone = this.finsishItem.reward.rewardNum;
                 console.log("get magicStone " + rewardMagicStone);
-                User.instance.magic_stone += rewardMagicStone;
+                User.instance.addResource(Resource.magicStone, rewardMagicStone)
                 break;
             case Resource.pet:
                 let petconfig = getPetConfigById(this.finsishItem.reward.petId);

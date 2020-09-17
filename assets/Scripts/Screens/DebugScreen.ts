@@ -110,8 +110,8 @@ export class DebugScreen extends ViewConnector {
 
     lostIsland(){
         this.close(undefined)
-        User.instance.areaCapture["unknow"]=false;
-        User.instance.areaCaptureStopTime["unknow"] = Date.now()
+        User.instance.areaInfo.capture["unknow"]=false;
+        User.instance.areaInfo.stopTime["unknow"] = Date.now()
         User.instance.saveUse();
     }
 
