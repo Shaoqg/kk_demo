@@ -50,6 +50,22 @@ export class AdventureArea extends ViewConnector {
         this.root = cc.find("content", this.node);
         this.adjustGameInterface();
 
+
+        this.initArea();
+
+        this.root.stopAllActions();
+        underlay.stopAllActions();
+        this.root.scale = 0;
+        underlay.opacity = 0;
+        underlay.runAction(cc.fadeTo(0.1, 100));
+        this.root.runAction(cc.scaleTo(0.4, this._originScale).easing(cc.easeBackOut()));
+
+        //this.adjustGameInterface();
+    }
+
+    initArea() {
+
+        let sprite_materials = cc.find("scrollview/materials", this.root).getComponent(cc.Sprite);//0:normal, 1:gray
         let list = cc.find("scrollview/list", this.root);
         AdventureAreas.forEach((area) => {
             let areaNode = list.getChildByName("area_" + area.areaName);
@@ -68,7 +84,31 @@ export class AdventureArea extends ViewConnector {
                 this.close(undefined);
                 Adventure.prompt(area.areaName);
             });
+
+            //lvl
+            let currentStar = 2;
+            let levelNode = cc.find("rewardNode",areaNode);
+            let label = cc.find("label", levelNode).getComponent(cc.Label);
+            label.string = "Lvl2-1";
+            let starNodeIndex = 0;
+            levelNode.children.forEach((node)=>{
+                if (node.name.includes("bg")) {
+                    let sprite = node.getComponent(cc.Sprite);
+                    sprite.setMaterial(0, sprite_materials.getMaterial(starNodeIndex < currentStar ?0: 1));
+
+                    starNodeIndex++
+                }
+            });
+
+            //reward    
+            
+
+
+
         })
+
+
+
 
         let areaNode = list.getChildByName("area_unknown");
         this.PlacePetsInBattle();
@@ -87,15 +127,8 @@ export class AdventureArea extends ViewConnector {
             }
         });
 
-        this.root.stopAllActions();
-        underlay.stopAllActions();
-        this.root.scale = 0;
-        underlay.opacity = 0;
-        underlay.runAction(cc.fadeTo(0.1, 100));
-        this.root.runAction(cc.scaleTo(0.4, this._originScale).easing(cc.easeBackOut()));
-
-        //this.adjustGameInterface();
     }
+
 
     PlacePetsInBattle() {
         if (User.instance.areaInfo.exploring["unknow"]) {

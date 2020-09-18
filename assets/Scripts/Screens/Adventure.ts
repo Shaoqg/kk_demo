@@ -87,7 +87,7 @@ export class Adventure extends ViewConnector {
         this.foodNumLabel = cc.find("foodNum/number", shipFood).getComponent(cc.Label);
         let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
-        this.seatNum=capacitys[1];
+        this.seatNum=4;
         shipCapacity.getComponent(cc.Label).string = "Capacity：" + 0 + "/"+this.seatNum;
         shipLevel.getComponent(cc.Label).string="Level:"+1;
         shipSpeed.getComponent(cc.Label).string="Speed："+1+" knots:";

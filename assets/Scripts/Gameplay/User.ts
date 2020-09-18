@@ -101,6 +101,7 @@ export default class User {
         coinslist: number[],
         woodlist: number[],
         stonelist: number[],
+        levelInfo:{ "water": number, "fire": number, "food": number, "nature": number },
     } = null
 
     public exploreTime: object = { "water": 0, "fire": 0, "food": 0, "nature": 0 }
