@@ -19,7 +19,6 @@ export default class Line extends cc.Component {
 
         let x = width/2 + 500;
         let time = (width + 1000)/ this.lineSpeed + Math.random()*3;
-        node.x = Math.random()* 2*width - width;
         node.runAction(cc.sequence(
             cc.moveTo(time, cc.v2(x, node.y)),
             cc.callFunc(()=>{
