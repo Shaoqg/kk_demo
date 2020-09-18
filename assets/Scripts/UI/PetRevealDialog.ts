@@ -130,9 +130,9 @@ export default class PetRevealDialog extends ViewConnector {
     }
     
     upgradePet(data: PetData) {
-        data.petLevel++;
 
         let cost=this.getCost(this.petconfig);
+        data.petLevel++;
 
         console.log("cost",cost);
         if(cost.coin){

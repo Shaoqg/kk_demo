@@ -180,9 +180,9 @@ export class PetUpgrade extends ViewConnector {
     }
 
     upgradePet(data: PetData) {
-        data.petLevel++;
         this.petData = data;
         let cost=this.getCost(this.petconfig, data.petLevel);
+        data.petLevel++;
 
         console.log("cost",cost);
         if(cost.coin){
