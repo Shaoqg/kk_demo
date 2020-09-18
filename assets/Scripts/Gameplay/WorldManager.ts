@@ -1,11 +1,7 @@
 import User from "./User";
 import { StateManager } from "./State/StateManager";
-import { Adventure } from "../Screens/Adventure";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureArea } from "../Screens/AdventureArea";
-import { Trees, AdventureAreas } from "../Config";
 import { PetFactory } from "../Pet/PetFactory";
-import ScreenSize from "../Tools/ScreenSize";
 import { DebugScreen } from "../Screens/DebugScreen";
 import ResourceManager from "./ResourcerManager";
 
@@ -13,8 +9,6 @@ const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class WorldManager extends cc.Component {
-
-
 
     isCap: boolean = false;
     updateTime: number = 0;

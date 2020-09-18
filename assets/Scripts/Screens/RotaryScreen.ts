@@ -5,7 +5,7 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, Trees, TreeNeed, getRotaryRewardByIndex, RotaryReward, Resource, RewardType, RotaryType, getPetConfigById, PetConfigType } from "../Config";
+import { AdventureAreas, getRotaryRewardByIndex, RotaryReward, Resource, RewardType, RotaryType, getPetConfigById, PetConfigType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { AdventureReward } from "./AdventureReward";
 import { delay } from "../kk/DataUtils";

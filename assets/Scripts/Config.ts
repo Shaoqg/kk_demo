@@ -345,22 +345,6 @@ export let AdventureBasicstone = 30;
 export let AdventureBasiccoins = 100;
 export let AdventureShipMaxFood = 5;
 
-export let TreeNeed: number[] = [10, 50, 200, 1000];
-
-export let Trees = [
-{ 
-  treeId:"tree1",
-  treeName:"Candy tree",
-},
-{
-  treeId:"tree2",
-  treeName:"The woods",
-},
-{
-  treeId:"tree3",
-  treeName:"Tree house",
-},
-]
 export let AdventureAreas = [
   {
     areaName: "water",
