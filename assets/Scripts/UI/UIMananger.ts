@@ -103,6 +103,9 @@ export default class UIManager extends cc.Component {
         let root_ButtomHud = cc.find("ButtomHud/root", this.node)
         let root_top_right = cc.find("top_right/root", this.node)
         let root_top_left = cc.find("top_left/root", this.node)
+        
+        let arrow_left = cc.find("center_left/root/arrow_left", this.node);
+        let arrow_right = cc.find("center_right/root/arrow_right", this.node);
 
         root_ButtomHud.stopAllActions();
         root_top_right.stopAllActions();
@@ -112,10 +115,15 @@ export default class UIManager extends cc.Component {
             root_top_right.runAction(cc.moveTo(0.2, cc.Vec2.ZERO));
             root_top_left.runAction(cc.moveTo(0.2, cc.Vec2.ZERO));
 
+            arrow_left.active = true;
+            arrow_right.active = true;
         } else {
             root_ButtomHud.runAction(cc.moveTo(0.2, cc.v2(0,-390)));
             root_top_right.runAction(cc.moveTo(0.2, cc.v2(175,0)));
             root_top_left.runAction(cc.moveTo(0.2, cc.v2(0,180)));
+
+            arrow_left.active = false;
+            arrow_right.active = false;
         }
         
     }
