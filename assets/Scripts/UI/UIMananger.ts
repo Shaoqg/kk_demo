@@ -4,12 +4,12 @@ import ResourcePointScreen from "../Screens/ResourcePointScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import StickerbookScreen from "./StickerbookScreen";
 import { StateManager } from "../Gameplay/State/StateManager";
-import { AdventureArea } from "../Screens/AdventureArea";
 import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
 import { BuildModel } from "../Screens/BuildModel";
 import IslandManager from "../Gameplay/Island/IslandManager";
 import { Resource } from "../Config";
+import AdventureManager from "../Gameplay/AdventureManager";
 
 
 const {ccclass, property} = cc._decorator;
@@ -170,7 +170,8 @@ export default class UIManager extends cc.Component {
         // if (timestamp > 0) {
         //     Adventure.prompt();
         // } else {
-            AdventureArea.prompt();
+            // AdventureArea.prompt();
+            AdventureManager.instance.showAdventureArea();
         // }
     }
 

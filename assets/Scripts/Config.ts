@@ -349,53 +349,25 @@ export let AdventureAreas = [
   {
     areaName: "water",
     areaCompletetime: 360,
+    reward: Resource.coin,
   },
   {
     areaName: "fire",
     areaCompletetime: 360,
+    reward: Resource.stone,
   },
   {
     areaName: "food",
     areaCompletetime: 360,
+    reward: Resource.food,
   },
   {
     areaName: "nature",
     areaCompletetime: 360,
+    reward: Resource.wood,
   }
 ];
 
-export let speedLevelUpInfo= [
-    {
-        coin:100,
-        wood:5,
-    },
-    {
-        coin:200,
-        wood:20,
-    },
-]
-export let capacityLevelUpInfo= [
-    {
-        coin:10,
-        wood:5,
-        stone:5,
-    },
-    {
-        coin:20,
-        wood:2,
-        stone:10,
-    },
-]
-export let bounsLevelUpInfo= [
-    {
-        coin:1000,
-        stone:50,
-    },
-    {
-        coin:2000,
-        stone:1000,
-    },
-]
 
 export let AcheievementConfig: TaskType[] = [
   {

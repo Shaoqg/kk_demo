@@ -101,13 +101,15 @@ export default class User {
         coinslist: number[],
         woodlist: number[],
         stonelist: number[],
-        levelInfo:{ "water": number, "fire": number, "food": number, "nature": number },
+        levelInfo: { "water": number, "fire": number, "food": number, "nature": number },
     } = null
 
     public exploreTime: object = { "water": 0, "fire": 0, "food": 0, "nature": 0 }
     public currentExp = 5;
 
     public areaInfo: {
+        questList: { [name: string]: { exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number } } }
+
         exploring: { "water": boolean, "fire": boolean, "food": boolean, "nature": boolean, "unknow": boolean },
         capture: { "unknow": boolean },
         captureStartTime: { "unknow": number },
@@ -241,6 +243,22 @@ export default class User {
         return this.resource[type];
     }
 
+    public getAreaInfo(areanName: string) {
+        if (!this.areaInfo.questList[areanName]) {
+            this.areaInfo.questList[areanName] = {
+                exploring: false,
+                levelInfo:{level:1, star:0},
+                timeStamps:0
+            }
+        }
+        return this.areaInfo.questList[areanName];
+    }
+
+    public updateAreaInfo(areanName: string, info:{ exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number } }){
+        this.areaInfo.questList[areanName] = info;
+    }
+
+
     public getBuildRes(islandType: IsLandType) {
         if (!this.buildResource[islandType]) {
             this.buildResource[islandType] = {
@@ -337,15 +355,15 @@ export default class User {
             this.buildResource = data["buildResource"] || this.resetData("buildResource");
             this.resource = data["resource"] || this.resetData("resource");
         } else {
-            this._playerID =  this.resetData("playerID");
-            this.petList =  this.resetData("petList");
-            this._timeStamps =   this.resetData("_timeStamps");
-            this.AdventureInfo =   this.resetData("AdventureInfo");
-            this.exploreTime =  this.resetData("exploreTime");
+            this._playerID = this.resetData("playerID");
+            this.petList = this.resetData("petList");
+            this._timeStamps = this.resetData("_timeStamps");
+            this.AdventureInfo = this.resetData("AdventureInfo");
+            this.exploreTime = this.resetData("exploreTime");
             this.areaInfo = this.resetData("areaInfo");
             this.buildInfo = this.resetData("buildInfo");
-            this.buildResource =  this.resetData("buildResource");
-            this.resource =  this.resetData("resource");
+            this.buildResource = this.resetData("buildResource");
+            this.resource = this.resetData("resource");
 
         }
         this.isLoaded = true;
@@ -353,7 +371,7 @@ export default class User {
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
     }
 
-    resetData(name):any {
+    resetData(name): any {
         switch (name) {
             case "playerID":
                 return `Player:${Math.random()}`;
@@ -375,6 +393,7 @@ export default class User {
                 return { "water": 0, "fire": 0, "food": 0, "nature": 0 };
             case "areaInfo":
                 return {
+                    questList:{},
                     exploring: { "water": false, "fire": false, "food": false, "nature": false, "unknow": false },
                     capture: { "unknow": false },
                     captureStartTime: { "unknow": 0 },

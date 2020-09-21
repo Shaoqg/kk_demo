@@ -7,6 +7,7 @@ import { VoidCallPromise, delay } from "../kk/DataUtils";
 import User from "./User";
 import { setSpriteSize } from "../Tools/UIUtils";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import AdventureManager from "./AdventureManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -71,7 +72,7 @@ export default class ResourceManager extends cc.Component {
 
         let timeBar = new TimeBar();
         timeBar.init(node, {
-            totalTime: type == IsLandType.castle ? 2 : 10
+            totalTime: type == IsLandType.castle ? 10 : 10
         }, () => {
             this.onTimeOver(type);
         });
@@ -87,16 +88,20 @@ export default class ResourceManager extends cc.Component {
     }
 
     async onTimeOver(type: IsLandType) {
-        //TODO 
-        let number_min = this._resourceConfig[type]["res"]["num"];
-        let rewardNumber = Math.floor(number_min / 6 * 100) / 100;
-
         if (type == IsLandType.castle) {
-            let types = [Resource.coin, Resource.food, Resource.stone, Resource.wood]
-            this.creatShipRes(types[Math.floor(Math.random() * types.length)]);
+
+            let rewardList = AdventureManager.instance.getTimeoverReward();
+
+            rewardList.forEach(async (rewardInfo,i) => {
+                let rewardNumber = Math.floor(rewardInfo.rewardNum / 6 * 100) / 100;
+                await delay(i*0.1);
+                this.creatShipRes(rewardInfo.resource, rewardNumber);
+            });
             return;
         }
 
+        let number_min = this._resourceConfig[type]["res"]["num"];
+        let rewardNumber = Math.floor(number_min / 6 * 100) / 100;
 
         await this.creatResAnimation(type);
 
@@ -249,7 +254,7 @@ export default class ResourceManager extends cc.Component {
         return endCB;
     }
 
-    async creatShipRes(resType: Resource = Resource.coin) {
+    async creatShipRes(resType: Resource = Resource.coin, number = 3) {
         let parentInfo = this.getParentInfo(IsLandType.castle);
         let parent: cc.Node = parentInfo.parent;
         let pos: cc.Vec2 = parentInfo.position;
@@ -275,8 +280,10 @@ export default class ResourceManager extends cc.Component {
             // cc.moveTo(0.7,cc.Vec2.ZERO).easing(cc.easeBounceOut())
         ))
 
+        let endCP = new VoidCallPromise();
         let showLabel = () => {
-            this.creatResAnimation(IsLandType.castle, resType, 3, { parent: parent, position: node.position.add(cc.v2(0, 100)) });
+            endCP.resolve();
+            this.creatResAnimation(IsLandType.castle, resType, number, { parent: parent, position: node.position.add(cc.v2(0, 100)) });
         }
 
         node.zIndex = 1000;
@@ -304,6 +311,8 @@ export default class ResourceManager extends cc.Component {
                 })
             })
         ))
+
+        return endCP;
     }
 
     async onBuildLevelUp(type: IsLandType, isLandItemType: IsLandItemType) {

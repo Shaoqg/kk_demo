@@ -1,15 +1,12 @@
 import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
-import { petBouns } from "../UI/PetRevealDialog";
 import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
-import WorldManager from "../Gameplay/WorldManager";
-import { EventEmitter, EventType } from "../Tools/EventEmitter";
-import { AdventureAreas, getPetConfigById } from "../Config";
-import { BattleArea } from "./BattleArea";
-import { BattleInDefende } from "./BattleInDefende";
+import { AdventureAreas, getPetConfigById, PetData, Resource } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
-import { StateManager } from "../Gameplay/State/StateManager";
+import { setSpriteSize } from "../Tools/UIUtils";
+import GlobalResources, { SpriteType } from "../Util/GlobalResource";
+import AdventureManager from "../Gameplay/AdventureManager";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -63,70 +60,91 @@ export class AdventureArea extends ViewConnector {
         //this.adjustGameInterface();
     }
 
+
+    areaInfo:{[areaName:string]:{}} ={};
     initArea() {
 
         let sprite_materials = cc.find("scrollview/materials", this.root).getComponent(cc.Sprite);//0:normal, 1:gray
         let list = cc.find("scrollview/list", this.root);
         AdventureAreas.forEach((area) => {
             let areaNode = list.getChildByName("area_" + area.areaName);
-            let progressLab = areaNode.getChildByName("areaProgress").getComponent(cc.Label);
-            let levelStar = cc.find("level_star/level_starProgress", areaNode).getComponent(cc.Sprite)
-            if (User.instance.exploreTime[area.areaName] >= area.areaCompletetime) {
-                progressLab.string = "100%";
-                levelStar.fillRange = 1;
-            } else {
-                let UsrProgress = Math.round((User.instance.exploreTime[area.areaName] / area.areaCompletetime) * 1000) / 10;
-                progressLab.string = UsrProgress.toString() + "%";
-                levelStar.fillRange = User.instance.exploreTime[area.areaName] / area.areaCompletetime;
-            }
 
-            areaNode.on(cc.Node.EventType.TOUCH_END, () => {
-                this.close(undefined);
+            let info = User.instance.getAreaInfo(area.areaName,);
+            this.areaInfo[area.areaName] = info;
+
+            this.updatePetInfo(areaNode,null);
+
+            this.updateLevelInfo(areaNode, info.levelInfo);
+
+            let rewardNum = AdventureManager.instance.getAreaReward(area.areaName, info.levelInfo);
+            this.updateRewardInfo(areaNode, rewardNum, area.reward);
+
+            areaNode.on(cc.Node.EventType.TOUCH_END,()=>{
+                this.close(null);
                 Adventure.prompt(area.areaName);
-            });
-
-            //lvl
-            let currentStar = 2;
-            let levelNode = cc.find("rewardNode",areaNode);
-            let label = cc.find("label", levelNode).getComponent(cc.Label);
-            label.string = "Lvl2-1";
-            let starNodeIndex = 0;
-            levelNode.children.forEach((node)=>{
-                if (node.name.includes("bg")) {
-                    let sprite = node.getComponent(cc.Sprite);
-                    sprite.setMaterial(0, sprite_materials.getMaterial(starNodeIndex < currentStar ?0: 1));
-
-                    starNodeIndex++
-                }
-            });
-
-            //reward    
-            
-
-
-
+            })
         })
+    }
 
+    updatePetInfo(areaNode: cc.Node, petDatas: PetData[]) {
+        let petList = cc.find("petList", areaNode);
 
+        let index = -1;
+        petList.children.forEach((petNode: cc.Node) => {
+            if (petNode.name.includes("pet")) {
+                index++;
+                let petData =petDatas && petDatas.length - 1 <= index ? petDatas[index] : null;
 
-
-        let areaNode = list.getChildByName("area_unknown");
-        this.PlacePetsInBattle();
-        areaNode.on(cc.Node.EventType.TOUCH_END, async () => {
-            // this.close(undefined);
-            console.log("area_unknown");
-            if (User.instance.areaInfo.exploring["unknow"]) {
-                await BattleInDefende.prompt(User.instance.areaInfo.capture["unknow"]);
-                this.PlacePetsInBattle();
-            } else {
-                let isChoose = await Adventure.prompt("area_unknown");
-                this.PlacePetsInBattle();
-                if (isChoose) {
-                    this.close(undefined);
+                let emptyNode = cc.find("empty", petNode);
+                let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
+                if (petData) {
+                    emptyNode.active = false;
+                    let config = getPetConfigById(petData.petId);
+                    petImage.spriteFrame = null;
+                    GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset, (sf) => {
+                        setSpriteSize(petImage, sf);
+                    })
+                } else {
+                    emptyNode.active = true;
                 }
+            } else {
+                console.error("pls check node");
             }
+        })
+    }
+
+    updateRewardInfo(areaNode: cc.Node, reward: number, resType: Resource) {
+        let rewardNode = cc.find("rewardNode", areaNode);
+
+        let label = cc.find("label_reward", rewardNode).getComponent(cc.Label);
+        let resImage = cc.find("image", rewardNode).getComponent(cc.Sprite);
+
+        label.string = `${reward} /min`;
+
+        GlobalResources.getSpriteFrame(SpriteType.UI, resType, (sf) => {
+            resImage.spriteFrame = sf;
         });
 
+    }
+
+    updateLevelInfo(areaNode: cc.Node, info: { level: number, star: number }) {
+        let levelNode = cc.find("levelNode", areaNode);
+
+        let label_level = cc.find("label", levelNode).getComponent(cc.Label);
+        label_level.string = `Lvl${info.level}-${info.star}`;
+
+        let starNodes = levelNode.children.filter((node) => node.name.includes("bg"));
+        starNodes.forEach((node, i) => {
+            let image = node.getComponent(cc.Sprite);
+            image.setMaterial(0, this.getMaterials(i <= info.star - 1));
+        });
+
+    }
+
+    getMaterials(isNormal = false) {
+        let sprite_materials = cc.find("scrollview/materials", this.root).getComponent(cc.Sprite);//0:normal, 1:gray
+
+        return sprite_materials.getMaterial(isNormal ? 0 : 1);
     }
 
 

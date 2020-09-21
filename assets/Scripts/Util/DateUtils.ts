@@ -47,18 +47,18 @@ export class DateUtils {
     //     this._serverTime = this._retrievalTime = Date.now();
     // }
     
-    // static getServerTime() {
-    //     if(!this._kkgClient){
-    //         console.error('no time from server');
-    //         return Date.now();
-    //     }
+    static getServerTime() {
+        if(!this._kkgClient) {
+            // console.error('no time from server');
+            return Date.now();
+        }
 
-    //     let delta = Date.now() - this._retrievalTime;
-    //     if(delta > this.MS_PER_MINUTE * 5) {
-    //         this.retrieveServerTime();
-    //     }
-    //     return this._serverTime + delta;
-    // }
+        let delta = Date.now() - this._retrievalTime;
+        if(delta > this.MS_PER_MINUTE * 5) {
+            // this.retrieveServerTime();
+        }
+        return this._serverTime + delta;
+    }
 
     static getCurrentHourMin(timestamp?: number): string {
         let timeString = new Date(timestamp).toISOString().split("T")[1];
