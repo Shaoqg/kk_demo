@@ -1104,7 +1104,7 @@
   {
     "__type__": "cc.Node",
     "_name": "capacity",
-    "_objFlags": 0,
+    "_objFlags": 512,
     "_parent": {
       "__id__": 21
     },
@@ -7834,7 +7834,7 @@
     "sync": false
   },
   {
-    "__type__": "05d3cqIiYNDLpXMAiB1HVQr",
+    "__type__": "82440OkuItK14PmD1Y2LH2B",
     "_name": "",
     "_objFlags": 0,
     "node": {

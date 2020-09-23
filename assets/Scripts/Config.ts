@@ -39,7 +39,7 @@ export function setElementType(element: ElementType[] | ElementType | string, no
 }
 
 export function getBattleOpponentConfig() {
-    return [getRandomConfigs(1),getRandomConfigs(2),getRandomConfigs(2),getRandomConfigs(2)];
+    return [getRandomConfigs(1),getRandomConfigs(1),getRandomConfigs(1),getRandomConfigs(1)];
 }
 
 export function getPetConfigById(id:string){

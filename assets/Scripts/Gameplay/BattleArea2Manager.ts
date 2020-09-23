@@ -13,6 +13,7 @@ import { PetObjectBattle_Enemy } from "../Pet/PetObjectBattle_Enemy";
 import BattleUI from "../UI/BattleUI";
 import User from "./User";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import AdventureManager from "./AdventureManager";
 
 
 export default class BattleArea2Manager {
@@ -67,17 +68,9 @@ export default class BattleArea2Manager {
 
         let isWin = await this.battlePromise;
         if (isWin) {
-            pets.forEach((pet) => {
-                let UserPet = User.instance.findPetDataByPetId(pet.petId);
-                UserPet.nowUsing = true;
-                UserPet.UsingBy = "Defence"
-            })
-            User.instance.areaInfo.exploring["unknow"] = true
-            User.instance.areaInfo.capture["unknow"] = true
-            User.instance.areaInfo.captureStartTime["unknow"] = Date.now();
-            User.instance.areaInfo.captureTimeTakenReward["unknow"] = Date.now();
-            User.instance.saveUse();
-            EventEmitter.emitEvent(EventType.GO_CAPTURE);            
+            AdventureManager.instance.onEndExplore(true);
+
+            EventEmitter.emitEvent(EventType.GO_CAPTURE);    
         }
 
 

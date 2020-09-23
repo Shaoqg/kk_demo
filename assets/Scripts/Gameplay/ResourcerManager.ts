@@ -14,7 +14,10 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class ResourceManager extends cc.Component {
 
+    static instance:ResourceManager = null;
+
     onLoad() {
+        ResourceManager.instance = this;
         this.init();
     }
 
@@ -95,7 +98,9 @@ export default class ResourceManager extends cc.Component {
             rewardList.forEach(async (rewardInfo,i) => {
                 let rewardNumber = Math.floor(rewardInfo.rewardNum / 6 * 100) / 100;
                 await delay(i*0.1);
-                this.creatShipRes(rewardInfo.resource, rewardNumber);
+                this.creatShipRes(rewardInfo.resource, rewardNumber).then(()=>{
+                    rewardInfo.rewardCB && rewardInfo.rewardCB(rewardNumber);
+                })
             });
             return;
         }
@@ -112,6 +117,10 @@ export default class ResourceManager extends cc.Component {
         }
 
         this.updateResDialogInfo(type);
+    }
+
+    getTimeBar(type: IsLandType) {
+        return this._timebarList[type];
     }
 
     getEarnPerMin(type: IsLandType) {
@@ -254,7 +263,7 @@ export default class ResourceManager extends cc.Component {
         return endCB;
     }
 
-    async creatShipRes(resType: Resource = Resource.coin, number = 3) {
+    async creatShipRes(resType: Resource = Resource.coin, number = 3, time = 6) {
         let parentInfo = this.getParentInfo(IsLandType.castle);
         let parent: cc.Node = parentInfo.parent;
         let pos: cc.Vec2 = parentInfo.position;
@@ -295,7 +304,7 @@ export default class ResourceManager extends cc.Component {
             cc.callFunc(() => {
                 node.zIndex = -node.y + 660;
                 node.runAction(cc.sequence(
-                    cc.delayTime(10),
+                    cc.delayTime(time),
                     cc.callFunc(() => {
                         this.pushResNode(node, "res");
                         showLabel();

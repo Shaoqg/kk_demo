@@ -1,5 +1,4 @@
 import { State } from "./State";
-import { CastleScreen } from "../../Screens/CastleScreen";
 import { StateManager } from "./StateManager";
 
 const {ccclass, property} = cc._decorator;

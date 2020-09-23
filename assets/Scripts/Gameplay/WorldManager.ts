@@ -4,6 +4,7 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { PetFactory } from "../Pet/PetFactory";
 import { DebugScreen } from "../Screens/DebugScreen";
 import ResourceManager from "./ResourcerManager";
+import AdventureManager from "./AdventureManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -41,6 +42,7 @@ export default class WorldManager extends cc.Component {
         this.shipDock = cc.find("world/island/islandNode/shipDock",this.node);
 
         this.addComponent(ResourceManager);
+        AdventureManager.instance
 
     }
 

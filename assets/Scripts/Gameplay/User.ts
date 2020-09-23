@@ -14,6 +14,8 @@ export default class User {
         return this._instance;
     }
 
+    private static readonly SAVEKEY = "KK_DEMO_Version2";
+
     public isLoaded = false;
 
     // public level = 1;
@@ -108,13 +110,14 @@ export default class User {
     public currentExp = 5;
 
     public areaInfo: {
-        questList: { [name: string]: { exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number } } }
+        questList: { [name: string]: { exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number }, pets:string[] } }
 
         exploring: { "water": boolean, "fire": boolean, "food": boolean, "nature": boolean, "unknow": boolean },
         capture: { "unknow": boolean },
         captureStartTime: { "unknow": number },
         captureTimeTakenReward: { "unknow": number },
         stopTime: { "unknow": number },
+        saveTime: number
     } = null;
 
     private buildResource: { [resName: string]: { timestamp: number, number: number } } = {}
@@ -188,6 +191,32 @@ export default class User {
         return Pets;
     }
 
+    setPetOnUsing(petId:string, usingBy:string){
+        let petData = this.petList.find((petData) => petData.petId == petId);
+        if (!petData) {
+            console.error("can not find pet:" + petId);
+            return;
+        }
+
+        if (petData.nowUsing) {
+            console.error("reuse, pls check");
+        }
+        petData.nowUsing = true;
+        petData.UsingBy = usingBy;
+    }
+
+
+    removePetUsing(petId:string, key = '') {
+        
+        let petData = this.petList.find((petData)=> petId == petData.petId);
+        if (petData && key == petData.UsingBy) {
+            petData.nowUsing = false;
+            petData.UsingBy = null; 
+            return true;
+        }
+        return false;
+    }
+
     removePetFromInAdventure(usingBy: string = "") {
         let Pets = this.getPetsNowUsing(usingBy);
         console.log(Pets);
@@ -248,13 +277,14 @@ export default class User {
             this.areaInfo.questList[areanName] = {
                 exploring: false,
                 levelInfo:{level:1, star:0},
-                timeStamps:0
+                timeStamps:0,
+                pets:null
             }
         }
         return this.areaInfo.questList[areanName];
     }
 
-    public updateAreaInfo(areanName: string, info:{ exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number } }){
+    public updateAreaInfo(areanName: string, info:{ exploring: boolean, timeStamps: number, levelInfo: { level: number, star: number },pets:string[] }){
         this.areaInfo.questList[areanName] = info;
     }
 
@@ -335,12 +365,12 @@ export default class User {
             buildResource: this.buildResource,
             resource: this.resource
         }
-        cc.sys.localStorage.setItem("KK_DEMO", JSON.stringify(gameData));
+        cc.sys.localStorage.setItem(User.SAVEKEY, JSON.stringify(gameData));
         console.log("SAVE USER")
     }
 
     public getUse() {
-        let dataStr = cc.sys.localStorage.getItem("KK_DEMO");
+        let dataStr = cc.sys.localStorage.getItem(User.SAVEKEY);
 
         if (dataStr) {
             let data = JSON.parse(dataStr);
@@ -399,6 +429,7 @@ export default class User {
                     captureStartTime: { "unknow": 0 },
                     captureTimeTakenReward: { "unknow": 0 },
                     stopTime: { "unknow": 0 },
+                    saveTime: 0
                 };
             case "buildInfo":
                 return {};
@@ -422,7 +453,7 @@ export default class User {
 
 
     public resetUse() {
-        cc.sys.localStorage.setItem("KK_DEMO", "");
+        cc.sys.localStorage.setItem(User.SAVEKEY, "");
         cc.director.pause(); // try to prevent more saves; PET-1128
         location.reload();
     }

@@ -4,7 +4,7 @@ import User from "../Gameplay/User";
 import { Adventure } from "./Adventure";
 import { AdventureAreas, getPetConfigById, PetData, Resource } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
-import { setSpriteSize } from "../Tools/UIUtils";
+import { setSpriteSize, timeToString } from "../Tools/UIUtils";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import AdventureManager from "../Gameplay/AdventureManager";
 const { ccclass, property } = cc._decorator;
@@ -61,29 +61,78 @@ export class AdventureArea extends ViewConnector {
     }
 
 
-    areaInfo:{[areaName:string]:{}} ={};
+    update(dt) {
+        for (const key in this.cbList) {
+            this.cbList[key] && this.cbList[key](dt);
+        }
+    }
+
+    areaCB: { [areaName: string]: {} } = {};
     initArea() {
 
-        let sprite_materials = cc.find("scrollview/materials", this.root).getComponent(cc.Sprite);//0:normal, 1:gray
         let list = cc.find("scrollview/list", this.root);
         AdventureAreas.forEach((area) => {
             let areaNode = list.getChildByName("area_" + area.areaName);
 
-            let info = User.instance.getAreaInfo(area.areaName,);
-            this.areaInfo[area.areaName] = info;
+            let info = User.instance.getAreaInfo(area.areaName);
 
-            this.updatePetInfo(areaNode,null);
+            let exploreInfo = AdventureManager.instance.getExploreReward(area.areaName);
+            this.updateTimeInfo(areaNode, exploreInfo);
+
+            let pets = AdventureManager.instance.areaInfo[area.areaName];
+            this.updatePetInfo(areaNode, pets.petDatas);
 
             this.updateLevelInfo(areaNode, info.levelInfo);
 
             let rewardNum = AdventureManager.instance.getAreaReward(area.areaName, info.levelInfo);
             this.updateRewardInfo(areaNode, rewardNum, area.reward);
 
-            areaNode.on(cc.Node.EventType.TOUCH_END,()=>{
+            areaNode.on(cc.Node.EventType.TOUCH_END, () => {
                 this.close(null);
                 Adventure.prompt(area.areaName);
             })
         })
+    }
+
+    cbList:{[areaName:string]: Function} = {};
+    updateTimeInfo(areaNode: cc.Node, info: { multiple: number, time: number }) {
+        let label_bonus = cc.find("label_bonus", areaNode).getComponent(cc.Label);
+        if (info) {
+            label_bonus.node.active = true;
+
+            this.updateTimelabel(label_bonus, info.time/1000,  info.multiple);
+            label_bonus.node.runAction(cc.sequence(
+                cc.scaleTo(0.8, 1.1),
+                cc.scaleTo(0.8, 1)
+            ).repeatForever());
+
+            let timeTemp = 0.5;
+            let timeTotal = info.time/1000;
+            this.cbList[areaNode.name] = (dt)=>{
+                timeTemp -= dt;
+                timeTotal -= dt;
+                if (timeTemp <=0) {
+                    timeTemp += 0.5;
+                    if (timeTotal <= 0) {
+                        this.updateTimeInfo(areaNode, null);//close node
+                        this.updatePetInfo(areaNode, null);
+                    }else{//update label
+                        this.updateTimelabel(label_bonus, timeTotal, info.multiple);
+                    }
+                }
+            };
+        } else {
+            this.cbList[areaNode.name] = null;
+            label_bonus.node.stopAllActions();
+            label_bonus.node.active = false;
+
+
+        }
+    }
+
+    updateTimelabel(label: cc.Label, time: number, multiple:number) {
+        
+        label.string = `Bonus x ${multiple}\n${timeToString(Math.floor(time))}`;
     }
 
     updatePetInfo(areaNode: cc.Node, petDatas: PetData[]) {
@@ -93,7 +142,7 @@ export class AdventureArea extends ViewConnector {
         petList.children.forEach((petNode: cc.Node) => {
             if (petNode.name.includes("pet")) {
                 index++;
-                let petData =petDatas && petDatas.length - 1 <= index ? petDatas[index] : null;
+                let petData = petDatas && petDatas.length - 1 >= index ? petDatas[index] : null;
 
                 let emptyNode = cc.find("empty", petNode);
                 let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
@@ -145,34 +194,6 @@ export class AdventureArea extends ViewConnector {
         let sprite_materials = cc.find("scrollview/materials", this.root).getComponent(cc.Sprite);//0:normal, 1:gray
 
         return sprite_materials.getMaterial(isNormal ? 0 : 1);
-    }
-
-
-    PlacePetsInBattle() {
-        if (User.instance.areaInfo.exploring["unknow"]) {
-            let pets = User.instance.getPetsNowUsing("Defence");
-            pets.forEach(async (pet, idx) => {
-                let petNode = cc.find("scrollview/list/area_unknown/defencePets/pet" + (idx + 1), this.root);
-                let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
-                let empty = cc.find("empty", petNode);
-
-                empty.active = false;
-
-                let petconfig = getPetConfigById(pet.petId)
-                petImage.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
-
-            })
-        } else {
-            for (let i = 0; i < 4; i++) {
-                let petNode = cc.find("scrollview/list/area_unknown/defencePets/pet" + (i + 1), this.root);
-                let petImage = cc.find("petImage", petNode).getComponent(cc.Sprite);
-                let empty = cc.find("empty", petNode);
-
-                empty.active = true;
-                petImage.spriteFrame = null
-            }
-
-        }
     }
 
     adjustGameInterface() {

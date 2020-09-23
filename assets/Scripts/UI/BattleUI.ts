@@ -87,7 +87,11 @@ export default class BattleUI {
         this.skillCB = cb;
         let node = cc.find("skillNode", this.node);
         node.children.forEach((node: cc.Node, index) => {
-
+            if (petDatas.length -1 < index) {
+                node.active = false;
+                return;
+            }
+            node.active = true;
             let config = getPetConfigById(petDatas[index].petId);
             let sprite = cc.find("image", node).getComponent(cc.Sprite);
             GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset, (sf) => {

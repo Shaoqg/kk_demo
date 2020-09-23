@@ -3,8 +3,6 @@ import User from "../Gameplay/User";
 import ResourcePointScreen from "../Screens/ResourcePointScreen";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import StickerbookScreen from "./StickerbookScreen";
-import { StateManager } from "../Gameplay/State/StateManager";
-import ScreenSize from "../Tools/ScreenSize";
 import TaskScreen from "./TaskScreen";
 import { BuildModel } from "../Screens/BuildModel";
 import IslandManager from "../Gameplay/Island/IslandManager";

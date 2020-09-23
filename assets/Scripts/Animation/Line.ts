@@ -1,4 +1,3 @@
-import ScreenSize from "../Tools/ScreenSize";
 
 const { ccclass, property } = cc._decorator;
 

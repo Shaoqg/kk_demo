@@ -212,7 +212,30 @@ export function once<ParamType=cc.Event.EventTouch>(fToWrap:(ParamType)=>void){
     return wrapper;
 }
 
+/**
+ * return "-h-m-s"
+ * @param seconds 
+ */
+export function timeToString(seconds: number) {
 
+    let hour = Math.floor(seconds / 3600).toString();
+    let min = Math.floor(seconds % 3600 / 60).toString();
+    let sec = Math.floor(seconds % 60).toString();
+
+    hour = hour.length > 1 ? hour : "0" + hour;
+    min = min.length > 1 ? min : "0" + min;
+    sec = sec.length > 1 ? sec : "0" + sec;
+
+    let h_str = ":";
+    let m_str = ":";
+    let s_str = "";
+
+    if (hour == "00") {
+        return min + m_str + sec + s_str;
+    } else {
+        return hour + h_str + min + m_str + sec + s_str;
+    }
+}
 
 export function normalizeNumber(num: number, model :"normal"|"special" = "normal", decimal = 0): string {
     function getString(_num: number, divisor: number) {

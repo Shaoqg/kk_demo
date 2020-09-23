@@ -2,7 +2,6 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import { petBouns } from "../UI/PetRevealDialog";
 import User from "../Gameplay/User";
-import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { AdventureAreas, getRotaryRewardByIndex, RotaryReward, Resource, RewardType, RotaryType, getPetConfigById, PetConfigType } from "../Config";

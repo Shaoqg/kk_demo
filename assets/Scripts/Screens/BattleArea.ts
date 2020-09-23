@@ -2,7 +2,6 @@ import { ViewConnector } from "../Tools/ViewConnector";
 import ScreenSize from '../Tools/ScreenSize';
 import { petBouns } from "../UI/PetRevealDialog";
 import User from "../Gameplay/User";
-import { Adventure } from "./Adventure";
 import WorldManager from "../Gameplay/WorldManager";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
 import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRandomConfigs, PetConfigType, PetConfig, ElementType, getRestraint } from "../Config";
@@ -124,17 +123,17 @@ export class BattleArea extends ViewConnector {
 
         //judge sucess or failed
         if (isWin) {
-            Pets.forEach((pet) => {
-                let UserPet = User.instance.findPetDataByPetId(pet.petId);
-                UserPet.nowUsing = true;
-                UserPet.UsingBy = "Defence"
-            })
-            User.instance.areaInfo.exploring["unknow"] = true
-            User.instance.areaInfo.capture["unknow"] = true
-            User.instance.areaInfo.captureStartTime["unknow"] = Date.now();
-            User.instance.areaInfo.captureTimeTakenReward["unknow"] = Date.now();
-            User.instance.saveUse();
-            EventEmitter.emitEvent(EventType.GO_CAPTURE);
+            // Pets.forEach((pet) => {
+            //     let UserPet = User.instance.findPetDataByPetId(pet.petId);
+            //     UserPet.nowUsing = true;
+            //     UserPet.UsingBy = "Defence"
+            // })
+            // User.instance.areaInfo.exploring["unknow"] = true
+            // User.instance.areaInfo.capture["unknow"] = true
+            // User.instance.areaInfo.captureStartTime["unknow"] = Date.now();
+            // User.instance.areaInfo.captureTimeTakenReward["unknow"] = Date.now();
+            // User.instance.saveUse();
+            // EventEmitter.emitEvent(EventType.GO_CAPTURE);
         }
         await BattleReward.prompt(isWin, Pets);
         this.close(undefined);

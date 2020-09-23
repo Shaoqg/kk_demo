@@ -1,7 +1,7 @@
 import { State } from "./State";
 import { StateManager } from "./StateManager";
 import UIManager from "../../UI/UIMananger";
-import IslandManager from "../IslandManager";
+import IslandManager from "../Island/IslandManager";
 
 
 const {ccclass, property} = cc._decorator;

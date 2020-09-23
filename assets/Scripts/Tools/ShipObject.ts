@@ -26,7 +26,7 @@ export default class ShipObject extends cc.Component {
     }
 
     setMast() {
-        let level = User.instance.ship_speed_level+1;
+        let level = 1;
         for (let i = 1; i < level; i++) {
             let mast = cc.find("mast" + (i + 1), this.node);
             mast.active = true;
