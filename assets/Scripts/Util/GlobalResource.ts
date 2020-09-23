@@ -130,11 +130,12 @@ export default class GlobalResources {
             case SpriteType.UI:
                 desiredAsset = this.UIFrames[assetName];
                 targetMap = this.UIFrames;
+                path_temp = "Images/";
                 break;
             case SpriteType.Game:
                 desiredAsset = this.GameFrames[assetName];
                 targetMap = this.GameFrames;
-                path_temp = "Images";
+                path_temp = "Images/";
                 break;
             default:
                 desiredAsset = this.spriteFrames[assetName];
