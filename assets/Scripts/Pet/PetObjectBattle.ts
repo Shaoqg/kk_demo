@@ -9,6 +9,7 @@ import { MoveToTarget } from "./Behviors/MoveToTarget";
 import { delay } from "../kk/DataUtils";
 import { Dead } from "./Behviors/Dead";
 import { setSpriteSize } from "../Tools/UIUtils";
+import { PetFactory } from "./PetFactory";
 
 
 export enum PetType {
@@ -24,6 +25,7 @@ const {ccclass, property} = cc._decorator;
 export class PetObjectBattle extends PetObject{
 
     _attack = 0;
+    teamIndx = 0;
 
     progressBar_health: cc.ProgressBar = null;
     _currentHP:number = 0;
@@ -42,15 +44,16 @@ export class PetObjectBattle extends PetObject{
         let config = getPetConfigById(petData.petId);
         let petImage: cc.Node = this._root.getChildByName("image");
         let sprite_front = petImage.getChildByName("image_front").getComponent(cc.Mask);
-        sprite_front.node.width = height;
-        sprite_front.node.height  =  height;
+        petImage.width =  sprite_front.node.width = height;
+        petImage.height =  sprite_front.node.height  =  height;
         sprite_front.node.stopAllActions();
         sprite_front.node.active = false;
 
         GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
             sprite_front.spriteFrame = sf;
-            setSpriteSize(sprite_front.node, sf, height);
         });
+
+        petImage.getComponent(cc.Sprite).trim = true;
 
         //setHealth
         let infoNode = cc.find("info", this.node);
@@ -173,6 +176,7 @@ export class PetObjectBattle extends PetObject{
         }
 
         this._currentHP =  this._currentHP > attack ? this._currentHP - attack: 0;
+        this.onBeHit(attack, targePet.node.x > this.node.x ? -1: 1);
         this.progressBar_health.node.active = true;
         this.updateHealth();
 
@@ -195,6 +199,10 @@ export class PetObjectBattle extends PetObject{
         let hpBar = this._currentHP/this._totalHP;
 
         this.progressBar_health.progress = hpBar;
+    }
+
+    onBeHit(number: number, dir: 1 | -1) {
+        PetFactory.onBeHit(this.node, number, dir);
     }
 
     isDead() {

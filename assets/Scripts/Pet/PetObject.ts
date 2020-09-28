@@ -48,8 +48,8 @@ export class PetObject extends cc.Component {
 
         let config = getPetConfigById(petData.petId);
 
-        let rarityScaleConfig = {[Rarity.common]:1, [Rarity.uncommon]:1.1, [Rarity.rare]:1.2, };
-        let scale = rarityScaleConfig[config.rarity];
+        // let rarityScaleConfig = {[Rarity.common]:1, [Rarity.uncommon]:1.1, [Rarity.rare]:1.2, };
+        let scale = 1;
 
         this.node.width = height * scale;
         this.node.height = height * scale;
@@ -173,7 +173,7 @@ export class PetObject extends cc.Component {
     }
 
     faceInterest(posX:number): boolean {
-        let faceRight = posX > this.node.position.x;
+        let faceRight = posX > this.node.x;
         this.setFlip(faceRight ? 1 : -1);
         return faceRight;
     }

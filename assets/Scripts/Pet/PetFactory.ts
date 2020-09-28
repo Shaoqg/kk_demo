@@ -7,6 +7,7 @@ import { PetUpgradeModel } from "../Screens/PetUpgradeModel";
 import { PerformAnimation } from "./Behviors/PerformAnimation";
 import IslandManager from "../Gameplay/Island/IslandManager";
 import { IslandPointHelper } from "./IslandPointHelper";
+import GlobalResources from "../Util/GlobalResource";
 
 export class PetFactory {
 
@@ -62,6 +63,29 @@ export class PetFactory {
         // let island = cc.find(PetFactory.PetPath);
         // island.removeAllChildren(true);
         User.instance.saveUse()
+    }
+
+    private static _HPLabelPool:cc.NodePool = new cc.NodePool();
+    static async onBeHit(petNode:cc.Node,num:number, dir:1|-1) {
+        if (this._HPLabelPool.size() <= 0) {
+            let label = await GlobalResources.getPrefab("fx/HitHP");
+            let node = cc.instantiate(label);
+            this._HPLabelPool.put(node);
+        }
+        
+        let labelHp = this._HPLabelPool.get();
+        labelHp.getComponentInChildren(cc.Label).string = num.toString();
+        labelHp.setParent(petNode.parent);
+        labelHp.zIndex = 1100;
+        labelHp.setPosition(petNode.position.add(cc.v2(0, 140)));
+        labelHp.scale = 0;
+        labelHp.runAction(cc.sequence(
+            cc.spawn(
+                cc.scaleTo(0.2, 1).easing(cc.easeBackOut()),
+                cc.moveBy(0.5,cc.v2(dir * 10, 50)).easing(cc.easeIn(3.0)),
+            ),
+            cc.callFunc(()=>{ this._HPLabelPool.put(labelHp)})
+        ))
     }
 
     static onIslandPet:{[islandType:string]: PetData[]}={};
