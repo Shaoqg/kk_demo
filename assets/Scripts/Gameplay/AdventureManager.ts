@@ -101,6 +101,7 @@ export default class AdventureManager {
             } else {
                 //level up
                 info.levelInfo.level++;
+                info.levelInfo.star = 0;
             }
             // set pet 
             let pets: string[] = [];
