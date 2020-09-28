@@ -8,6 +8,7 @@ import { BuildModel } from "../Screens/BuildModel";
 import IslandManager from "../Gameplay/Island/IslandManager";
 import { Resource } from "../Config";
 import AdventureManager from "../Gameplay/AdventureManager";
+import ScreenSize from "../Tools/ScreenSize";
 
 
 const {ccclass, property} = cc._decorator;
@@ -254,8 +255,16 @@ export default class UIManager extends cc.Component {
     }
 
     adjustGameInterface() {
-        // let scale = ScreenSize.getScale(1, 0.8);
-        // this.node.scale = scale;
+        let scale = ScreenSize.getScale(1, 0.8);
+
+        this.node.children.forEach((node)=>{
+            let root = node.getChildByName("root")
+            if (root ) {
+                root.scale = scale;
+            }
+
+        })
+
     }
    
 
