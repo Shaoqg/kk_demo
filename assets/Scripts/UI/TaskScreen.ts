@@ -3,6 +3,7 @@ import User from "../Gameplay/User";
 import { Resource, getTaskConfigById, RewardType } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { EventEmitter, EventType } from "../Tools/EventEmitter";
+import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 
 
 const { ccclass, property } = cc._decorator;
@@ -159,27 +160,8 @@ export default class TaskScreen extends ViewConnector {
         let task = getTaskConfigById(taskdata.taskID,taskdata.tasktype);
         name.string = task.taskName;
         info.string = task.taskInfo;
-        let path = null;
-        switch (task.reward.rewardType) {
-            case Resource.coin:
-                path = "UI/coin_reward";
-                break;
-            case Resource.wood:
-                path = "UI/wood";
-                break;
-            case Resource.stone:
-                path = "UI/stone";
-                break;
-            case Resource.food:
-                path = "UI/food";
-                break;
-            case Resource.magicStone:
-                path = "UI/magic_rock";
-                break;
-            default:
-                path = "UI/coin_reward";
-        }
-        RewardImage.spriteFrame = await KKLoader.loadSprite(path);
+        
+        RewardImage.spriteFrame = await GlobalResources.getSpriteFrame(SpriteType.UI, task.reward.rewardType);
         rewardLabel.string = task.reward.rewardNum.toString();
 
         if(taskdata.taskfinish||true){
