@@ -3,7 +3,7 @@ import { Wander } from "./Behviors/Wander";
 import { KKLoader } from "../Util/KKLoader";
 import { PetObject } from "./PetObject";
 import User from "../Gameplay/User";
-import { PetUpgrade } from "../Screens/PetUpgrade";
+import { PetUpgradeModel } from "../Screens/PetUpgradeModel";
 import { PerformAnimation } from "./Behviors/PerformAnimation";
 import IslandManager from "../Gameplay/Island/IslandManager";
 import { IslandPointHelper } from "./IslandPointHelper";
@@ -42,7 +42,7 @@ export class PetFactory {
 
         preppedPetNode.on(cc.Node.EventType.TOUCH_END, async () => {
             petObject.clearBehavior(false);
-            await PetUpgrade.prompt(petData)
+            await PetUpgradeModel.prompt(petData)
             let wanderBehavior = new Wander();
             wanderBehavior.init(petObject, "spawnpet", { position: preppedPetNode.position, wanderRadius: 10 });
             wanderBehavior.start()

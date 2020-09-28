@@ -7,12 +7,12 @@ import { EventEmitter, EventType } from "../Tools/EventEmitter";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export class PetUpgrade extends ViewConnector {
+export class PetUpgradeModel extends ViewConnector {
 
 
     static prefabPath = 'Prefab/PetUpgrade';
 
-    static _instance: PetUpgrade = null;
+    static _instance: PetUpgradeModel = null;
 
     root: cc.Node = null;
     pet: cc.Node;
@@ -26,7 +26,7 @@ export class PetUpgrade extends ViewConnector {
 
     static async prompt(petdata:PetData): Promise<any> {
         let parentNode = cc.find("Canvas/DialogRoot");
-        let vc = PetUpgrade._instance = await this.loadView<PetUpgrade>(parentNode, PetUpgrade);
+        let vc = PetUpgradeModel._instance = await this.loadView<PetUpgradeModel>(parentNode, PetUpgradeModel);
 
         vc.applyData(petdata);
 
