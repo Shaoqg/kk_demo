@@ -54,7 +54,8 @@ export default class CastleManager {
             let item2 = cc.find("item_content/item2", itemNode);
             let sprite2 = cc.find("image", item2).getComponent(cc.Sprite);
 
-            let nodes = cc.find("island/mapblocks/" + name, targeNode).children;
+            let children = cc.find("island/mapblocks/" + name, targeNode).children;
+            let nodes = children.filter((node)=> node.name.includes("level"))
 
             //update sprite
             let sf: cc.SpriteFrame = null;
