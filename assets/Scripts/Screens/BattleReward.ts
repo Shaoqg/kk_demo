@@ -70,8 +70,11 @@ export class BattleReward extends ViewConnector {
     }
 
     setPets(Pets: PetData[]){
+        cc.find("defPets", this.root).children.forEach((node)=>{node.active = false});
         Pets.forEach(async (pet,idx)=>{
-            let petImage=cc.find("defPets/pet"+(idx+1)+"/petImage",this.root).getComponent(cc.Sprite);
+            let petNode = cc.find("defPets/pet"+(idx+1), this.root);
+            petNode.active = true;
+            let petImage= cc.find("petImage",petNode).getComponent(cc.Sprite);
             let petconfig = getPetConfigById(pet.petId);
             petImage.spriteFrame = await KKLoader.loadSprite("Pets/" + petconfig.art_asset);
         })

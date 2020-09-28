@@ -59,7 +59,7 @@ export class Adventure extends ViewConnector {
         let subtitleLabel = cc.find("subtitle/capacity", this.root).getComponent(cc.Label);
         let destinationLabel = cc.find("destination", this.root).getComponent(cc.Label);
 
-        this.seatNum=4;
+        this.seatNum=3;
         
         if(!areaName){
             areaName=User.instance.AdventureInfo.destination;
