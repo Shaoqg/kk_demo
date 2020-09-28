@@ -1,6 +1,7 @@
 import { PetObject } from "../PetObject";
 import { IslandPointHelper } from "../IslandPointHelper";
 import { BehaviorParams, Behavior } from "./Behavior";
+import { PetObjectBattle } from "../PetObjectBattle";
 
 export class MoveToTarget extends Behavior {
 
@@ -13,6 +14,8 @@ export class MoveToTarget extends Behavior {
     // walk speed
     protected _baseSpeed: number = 75;
     protected _speed: number = this._baseSpeed;
+
+    protected teamIndex = 0;
 
     // protected _transitionBehavior:PerformAnimation;
     protected _prevDirection: cc.Vec2 = undefined;
@@ -30,7 +33,9 @@ export class MoveToTarget extends Behavior {
         this._position = options.targetPet.node.position;
         this._targetNode = options.targetPet.node;
 
-        this._random = Math.random();
+        this.teamIndex = (this._actor as PetObjectBattle).teamIndx;
+        this._speed = this._baseSpeed * ( this.teamIndex<=0? 1.5:1);
+
     }
 
     update(dt: number): boolean {
@@ -40,7 +45,7 @@ export class MoveToTarget extends Behavior {
             this.updatePos(dt);
             let pos = this._actor.node.position;
             let direction = this._position.sub(pos).normalize();
-            if (Math.abs(pos.y - this._targetNode.y) <= 30  && Math.abs(pos.x - this._targetNode.x) <= (100 + this._random * 15)) {
+            if (Math.abs(pos.y - this._position.y) <= 10  && Math.abs(pos.x - this._targetNode.x) <=  this.baseX[this.teamIndex]) {
                 this._position = undefined;
                 this._isActive = false;
                 this._behaviorResult = true;
@@ -57,17 +62,20 @@ export class MoveToTarget extends Behavior {
         return !this._isActive;
     }
 
+    baseX = [110, 70, 70];
+    baseY = [0, 40, -40]
     _time = 0.1
     updatePos(dt) {
         this._time -= dt;
         if (this._time <= 0) {
             this._time += 0.1;
 
-            let centerX = (this._targetNode.x - this._actor.node.x);
-            if (Math.abs(centerX) < 100) {
-                this._position = (cc.v2(centerX + (centerX > this._actor.node.x ? -50 : 50), this._targetNode.y + Math.random() * 40 - 20));
+            let centerDis = (this._targetNode.x - this._actor.node.x);
+            let centerX = (this._targetNode.x + this._actor.node.x)/2;
+            if (Math.abs(centerDis) < 100) {
+                this._position = (cc.v2(centerX + (centerX > this._actor.node.x ? -1 : 1) * (this.baseX[this.teamIndex] - 5)*0.5, this._targetNode.y + this.baseY[this.teamIndex]));
             } else {
-                this._position = (cc.v2(this._targetNode.x + (this._targetNode.x > this._actor.node.x ? -50 : 50), this._targetNode.y + Math.random() * 40 - 20));
+                this._position = (cc.v2(this._targetNode.x + (this._targetNode.x > this._actor.node.x ? -40 : 40), this._targetNode.y));
             }
 
         }

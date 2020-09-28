@@ -114,7 +114,9 @@ export default class BattleArea2Manager {
     creatSelfPet(pets: PetData[]) {
         this.selfPetDatas = pets;
         pets.forEach(async (pet, idx) => {
+            await delay((idx+1) * 0.3);
             let petObject = this._preparePetNode(pet, idx, this.getPos(false), false);
+            petObject.teamIndx = idx;
 
             this.selfPets.push(petObject);
             petObject.onDeadCallback = () => {
