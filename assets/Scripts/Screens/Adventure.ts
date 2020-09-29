@@ -84,8 +84,8 @@ export class Adventure extends ViewConnector {
             if (!this.boatReady) {
                 return;
             }
-            StateManager.instance.changeState("BattleAreaState", this.selectPets);
             AdventureManager.instance.onStartExplore(areaName, this.selectPets);
+            StateManager.instance.changeState("BattleAreaState", this.selectPets);
             this.close(true);
         });
 
@@ -154,7 +154,7 @@ export class Adventure extends ViewConnector {
         let bonusLabel = petSeat.getChildByName("bonus").getComponent(cc.Label);
 
         if(petNode){
-            this.selectPets.push(petData);
+            let index = this.selectPets.push(petData) -1;
             petNode.getChildByName("underlay").active = true;
             petNode.getChildByName("Label").active = true;
             petSeat.once(cc.Node.EventType.TOUCH_END, () => {
@@ -172,6 +172,7 @@ export class Adventure extends ViewConnector {
                 }
 
                 this.petReady--;
+                this.selectPets.splice(index, 1);
                 shipCapacity.getComponent(cc.Label).string = "Capacity：" + this.petReady + "/" + this.seatNum;
 
             });
