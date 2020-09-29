@@ -38,13 +38,15 @@ export function setElementType(element: ElementType[] | ElementType | string, no
   });
 }
 
-export function getBattleOpponentConfig() {
+export function getBattleOpponentConfig(areaName:string) {
+  let elementType = getElementByString(areaName);
+
     let Weights = 
     [//total = 1
       {[Rarity.common]:0.9, [Rarity.uncommon]:0.1,[Rarity.rare]:0},
       {[Rarity.common]:0.8, [Rarity.uncommon]:0.2,[Rarity.rare]:0},
-      {[Rarity.common]:0.7, [Rarity.uncommon]:0.2,[Rarity.rare]:0.1},
-      {[Rarity.common]:0.6, [Rarity.uncommon]:0.2,[Rarity.rare]:0.2},
+      {[Rarity.common]:0.4, [Rarity.uncommon]:0.3,[Rarity.rare]:0.3},
+      {[Rarity.common]:0.3, [Rarity.uncommon]:0.4,[Rarity.rare]:0.4},
     ]
 
     let getRarity = (index)=> {
@@ -59,10 +61,10 @@ export function getBattleOpponentConfig() {
     }
     let index = 0;
     return [
-      getRandomConfigs(1, getRarity(index++)),
-      getRandomConfigs(1, getRarity(index++)),
-      getRandomConfigs(1, getRarity(index++)),
-      getRandomConfigs(1, getRarity(index++))];
+      getRandomConfigs(1, getRarity(index++), elementType),
+      getRandomConfigs(1, getRarity(index++), elementType),
+      getRandomConfigs(1, getRarity(index++), elementType),
+      getRandomConfigs(1, getRarity(index++), elementType)];
 }
 
 export function getPetConfigById(id:string){
@@ -74,8 +76,8 @@ export function getPetConfigById(id:string){
     return null;
 }
 
-export function getRandomConfigs(num:number, type:Rarity) {
-  let configs_type:PetConfigType[] = PetConfig.filter((config)=> config.rarity == type);
+export function getRandomConfigs(num:number, type:Rarity, element?:ElementType) {
+  let configs_type:PetConfigType[] = PetConfig.filter((config)=> config.rarity == type && config.elements == element);
   let configs:PetConfigType[] =[];
   while (num--) {
     let index = Math.floor(Math.random()*configs_type.length);
@@ -369,24 +371,41 @@ export let AdventureBasicstone = 30;
 export let AdventureBasiccoins = 100;
 export let AdventureShipMaxFood = 5;
 
+
+export function getElementByString(name:string) {
+  switch (name) {
+    case IsLandType.water:
+      return ElementType.water;
+    case IsLandType.fire:
+      return ElementType.fire;
+    case IsLandType.snack:
+      return ElementType.snack;
+    case IsLandType.nature:
+      return ElementType.nature;
+    default:
+      break;
+  }
+}
+
+
 export let AdventureAreas = [
   {
-    areaName: "water",
+    areaName: IsLandType.water,
     areaCompletetime: 360,
     reward: Resource.coin,
   },
   {
-    areaName: "fire",
+    areaName: IsLandType.fire,
     areaCompletetime: 360,
     reward: Resource.stone,
   },
   {
-    areaName: "food",
+    areaName: IsLandType.snack,
     areaCompletetime: 360,
     reward: Resource.food,
   },
   {
-    areaName: "nature",
+    areaName: IsLandType.nature,
     areaCompletetime: 360,
     reward: Resource.wood,
   }

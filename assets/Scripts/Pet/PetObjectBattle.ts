@@ -69,8 +69,10 @@ export class PetObjectBattle extends PetObject{
         let typesNode = cc.find("info/typeLayout", this.node);
         let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
 
-        typesNode.active = false;
-        label_level.node.active = false;
+        delay(3).then(()=>{
+            typesNode.active = false;
+            label_level.node.active = false;
+        })
         this.updateHealth();
         this.progressBar_health.node.active = false;
 

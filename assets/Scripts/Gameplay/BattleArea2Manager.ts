@@ -26,6 +26,7 @@ export default class BattleArea2Manager {
     selfPets: PetObjectBattle[] = [];
     opponent: PetObjectBattle[] = [];
 
+    areaName:string = "";
     CurrentBattleOppnonentTotal = 0;
     battleIndex = -1;
     battleList: PetConfigType[][] = [];
@@ -37,8 +38,9 @@ export default class BattleArea2Manager {
 
     attackTime = 0.3;
 
-    constructor(pets: PetData[], petNodes: cc.Node) {
+    constructor(pets: PetData[], petNodes: cc.Node, areaName:string) {
         this.petNodes = petNodes;
+        this.areaName = areaName
         this.init(pets);
         BattleArea2Manager.instance = this;
     }
@@ -51,7 +53,7 @@ export default class BattleArea2Manager {
         this.creatSelfPet(pets);
         BattleUI.instance.setOnclickCB(this.selfPetDatas, this.triggerSkill.bind(this));
 
-        this.battleList = getBattleOpponentConfig();
+        this.battleList = getBattleOpponentConfig(this.areaName);
         this.creatOpponentPet(this.battleList.pop());
 
         this.battlePromise = new CallPromise<boolean>();
@@ -135,11 +137,15 @@ export default class BattleArea2Manager {
         this.CurrentBattleOppnonentTotal = petconfigs.length;
         this.battleIndex++;
 
+        let levelInfo = User.instance.getAreaInfo(this.areaName).levelInfo;
+
+        let baseLevel = levelInfo.level;
+
         let pos = this.getPos(true);
         petconfigs.forEach((config, idx) => {
             let petData = {
                 petId: config.petId,
-                petLevel: 1
+                petLevel: baseLevel > 1 ? baseLevel-1 : baseLevel
             }
             petDatas.push(petData)
             let petObject = this._preparePetNode(petData, idx, pos, true);

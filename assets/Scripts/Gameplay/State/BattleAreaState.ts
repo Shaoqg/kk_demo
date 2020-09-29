@@ -6,6 +6,7 @@ import { BattleArea2Screen } from "../../Screens/BattleArea2Screen";
 import { VoidCallPromise, CallPromise } from "../../kk/DataUtils";
 import { StateManager } from "./StateManager";
 import BattleUI from "../../UI/BattleUI";
+import AdventureManager from "../AdventureManager";
 
 
 export default class BattleAreaState extends State {
@@ -14,7 +15,10 @@ export default class BattleAreaState extends State {
 
     battleManager:BattleArea2Manager = null;
 
-    async startState(petsData:PetData[]) {
+    async startState() {
+        let petsData = AdventureManager.instance.currPetList;
+        let areaName = AdventureManager.instance.currAreaNam;
+
         //TODO hide UI show battleUI
         // UIManager
         UIManager.instance.showUI(false);
@@ -27,7 +31,7 @@ export default class BattleAreaState extends State {
         BattleUI.instance.showUI(true);
 
         //creatData
-        this.battleManager = new BattleArea2Manager(petsData, petNodeParent);
+        this.battleManager = new BattleArea2Manager(petsData, petNodeParent, areaName);
 
         return super.startState();
     }
