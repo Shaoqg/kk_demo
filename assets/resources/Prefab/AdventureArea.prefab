@@ -10669,7 +10669,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "area_food",
+    "_name": "area_snack",
     "_objFlags": 0,
     "_parent": {
       "__id__": 28
