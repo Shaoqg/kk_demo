@@ -135,6 +135,10 @@ export default class UpgradeModel extends ViewConnector {
         let children = tipsList.children;
         let index = 0;
 
+        let getNumber = (key_config:{baseNumber:number,levelNumber:number}, level) => {
+            return Math.floor((key_config.baseNumber + key_config.levelNumber * level)*10)/10;
+        }
+
 
         for (const key in config["reward"]) {
             let key_config = config["reward"][key];
@@ -142,30 +146,31 @@ export default class UpgradeModel extends ViewConnector {
             let description = "";
             let str2 = "";
             let imageSrc = "";
+
             switch (key) {
                 case "star":
                     imageSrc = "star"
                     description = "Increase reputation  ";
-                    this.info.starReward = key_config.baseNumber + key_config.levelNumber * this.info.toLevel;
+                    this.info.starReward =getNumber(key_config, this.info.toLevel);
                     str2 = ` +${this.info.starReward}`;
                     break;
                 case "number"://reward number
                     imageSrc = this.getRewardRes();
                     description = "Increase revenue  ";
-                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}/min`;
-                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}/min`;
+                    str1 = ` ${getNumber(key_config, this.info.toLevel - 1)}/min`;
+                    str2 = ` ${getNumber(key_config, this.info.toLevel)}/min`;
                     break;
                 case "storage"://
                     imageSrc = this.getRewardRes();
                     description = "Offline revenue cap  ";
-                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}`;
-                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}`;
+                    str1 = ` ${getNumber(key_config, this.info.toLevel - 1)}`;
+                    str2 = ` ${getNumber(key_config, this.info.toLevel)}`;
                     break;
                 case "quest"://
                     imageSrc = this.getRewardRes();
                     description = "Quest reward ";
-                    str1 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel - 1)}`;
-                    str2 = ` ${key_config.baseNumber + key_config.levelNumber * (this.info.toLevel)}`;
+                    str1 = ` ${getNumber(key_config, this.info.toLevel - 1)}`;
+                    str2 = ` ${getNumber(key_config, this.info.toLevel)}`;
                     break;
                 case "questLevel"://
                     imageSrc = "";

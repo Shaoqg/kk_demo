@@ -39,7 +39,30 @@ export function setElementType(element: ElementType[] | ElementType | string, no
 }
 
 export function getBattleOpponentConfig() {
-    return [getRandomConfigs(1),getRandomConfigs(1),getRandomConfigs(1),getRandomConfigs(1)];
+    let Weights = 
+    [//total = 1
+      {[Rarity.common]:0.9, [Rarity.uncommon]:0.1,[Rarity.rare]:0},
+      {[Rarity.common]:0.8, [Rarity.uncommon]:0.2,[Rarity.rare]:0},
+      {[Rarity.common]:0.7, [Rarity.uncommon]:0.2,[Rarity.rare]:0.1},
+      {[Rarity.common]:0.6, [Rarity.uncommon]:0.2,[Rarity.rare]:0.2},
+    ]
+
+    let getRarity = (index)=> {
+      let number = 0;
+      let random = Math.random();
+      for (const key in Weights[index]) {
+        number += Weights[index][key];
+        if (random <= number) {
+          return key as Rarity;
+        }
+      }
+    }
+    let index = 0;
+    return [
+      getRandomConfigs(1, getRarity(index++)),
+      getRandomConfigs(1, getRarity(index++)),
+      getRandomConfigs(1, getRarity(index++)),
+      getRandomConfigs(1, getRarity(index++))];
 }
 
 export function getPetConfigById(id:string){
@@ -51,11 +74,12 @@ export function getPetConfigById(id:string){
     return null;
 }
 
-export function getRandomConfigs(num:number) {
-  let configs:PetConfigType[] = [];
+export function getRandomConfigs(num:number, type:Rarity) {
+  let configs_type:PetConfigType[] = PetConfig.filter((config)=> config.rarity == type);
+  let configs:PetConfigType[] =[];
   while (num--) {
-    let index = Math.floor(Math.random()*PetConfig.length);
-    configs.push(PetConfig[index]) 
+    let index = Math.floor(Math.random()*configs_type.length);
+    configs.push(configs_type[index]) 
   }
   return configs;
 }
