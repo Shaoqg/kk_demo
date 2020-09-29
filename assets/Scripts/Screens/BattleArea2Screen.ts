@@ -3,6 +3,7 @@ import { AdventureAreas, PetData, getPetConfigById, getStrengthByPetData, getRan
 import { PetObject } from "../Pet/PetObject";
 import ScreenSize from "../Tools/ScreenSize";
 import { CallPromise } from "../kk/DataUtils";
+import AdventureManager from "../Gameplay/AdventureManager";
 
 
 
@@ -35,6 +36,13 @@ export class BattleArea2Screen extends ViewConnector {
     applyData(any) {
         let content = cc.find("content", this.node);
         this.petNodeParent = cc.find("pets", content);
+
+        let bgs = cc.find("bg", content);
+        bgs.children.forEach((node)=>{
+            node.active = node.name == AdventureManager.instance.currAreaNam;
+        })
+
+
     }
 
     onClose(){
