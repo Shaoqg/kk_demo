@@ -358,7 +358,18 @@ export function getRestraint(element1: ElementType, element2: ElementType) {
   return 0;
 }
 
-
+export function getRestraintDamage(num: -1 | 0 | 1) {
+  switch (num) {
+    case -1:
+      return 0.75;
+    case 0:
+      return 1;
+    case 1:
+      return 1.5;
+    default:
+      return 1;
+  }
+}
 
 export let speeds: number[] = [24, 30, 42];
 export let capacitys: number[] = [1, 3, 5];

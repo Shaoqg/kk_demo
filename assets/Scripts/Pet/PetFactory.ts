@@ -66,14 +66,25 @@ export class PetFactory {
     }
 
     private static _HPLabelPool:cc.NodePool = new cc.NodePool();
-    static async onBeHit(petNode:cc.Node,num:number, dir:1|-1) {
+    static async onBeHit(petNode:cc.Node,num:number, dir:1|-1, restraintNum = 0) {
         if (this._HPLabelPool.size() <= 0) {
             let label = await GlobalResources.getPrefab("fx/HitHP");
             let node = cc.instantiate(label);
             this._HPLabelPool.put(node);
         }
-        
+
         let labelHp = this._HPLabelPool.get();
+
+        let icon_hit = cc.find("icon_hit",labelHp);
+        let label_node = cc.find("label",labelHp);
+        if (restraintNum == 1) {
+            icon_hit.active = true;
+            label_node.color = cc.Color.RED;
+        } else {
+            icon_hit.active = false;
+            label_node.color = cc.Color.WHITE;
+        }
+
         labelHp.getComponentInChildren(cc.Label).string = num.toString();
         labelHp.setParent(petNode.parent);
         labelHp.zIndex = 1100;
@@ -88,10 +99,10 @@ export class PetFactory {
         ))
     }
 
-    static onIslandPet:{[islandType:string]: PetData[]}={};
+    static onIslandPet:{[islandType:string]: PetObject[]}={};
     static setIslandPets(isRemove:boolean=false) {
         if(isRemove){
-            this.removeAllPets();
+            // this.removeAllPets();
         }
         let petsNowUsing = User.instance.getPetList();
         petsNowUsing.forEach((pet)=>{
@@ -99,12 +110,19 @@ export class PetFactory {
             if (!this.onIslandPet[type]) {
                 this.onIslandPet[type] = [];
             }
-            let isAdd = this.onIslandPet[type].find((oldPet) => oldPet.petId == pet.petId);
+            let isAdd = this.onIslandPet[type].find((oldPet) => oldPet.petData.petId == pet.petId);
             
             if(!isAdd) {
-                this.onIslandPet[type].push(pet);
-                this.addPet(pet, type);
+                this.addPet(pet, type).then((petObject)=>{
+                    this.onIslandPet[type].push(petObject);
+                })
             }
         })
-    }   
+    } 
+    
+    static refreshIslandPetInfo(petId:string){
+        let type = IslandManager.instance.getIslandTypeByPetId(petId);
+        let pet = this.onIslandPet[type].find((petObject) => petObject.petData.petId == petId);
+        pet.refreshLevelInfo();
+    }
 }

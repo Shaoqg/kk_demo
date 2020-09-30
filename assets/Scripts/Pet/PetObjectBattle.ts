@@ -1,6 +1,6 @@
 import { Behavior } from "./Behviors/Behavior";
 import { Idle } from "./Behviors/Idle";
-import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity, getHealth, getStrength, getStrengthByPetData } from "../Config";
+import { PetData, getPetConfigById, setElementType, getColorByRarity, Rarity, getHealth, getStrength, getStrengthByPetData, getRestraint, ElementType, getRestraintDamage } from "../Config";
 import GlobalResources, { SpriteType } from "../Util/GlobalResource";
 import { Attack } from "./Behviors/Attack";
 import { BeAttack } from "./Behviors/BeAttck";
@@ -159,6 +159,14 @@ export class PetObjectBattle extends PetObject{
     beAttack(targePet:PetObjectBattle) {
         let attack = targePet.getAttack();
 
+        let elementType1 = getPetConfigById(targePet.petData.petId).elements as ElementType;
+        let elementType2 = getPetConfigById(this.petData.petId).elements as ElementType;
+
+        let restraintNum:any= getRestraint(elementType1, elementType2);
+        let mut = getRestraintDamage(restraintNum);
+        attack = Math.floor(mut*attack);
+
+
         if (this._currentBehavior.getType() == "Attack") {
             let beHitNode= cc.find("image/image_front", this._root);
             beHitNode.active = true;
@@ -178,7 +186,7 @@ export class PetObjectBattle extends PetObject{
         }
 
         this._currentHP =  this._currentHP > attack ? this._currentHP - attack: 0;
-        this.onBeHit(attack, targePet.node.x > this.node.x ? -1: 1);
+        this.onBeHit(attack, targePet.node.x > this.node.x ? -1: 1, restraintNum);
         this.progressBar_health.node.active = true;
         this.updateHealth();
 
@@ -203,8 +211,8 @@ export class PetObjectBattle extends PetObject{
         this.progressBar_health.progress = hpBar;
     }
 
-    onBeHit(number: number, dir: 1 | -1) {
-        PetFactory.onBeHit(this.node, number, dir);
+    onBeHit(number: number, dir: 1 | -1, restraintNum = 0) {
+        PetFactory.onBeHit(this.node, number, dir, restraintNum);
     }
 
     isDead() {

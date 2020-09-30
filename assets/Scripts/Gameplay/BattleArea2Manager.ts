@@ -1,4 +1,4 @@
-import { PetData, getRandomConfigs, getBattleOpponentConfig, PetConfigType } from "../Config";
+import { PetData, getRandomConfigs, getBattleOpponentConfig, PetConfigType, getStrengthByPetData } from "../Config";
 import { KKLoader } from "../Util/KKLoader";
 import { PetObject, PetType } from "../Pet/PetObject";
 import { Drop } from "../Pet/Behviors/Drop";
@@ -145,7 +145,7 @@ export default class BattleArea2Manager {
         petconfigs.forEach((config, idx) => {
             let petData = {
                 petId: config.petId,
-                petLevel: baseLevel > 1 ? baseLevel-1 : baseLevel
+                petLevel: baseLevel
             }
             petDatas.push(petData)
             let petObject = this._preparePetNode(petData, idx, pos, true);
@@ -252,7 +252,8 @@ export default class BattleArea2Manager {
         node.setParent(petObject.node.getParent());
         node.zIndex = 999;
         node.position = petObject.node.position;
-        petObject.addHealth(100);
+        let addNum = getStrengthByPetData(petData) * 2;
+        petObject.addHealth(addNum);
         await delay(1);
         node.destroy();
     }

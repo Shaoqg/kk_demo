@@ -44,6 +44,10 @@ export default class WorldManager extends cc.Component {
         this.addComponent(ResourceManager);
         AdventureManager.instance
 
+
+        EventEmitter.subscribeTo(EventType.LEVEL_UP_PET, (petId: string)=>{
+            PetFactory.refreshIslandPetInfo(petId);
+        });
     }
 
 

@@ -46,8 +46,6 @@ export class PetObject extends cc.Component {
         this._root = this._root || cc.find("root", this.node)
         this.petData = petData;
 
-        let config = getPetConfigById(petData.petId);
-
         // let rarityScaleConfig = {[Rarity.common]:1, [Rarity.uncommon]:1.1, [Rarity.rare]:1.2, };
         let scale = 1;
 
@@ -57,26 +55,24 @@ export class PetObject extends cc.Component {
         //set name
         this.node.name = petData.petId;
 
-        //set image
-        let petImage: cc.Node = this._root.getChildByName("image");
-        let sprite = petImage.getComponent(cc.Sprite);
-        GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
-            sprite.spriteFrame =  sf;
-            setSpriteSize(sprite, sf, height);
-        })
-
-
         let infoNode = cc.find("info", this.node);
         infoNode.opacity = 180;
         infoNode.setPosition(infoNode.x, height + 20);
 
+        this.refreshLevelInfo();
+
+        this.refreshImage();
+    }
+
+    refreshLevelInfo() {
+        let config = getPetConfigById( this.petData.petId);
         //set info
         let typesNode = cc.find("info/typeLayout", this.node);
         setElementType(config.elements, typesNode);
 
         //set level
         let label_level = cc.find("info/label", this.node).getComponent(cc.Label);
-        label_level.string = `lvl: ${petData.petLevel}`
+        label_level.string = `lvl: ${ this.petData.petLevel}`
 
         //set rar
         let colorInfo = getColorByRarity(config.rarity as Rarity);
@@ -87,6 +83,17 @@ export class PetObject extends cc.Component {
             cc.scaleTo(0.8, 1.1),
             cc.scaleTo(0.8, 1)
         ).repeatForever())
+    }
+
+    refreshImage() {
+          let config = getPetConfigById( this.petData.petId);
+        //set image
+        let petImage: cc.Node = this._root.getChildByName("image");
+        let sprite = petImage.getComponent(cc.Sprite);
+        GlobalResources.getSpriteFrame(SpriteType.Pet, config.art_asset).then((sf)=>{
+            sprite.spriteFrame =  sf;
+            setSpriteSize(sprite, sf, this.node.height);
+        })
     }
 
     setAnchor(anchor: cc.Vec2) {

@@ -196,6 +196,7 @@ export class PetUpgradeModel extends ViewConnector {
         }
         EventEmitter.emitEvent(EventType.UPDATE_RESOURCE);
         EventEmitter.emitEvent(EventType.STAR_INCREASE);
+        EventEmitter.emitEvent(EventType.LEVEL_UP_PET, null, data.petId);
         this.refresh(data)
     }
 
